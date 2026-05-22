@@ -1,0 +1,401 @@
+/* ================================================================
+   style.css — Foly Ananou personal site
+   Fonts: Instrument Serif (titles) + DM Sans (body)
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
+
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Base ──────────────────────────────────────────────────── */
+html { font-size: 16px; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #FAFAF8;
+  color: #1a1a1a;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ── Layout ────────────────────────────────────────────────── */
+.site-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.reading-width { max-width: 680px; }
+
+/* ── Navigation ────────────────────────────────────────────── */
+.site-nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 28px 0 24px;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 52px;
+}
+.site-nav .nav-name {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 20px;
+  letter-spacing: -.01em;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+.site-nav .nav-name:hover { text-decoration: none; }
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.nav-links a:hover { color: #1a1a1a; }
+.nav-links a.active {
+  color: #1a1a1a;
+  border-bottom-color: #1a1a1a;
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+.site-footer {
+  margin-top: 80px;
+  padding: 24px 0 32px;
+  border-top: 1px solid #e5e5e5;
+  font-size: 13px;
+  color: #888;
+}
+.site-footer a { color: #888; }
+.site-footer a:hover { color: #1a1a1a; }
+
+/* ── Home page ─────────────────────────────────────────────── */
+.home-name {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 3rem;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin-bottom: 10px;
+}
+.home-identity {
+  font-size: 1.05rem;
+  color: #666;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+.home-bio {
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 620px;
+  margin-bottom: 48px;
+  color: #2a2a2a;
+}
+.home-nav-links {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 52px;
+  flex-wrap: wrap;
+}
+.home-nav-links a {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-contact {
+  font-size: 13px;
+  color: #888;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.home-contact a { color: #888; }
+.home-contact a:hover { color: #1a1a1a; }
+
+/* ── Page titles ───────────────────────────────────────────── */
+.page-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 2.2rem;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.page-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 44px;
+}
+
+/* ── Badges ────────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+/* Language badges */
+.lang-en { background: #1D39C4; color: #fff; }
+.lang-fr { background: #D48806; color: #fff; }
+/* Publication type badges */
+.badge-published   { background: #237804; color: #fff; }
+.badge-accepted    { background: #52C41A; color: #1a1a1a; }
+.badge-wp          { background: #69C0FF; color: #1a1a1a; }
+.badge-submitted   { background: #B7EB8F; color: #1a1a1a; }
+
+/* ── Tag pills ─────────────────────────────────────────────── */
+.tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  display: inline-block;
+  background: #F0F0F0;
+  color: #555;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+/* ── Research page ─────────────────────────────────────────── */
+.section-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #888;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.pub-list { list-style: none; }
+.pub-entry {
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.pub-entry:last-child { border-bottom: none; }
+.pub-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.pub-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+.pub-title a { color: #1a1a1a; }
+.pub-title a:hover { text-decoration: underline; }
+.pub-meta {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+.pub-desc {
+  font-size: 13px;
+  color: #888;
+  margin-top: 3px;
+  font-style: italic;
+}
+
+.wip-list { list-style: none; }
+.wip-entry {
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.wip-entry:last-child { border-bottom: none; }
+.wip-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 3px;
+}
+.wip-desc {
+  font-size: 13px;
+  color: #666;
+}
+
+/* ── Éditos listing ────────────────────────────────────────── */
+.edito-list { list-style: none; }
+.edito-entry {
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.edito-entry:last-child { border-bottom: none; }
+.edito-date-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.edito-date {
+  font-size: 13px;
+  color: #888;
+}
+.edito-title-link {
+  display: block;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+.edito-title-link:hover { text-decoration: underline; }
+.edito-subtitle-list {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.edito-originally {
+  font-size: 12px;
+  color: #888;
+  margin-top: 6px;
+}
+.edito-originally a { color: #666; text-decoration: underline; }
+
+.empty-state {
+  padding: 48px 0;
+  text-align: center;
+  color: #aaa;
+  font-size: 15px;
+}
+
+/* ── Individual edito page ─────────────────────────────────── */
+.edito-back {
+  font-size: 13px;
+  color: #888;
+  display: inline-block;
+  margin-bottom: 36px;
+}
+.edito-back:hover { color: #1a1a1a; text-decoration: underline; }
+.edito-page-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 2.4rem;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  max-width: 640px;
+}
+.edito-page-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  max-width: 620px;
+  font-style: italic;
+}
+.edito-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #888;
+}
+.edito-originally-page {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 36px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.edito-originally-page a { color: #555; text-decoration: underline; }
+
+/* Prose body */
+.edito-body {
+  font-size: 17px;
+  line-height: 1.8;
+  max-width: 640px;
+  color: #1a1a1a;
+}
+.edito-body p { margin-bottom: 1.3em; }
+.edito-body h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.5rem;
+  margin: 1.8em 0 .6em;
+  letter-spacing: -.01em;
+}
+.edito-body h3 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.2rem;
+  margin: 1.5em 0 .5em;
+}
+.edito-body blockquote {
+  border-left: 3px solid #e5e5e5;
+  margin: 1.5em 0;
+  padding: .5em 0 .5em 20px;
+  color: #555;
+  font-style: italic;
+}
+.edito-body a { text-decoration: underline; text-underline-offset: 2px; }
+.edito-body ul, .edito-body ol {
+  margin: 0 0 1.2em 1.4em;
+}
+.edito-body li { margin-bottom: .4em; }
+.edito-body strong { font-weight: 600; }
+.edito-body em { font-style: italic; }
+.edito-body hr { border: none; border-top: 1px solid #e5e5e5; margin: 2em 0; }
+
+/* Prev/next nav */
+.edito-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e5e5;
+  gap: 20px;
+}
+.edito-nav-item { max-width: 46%; }
+.edito-nav-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #aaa;
+  display: block;
+  margin-bottom: 4px;
+}
+.edito-nav-title {
+  font-size: 14px;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+.edito-nav-title:hover { text-decoration: underline; }
+.edito-nav-right { text-align: right; margin-left: auto; }
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .site-container { padding: 0 18px; }
+  .site-nav {
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px 0 18px;
+    margin-bottom: 36px;
+  }
+  .nav-links { gap: 18px; }
+  .home-name { font-size: 2.2rem; }
+  .page-title { font-size: 1.7rem; }
+  .edito-page-title { font-size: 1.8rem; }
+  .edito-body { font-size: 16px; }
+  .home-nav-links { gap: 20px; }
+  .edito-nav { flex-direction: column; }
+  .edito-nav-item { max-width: 100%; }
+  .edito-nav-right { text-align: left; margin-left: 0; }
+}
