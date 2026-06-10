@@ -244,13 +244,12 @@ def build():
         out_path.write_text(html, encoding="utf-8")
         print(f"  ✓ editos/{slug}.html")
 
-    # Generate editos listing
-    listing_entries = [(slug, meta) for slug, meta, _ in entries]
-    listing_html = render_editos_listing(listing_entries)
-    (DOCS / "editos.html").write_text(listing_html, encoding="utf-8")
-    print("  ✓ editos.html")
+    # NOTE: editos.html (the listing page) is NO LONGER generated here.
+    # It is now an agenda-driven page that fetches docs/data/publications.json
+    # (type=article, status=published) at runtime. build.py only generates the
+    # individual essay pages above. See docs/js/feed.js.
 
-    print(f"\nDone — {len(entries)} édito(s) built.")
+    print(f"\nDone — {len(entries)} édito essay page(s) built.")
 
 
 if __name__ == "__main__":

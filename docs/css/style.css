@@ -158,6 +158,12 @@ a:hover { text-decoration: underline; }
 .badge-accepted    { background: #52C41A; color: #1a1a1a; }
 .badge-wp          { background: #69C0FF; color: #1a1a1a; }
 .badge-submitted   { background: #B7EB8F; color: #1a1a1a; }
+.badge-under_review,
+.badge-revise_resubmit { background: #FFE58F; color: #1a1a1a; }
+.badge-drafting    { background: #D9D9D9; color: #1a1a1a; }
+
+/* Feed loading / empty states */
+.feed-loading, .feed-empty { color: #999; font-size: 15px; padding: 8px 0; }
 
 /* ── Tag pills ─────────────────────────────────────────────── */
 .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }

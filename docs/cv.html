@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Éditos — Foly Ananou">
-  <title>Éditos — Foly Ananou</title>
+  <meta name="description" content="CV — Foly Ananou">
+  <title>CV — Foly Ananou</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -19,17 +19,25 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="research.html">Research</a></li>
-      <li><a href="editos.html" class="active">Éditos</a></li>
-      <li><a href="cv.html">CV</a></li>
+      <li><a href="editos.html">Éditos</a></li>
+      <li><a href="cv.html" class="active">CV</a></li>
     </ul>
   </nav>
 
   <main>
-    <h1 class="page-title">Éditos</h1>
-    <p class="page-subtitle">Essays and commentary on African economic policy, finance, and institutions.</p>
-    <ul class="edito-list" id="edito-list">
-      <li class="feed-loading">Loading…</li>
-    </ul>
+    <h1 class="page-title">Curriculum Vitæ</h1>
+
+    <p class="page-subtitle">
+      Foly Ananou is a researcher at Société Générale and an academic economist working on
+      financial markets, banking structure, and monetary integration in West Africa, with a focus
+      on the WAEMU and CEMAC monetary unions, sovereign debt markets, and pan-African banking
+      networks.
+    </p>
+
+    <!-- Publications & writing are fed from the research agenda -->
+    <div id="cv-publications">
+      <p class="feed-loading">Loading…</p>
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -41,10 +49,10 @@
 <script src="js/feed.js"></script>
 <script>
   loadFeed()
-    .then((feed) => renderEditos(feed, document.getElementById("edito-list")))
+    .then((feed) => renderCv(feed, document.getElementById("cv-publications")))
     .catch(() => {
-      document.getElementById("edito-list").innerHTML =
-        '<li class="feed-empty">Could not load éditos.</li>';
+      document.getElementById("cv-publications").innerHTML =
+        '<p class="feed-empty">Could not load publications.</p>';
     });
 </script>
 </body>

@@ -1,0 +1,104 @@
+{
+  "generated": "2026-06-10",
+  "_note": "Seed data from the prior hand-coded site. Regenerate by clicking 'Export to website' in the research agenda and replacing this file.",
+  "research": [
+    {
+      "id": "seed-1",
+      "type": "paper",
+      "title": "Liquidity regulation and bank lending",
+      "coauthors": "J. Wilson, D. Chronopoulos, A. Tarazi",
+      "outlet": "Journal of Corporate Finance, 2021",
+      "status": "published",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    },
+    {
+      "id": "seed-2",
+      "type": "paper",
+      "title": "Does liquidity regulation reduce bank systemic risk? Evidence from a quasi-natural experiment",
+      "coauthors": "J. Wilson, A. Tarazi, D. Chronopoulos",
+      "outlet": "Journal of Financial Stability",
+      "status": "accepted",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    },
+    {
+      "id": "seed-3",
+      "type": "working_paper",
+      "title": "Banks and monetary transmission in the WAEMU: Separating the liquidity and rate channels",
+      "coauthors": "",
+      "outlet": "SSRN",
+      "status": "posted",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    },
+    {
+      "id": "seed-4",
+      "type": "paper",
+      "title": "Multi-instrument sovereign debt operations and the term structure of borrowing costs: Evidence from the WAEMU regional market",
+      "coauthors": "",
+      "outlet": "Fadiga 2026 submission",
+      "status": "submitted",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    },
+    {
+      "id": "seed-5",
+      "type": "paper",
+      "title": "Severed Networks: Pan-African banking and sovereign stress transmission",
+      "coauthors": "",
+      "outlet": "",
+      "status": "drafting",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    },
+    {
+      "id": "seed-6",
+      "type": "paper",
+      "title": "Same peg, different outcomes: WAEMU and CEMAC under global shocks",
+      "coauthors": "",
+      "outlet": "",
+      "status": "drafting",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    },
+    {
+      "id": "seed-7",
+      "type": "paper",
+      "title": "An unwritten convention: Allotment clustering in WAEMU sovereign auctions",
+      "coauthors": "",
+      "outlet": "",
+      "status": "drafting",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    }
+  ],
+  "editos": [
+    {
+      "id": "seed-a1",
+      "type": "article",
+      "title": "UEMOA : Le paradoxe du financement souverain en monnaie locale",
+      "coauthors": "",
+      "outlet": "Financial Afrik",
+      "status": "published",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    }
+  ]
+}

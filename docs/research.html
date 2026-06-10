@@ -20,80 +20,22 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="research.html" class="active">Research</a></li>
       <li><a href="editos.html">Éditos</a></li>
+      <li><a href="cv.html">CV</a></li>
     </ul>
   </nav>
 
   <main>
     <h1 class="page-title">Research</h1>
 
-    <!-- ── Publications ───────────────────────────── -->
+    <!-- ── Publications (fed from the research agenda) ──────────── -->
     <h2 class="section-heading">Publications</h2>
-    <ul class="pub-list">
-
-      <li class="pub-entry">
-        <div class="pub-header">
-          <span class="badge badge-published">Published</span>
-          <span class="pub-title">Liquidity regulation and bank lending</span>
-        </div>
-        <div class="pub-meta">w/ J. Wilson, D. Chronopoulos, A. Tarazi &middot; <em>Journal of Corporate Finance</em>, 2021</div>
-      </li>
-
-      <li class="pub-entry">
-        <div class="pub-header">
-          <span class="badge badge-accepted">Accepted</span>
-          <span class="pub-title">Does liquidity regulation reduce bank systemic risk? Evidence from a quasi-natural experiment</span>
-        </div>
-        <div class="pub-meta">w/ J. Wilson, A. Tarazi, D. Chronopoulos &middot; <em>Journal of Financial Stability</em></div>
-      </li>
-
-      <li class="pub-entry">
-        <div class="pub-header">
-          <span class="badge badge-wp">Working Paper</span>
-          <span class="pub-title">Banks and monetary transmission in the WAEMU: Separating the liquidity and rate channels</span>
-        </div>
-        <div class="pub-meta">SSRN</div>
-      </li>
-
-      <li class="pub-entry">
-        <div class="pub-header">
-          <span class="badge badge-published">Published</span>
-          <span class="pub-title">UEMOA&nbsp;: Le paradoxe du financement souverain en monnaie locale</span>
-        </div>
-        <div class="pub-meta"><em>Financial Afrik</em></div>
-      </li>
-
-      <li class="pub-entry">
-        <div class="pub-header">
-          <span class="badge badge-submitted">Submitted</span>
-          <span class="pub-title">La fragmentation oubliée du marché souverain ouest-africain</span>
-        </div>
-        <div class="pub-meta"><em>Financial Afrik</em></div>
-      </li>
-
+    <ul class="pub-list" id="pub-list">
+      <li class="feed-loading">Loading…</li>
     </ul>
 
-    <!-- ── Work in progress ────────────────────────── -->
-    <h2 class="section-heading" style="margin-top:48px">Work in Progress</h2>
-    <ul class="wip-list">
-
-      <li class="wip-entry">
-        <div class="wip-title">Multi-instrument sovereign debt operations and the term structure of borrowing costs: Evidence from the WAEMU regional market</div>
-        <div class="wip-desc">Fadiga 2026 submission</div>
-      </li>
-
-      <li class="wip-entry">
-        <div class="wip-title">Severed Networks: Pan-African banking and sovereign stress transmission</div>
-      </li>
-
-      <li class="wip-entry">
-        <div class="wip-title">Same peg, different outcomes: WAEMU and CEMAC under global shocks</div>
-      </li>
-
-      <li class="wip-entry">
-        <div class="wip-title">An unwritten convention: Allotment clustering in WAEMU sovereign auctions</div>
-      </li>
-
-    </ul>
+    <!-- ── Work in progress ────────────────────────────────────── -->
+    <h2 class="section-heading" style="margin-top:48px" data-wip-heading>Work in Progress</h2>
+    <ul class="wip-list" id="wip-list"></ul>
   </main>
 
   <footer class="site-footer">
@@ -101,5 +43,15 @@
   </footer>
 
 </div>
+
+<script src="js/feed.js"></script>
+<script>
+  loadFeed()
+    .then((feed) => renderResearch(feed, document.getElementById("pub-list"), document.getElementById("wip-list")))
+    .catch(() => {
+      document.getElementById("pub-list").innerHTML =
+        '<li class="feed-empty">Could not load research data.</li>';
+    });
+</script>
 </body>
 </html>
