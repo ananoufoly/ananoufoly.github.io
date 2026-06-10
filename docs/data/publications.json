@@ -1,13 +1,122 @@
 {
   "generated": "2026-06-10",
-  "_note": "Seed data from the prior hand-coded site. Regenerate by clicking 'Export to website' in the research agenda and replacing this file.",
   "research": [
     {
-      "id": "seed-1",
+      "id": "mq8lrzychhks64nukh",
+      "type": "paper",
+      "title": "Senegal hidden debt, going beyond the noise",
+      "coauthors": "",
+      "outlet": "L'Afrique des Idées",
+      "status": "drafting",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-06-10"
+    },
+    {
+      "id": "mpp8qplb6ygmsfloxe8",
+      "type": "paper",
+      "title": "Diversification without Diversity: AI Adoption and Systemic Risk in Banking",
+      "coauthors": "",
+      "outlet": "jbf, jfs",
+      "status": "data_work",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-05-28"
+    },
+    {
+      "id": "mpeipou2lvww1c880ci",
+      "type": "paper",
+      "title": "Does liquidity regulation reduce bank systemic risk? Evidence from a quasi-natural experiment",
+      "coauthors": "J. Wilson, A. Tarazi, D. Chronopoulos",
+      "outlet": "Journal of Financial Stability",
+      "status": "published",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-05-20"
+    },
+    {
+      "id": "mpeijsajvjjofwy096m",
       "type": "paper",
       "title": "Liquidity regulation and bank lending",
       "coauthors": "J. Wilson, D. Chronopoulos, A. Tarazi",
-      "outlet": "Journal of Corporate Finance, 2021",
+      "outlet": "Journal of Corporate Finance",
+      "status": "published",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-05-20"
+    },
+    {
+      "id": "mpeicrzbfqjk6dgwl5v",
+      "type": "working_paper",
+      "title": "Banks and monetary transmission in the WAEMU: Separating the liquidity and rate channels",
+      "coauthors": "",
+      "outlet": "SSRN",
+      "status": "published",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6643579",
+      "tags": [],
+      "description": "",
+      "added": "2026-05-20"
+    },
+    {
+      "id": "mpei9wrflt45ux9c8ya",
+      "type": "book",
+      "title": "Dakar days",
+      "coauthors": "",
+      "outlet": "",
+      "status": "drafting",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-05-20"
+    },
+    {
+      "id": "mpei8b787agj4pac43v",
+      "type": "paper",
+      "title": "Same peg, different outcomes: Global shock transmission in Africa’s two CFA zones",
+      "coauthors": "",
+      "outlet": "",
+      "status": "drafting",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-05-20"
+    },
+    {
+      "id": "mpehhl6d2qdl8",
+      "type": "paper",
+      "title": "Not through lending: Sovereign buffers and the transmission of parent liquidity stressing Pan-African banks",
+      "coauthors": "",
+      "outlet": "Fadiga 2026 candidate",
+      "status": "drafting",
+      "url": "",
+      "tags": [],
+      "description": "this paper is using bank level data",
+      "added": "2026-05-20"
+    },
+    {
+      "id": "mpehftknsw60z",
+      "type": "paper",
+      "title": "Multi-instrument sovereign debt operations and the term structure of borrowing costs: Evidence from the WAEMU regional market",
+      "coauthors": "",
+      "outlet": "Fadiga 2026",
+      "status": "drafting",
+      "url": "",
+      "tags": [],
+      "description": "",
+      "added": "2026-05-20"
+    }
+  ],
+  "editos": [
+    {
+      "id": "mq81i0qk4a76llpbi9f",
+      "type": "article",
+      "title": "Senegal, Benin: deux trajectoires, meme traitement",
+      "coauthors": "Gloglo",
+      "outlet": "Financial Afrik",
       "status": "published",
       "url": "",
       "tags": [],
@@ -15,81 +124,19 @@
       "added": "2026-06-10"
     },
     {
-      "id": "seed-2",
-      "type": "paper",
-      "title": "Does liquidity regulation reduce bank systemic risk? Evidence from a quasi-natural experiment",
-      "coauthors": "J. Wilson, A. Tarazi, D. Chronopoulos",
-      "outlet": "Journal of Financial Stability",
-      "status": "accepted",
+      "id": "mpeiwmwm5ugmg16dajh",
+      "type": "article",
+      "title": "Africa's mobile money revolution has outgrown its rules",
+      "coauthors": "",
+      "outlet": "L'Afrique des Idées",
+      "status": "published",
       "url": "",
       "tags": [],
       "description": "",
-      "added": "2026-06-10"
+      "added": "2026-05-20"
     },
     {
-      "id": "seed-3",
-      "type": "working_paper",
-      "title": "Banks and monetary transmission in the WAEMU: Separating the liquidity and rate channels",
-      "coauthors": "",
-      "outlet": "SSRN",
-      "status": "posted",
-      "url": "",
-      "tags": [],
-      "description": "",
-      "added": "2026-06-10"
-    },
-    {
-      "id": "seed-4",
-      "type": "paper",
-      "title": "Multi-instrument sovereign debt operations and the term structure of borrowing costs: Evidence from the WAEMU regional market",
-      "coauthors": "",
-      "outlet": "Fadiga 2026 submission",
-      "status": "submitted",
-      "url": "",
-      "tags": [],
-      "description": "",
-      "added": "2026-06-10"
-    },
-    {
-      "id": "seed-5",
-      "type": "paper",
-      "title": "Severed Networks: Pan-African banking and sovereign stress transmission",
-      "coauthors": "",
-      "outlet": "",
-      "status": "drafting",
-      "url": "",
-      "tags": [],
-      "description": "",
-      "added": "2026-06-10"
-    },
-    {
-      "id": "seed-6",
-      "type": "paper",
-      "title": "Same peg, different outcomes: WAEMU and CEMAC under global shocks",
-      "coauthors": "",
-      "outlet": "",
-      "status": "drafting",
-      "url": "",
-      "tags": [],
-      "description": "",
-      "added": "2026-06-10"
-    },
-    {
-      "id": "seed-7",
-      "type": "paper",
-      "title": "An unwritten convention: Allotment clustering in WAEMU sovereign auctions",
-      "coauthors": "",
-      "outlet": "",
-      "status": "drafting",
-      "url": "",
-      "tags": [],
-      "description": "",
-      "added": "2026-06-10"
-    }
-  ],
-  "editos": [
-    {
-      "id": "seed-a1",
+      "id": "mpeitlerplvwgox79xg",
       "type": "article",
       "title": "UEMOA : Le paradoxe du financement souverain en monnaie locale",
       "coauthors": "",
@@ -98,7 +145,7 @@
       "url": "",
       "tags": [],
       "description": "",
-      "added": "2026-06-10"
+      "added": "2026-05-20"
     }
   ]
 }
