@@ -19,3 +19,9 @@ env/
 
 # Build artifacts (kept in docs/ for GitHub Pages, but exclude local temp)
 *.tmp
+
+# Local-only agenda encryption tool and any plaintext agenda source.
+# Only docs/agenda/agenda.enc (ciphertext) should ever be committed.
+encrypt_agenda.py
+research_agenda.html
+research_agenda.csv
