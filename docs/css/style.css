@@ -1,11 +1,9 @@
 /* ================================================================
    style.css — Foly Ananou personal site
-   Fonts: Carlito (body + UI) + Instrument Serif (display titles)
+   Font: Carlito everywhere (metric-compatible with Calibri, matches the CV)
    ================================================================ */
 
-/* Carlito — metric-compatible with Calibri, matches the CV typeface */
 @import url('https://cdn.jsdelivr.net/npm/@fontsource/carlito@5.0.13/index.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
 
 /* ── Reset ─────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,7 +41,7 @@ a:hover { text-decoration: underline; }
   margin-bottom: 52px;
 }
 .site-nav .nav-name {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Carlito', 'Calibri', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 20px;
   letter-spacing: -.01em;
   color: #1a1a1a;
@@ -83,7 +81,7 @@ a:hover { text-decoration: underline; }
 
 /* ── Home page ─────────────────────────────────────────────── */
 .home-name {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Carlito', 'Calibri', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 3rem;
   line-height: 1.1;
   letter-spacing: -.02em;
@@ -127,7 +125,7 @@ a:hover { text-decoration: underline; }
 
 /* ── Page titles ───────────────────────────────────────────── */
 .page-title {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Carlito', 'Calibri', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 2.2rem;
   letter-spacing: -.02em;
   line-height: 1.15;
@@ -258,7 +256,7 @@ a:hover { text-decoration: underline; }
 }
 .edito-title-link {
   display: block;
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Carlito', 'Calibri', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 1.2rem;
   color: #1a1a1a;
   margin-bottom: 4px;
@@ -294,7 +292,7 @@ a:hover { text-decoration: underline; }
 }
 .edito-back:hover { color: #1a1a1a; text-decoration: underline; }
 .edito-page-title {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Carlito', 'Calibri', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 2.4rem;
   letter-spacing: -.025em;
   line-height: 1.15;
@@ -336,13 +334,13 @@ a:hover { text-decoration: underline; }
 }
 .edito-body p { margin-bottom: 1.3em; }
 .edito-body h2 {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Carlito', 'Calibri', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 1.5rem;
   margin: 1.8em 0 .6em;
   letter-spacing: -.01em;
 }
 .edito-body h3 {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Carlito', 'Calibri', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 1.2rem;
   margin: 1.5em 0 .5em;
 }
