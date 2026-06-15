@@ -1,0 +1,2661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  /* ── TOKEN SYSTEM ── */
+  :root {
+    --bg:     #ffffff;
+    --bg2:    #ffffff;
+    --bg3:    #f9fafb;
+    --border: #e5e7eb;
+    --border2:#d1d5db;
+    --ink:    #111827;
+    --muted:  #6b7280;
+    --faint:  #9ca3af;
+    --accent: #1a56db;
+    --accent2:#059669;
+    --danger: #dc2626;
+    --t: .15s ease;
+  }
+  body.dark {
+    --bg:     #111827;
+    --bg2:    #1f2937;
+    --bg3:    #374151;
+    --border: #374151;
+    --border2:#4b5563;
+    --ink:    #f9fafb;
+    --muted:  #9ca3af;
+    --faint:  #6b7280;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 14px; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+    transition: background var(--t), color var(--t);
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    height: calc(48px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header h1 { font-size: 14px; font-weight: 700; letter-spacing: -.3px; }
+  header .header-right { display: flex; gap: 6px; align-items: center; }
+  .icon-btn {
+    background: none; border: none; color: var(--muted);
+    width: 32px; height: 32px; border-radius: 6px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: color var(--t), background var(--t);
+  }
+  .icon-btn:hover { color: var(--ink); background: var(--bg3); }
+  .icon-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: var(--bg); border-top: 1px solid var(--border);
+    display: flex; padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav button {
+    flex: 1; border: none; background: none; color: var(--faint);
+    padding: 10px 0 8px; font-size: 10px; font-weight: 600; letter-spacing: .03em;
+    cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    transition: color var(--t); text-transform: uppercase;
+    -webkit-tap-highlight-color: transparent;
+  }
+  nav button.active { color: var(--accent); }
+  nav button svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+  /* ── LAYOUT ── */
+  main {
+    padding-top: calc(48px + env(safe-area-inset-top));
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
+    min-height: 100vh;
+  }
+  .view { display: none; padding: 16px; }
+  .view.active { display: block; }
+
+  /* ── SECTION TITLE ── */
+  .sec-ttl {
+    font-size: 10px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .07em;
+    margin-bottom: 8px;
+  }
+
+  /* ── KPI STRIP (replaces bw-card gradient) ── */
+  .kpi-strip {
+    display: flex; border-bottom: 1px solid var(--border);
+    margin-bottom: 20px; padding-bottom: 16px;
+  }
+  .kpi { flex: 1; padding-right: 16px; border-right: 1px solid var(--border); margin-right: 16px; }
+  .kpi:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+  .kpi-lab { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+  .kpi-val { font-size: 20px; font-weight: 700; letter-spacing: -.5px; color: var(--ink); line-height: 1; }
+  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── BW INPUT ROW ── */
+  .bw-input-row {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 20px;
+    padding-bottom: 20px; border-bottom: 1px solid var(--border);
+  }
+  .bw-input-row input {
+    flex: 1; padding: 6px 2px; border: none; border-bottom: 1px solid var(--border2);
+    background: transparent; color: var(--ink); font-size: 13px;
+    font-family: inherit; outline: none; transition: border-color var(--t); max-width: 120px;
+  }
+  .bw-input-row input:focus { border-bottom-color: var(--accent); }
+  .bw-input-row input::placeholder { color: var(--faint); }
+  .bw-input-row label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+  .bw-save-btn {
+    background: none; border: none; color: var(--accent); font-size: 12px; font-weight: 700;
+    cursor: pointer; padding: 4px 8px; font-family: inherit;
+    transition: color var(--t); white-space: nowrap;
+  }
+  .bw-save-btn:hover { color: #1e40af; }
+
+  /* ── WEEK STATS ── */
+  .week-summary {
+    display: flex; gap: 0; margin-bottom: 20px;
+    border-bottom: 1px solid var(--border); padding-bottom: 16px;
+  }
+  .week-stat { flex: 1; text-align: center; }
+  .week-stat + .week-stat { border-left: 1px solid var(--border); }
+  .week-stat-val { font-size: 22px; font-weight: 700; letter-spacing: -.5px; color: var(--accent); }
+  .week-stat-label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
+
+  /* ── DAY CARDS ── */
+  .day-grid { display: grid; gap: 0; }
+  .day-card {
+    padding: 13px 0; border-bottom: 1px solid var(--border);
+    cursor: pointer; display: flex; align-items: center; gap: 12px;
+    -webkit-tap-highlight-color: transparent; transition: background var(--t);
+  }
+  .day-card:first-child { border-top: 1px solid var(--border); }
+  .day-card:hover { background: var(--bg3); }
+  .day-num {
+    width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; background: var(--bg3); color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .day-num.d1 { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+  .day-num.d2 { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+  .day-num.d3 { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+  .day-num.d4 { background: #fdf4ff; color: #7e22ce; border-color: #e9d5ff; }
+  .day-info { flex: 1; min-width: 0; }
+  .day-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 1px; }
+  .day-sub { font-size: 11px; color: var(--muted); }
+  .day-badge {
+    font-size: 11px; color: var(--muted); white-space: nowrap; flex-shrink: 0;
+  }
+  .day-badge.today { color: var(--accent); font-weight: 700; }
+  .day-chevron { color: var(--faint); flex-shrink: 0; }
+  .day-chevron svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ── WORKOUT LOGGING ── */
+  .back-btn {
+    display: flex; align-items: center; gap: 4px;
+    background: none; border: none; color: var(--muted);
+    font-size: 12px; font-weight: 600; cursor: pointer; padding: 0;
+    margin-bottom: 16px; font-family: inherit;
+    transition: color var(--t);
+  }
+  .back-btn:hover { color: var(--ink); }
+  .back-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .workout-header { margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .workout-header h2 { font-size: 17px; font-weight: 700; letter-spacing: -.3px; }
+  .workout-header p { color: var(--muted); font-size: 11px; margin-top: 3px; }
+
+  .exercise-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .exercise-header {
+    padding: 12px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+    gap: 8px; background: var(--bg2);
+  }
+  .exercise-header:hover { background: var(--bg3); }
+  .exercise-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .exercise-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .exercise-chevron { color: var(--faint); transition: transform var(--t); flex-shrink: 0; }
+  .exercise-chevron.open { transform: rotate(180deg); }
+  .exercise-chevron svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .exercise-body { display: none; padding: 0 14px 14px; border-top: 1px solid var(--border); background: var(--bg); }
+  .exercise-body.open { display: block; }
+
+  .sets-header {
+    display: grid; gap: 8px; margin: 10px 0 6px;
+    font-size: 10px; color: var(--muted); font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em;
+    border-bottom: 1px solid var(--border); padding-bottom: 6px;
+  }
+  .sets-header.has-weight { grid-template-columns: 28px 1fr 1fr 32px; }
+  .sets-header.cardio-type { grid-template-columns: 28px 1fr 32px; }
+  .set-row { display: grid; gap: 8px; align-items: center; margin-bottom: 6px; }
+  .set-row.has-weight { grid-template-columns: 28px 1fr 1fr 32px; }
+  .set-row.cardio-type { grid-template-columns: 28px 1fr 32px; }
+  .set-num { font-size: 11px; font-weight: 700; color: var(--faint); text-align: center; }
+  .set-input {
+    background: transparent; border: none; border-bottom: 1px solid var(--border2);
+    color: var(--ink); padding: 5px 2px; font-size: 13px;
+    width: 100%; outline: none; font-family: inherit;
+    transition: border-color var(--t); -webkit-appearance: none; border-radius: 0;
+  }
+  .set-input:focus { border-bottom-color: var(--accent); }
+  .set-done {
+    width: 32px; height: 32px; border-radius: 6px;
+    border: 1px solid var(--border2); background: none;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all var(--t); flex-shrink: 0; color: var(--faint);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .set-done:hover { border-color: var(--accent2); color: var(--accent2); }
+  .set-done.done { background: var(--accent2); border-color: var(--accent2); color: white; }
+  .set-done svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+  .beat-hint {
+    font-size: 11px; color: var(--muted); margin: 2px 0 6px;
+  }
+  .beat-hint span { color: var(--accent2); font-weight: 700; }
+
+  .save-workout-btn {
+    display: block; width: 100%; padding: 10px 0;
+    background: none; border: none; border-bottom: 2px solid var(--accent);
+    color: var(--accent); font-size: 13px; font-weight: 700;
+    cursor: pointer; margin-top: 20px; font-family: inherit;
+    transition: color var(--t), border-color var(--t); text-align: left;
+    letter-spacing: -.1px;
+  }
+  .save-workout-btn:hover { color: #1e40af; border-color: #1e40af; }
+
+  /* ── TABS (underline style) ── */
+  .section-tabs {
+    display: flex; gap: 0; margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .section-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 8px 14px; border: none; border-bottom: 2px solid transparent;
+    background: none; color: var(--muted); font-size: 12px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; margin-bottom: -1px;
+    transition: color var(--t), border-color var(--t);
+    -webkit-tap-highlight-color: transparent; font-family: inherit;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── PROGRESS VIEW ── */
+  .exercise-select {
+    background: transparent; border: none; border-bottom: 1px solid var(--border2);
+    color: var(--ink); padding: 5px 2px; font-size: 13px; font-family: inherit;
+    width: 100%; outline: none; margin-bottom: 16px; cursor: pointer; border-radius: 0;
+  }
+  .chart-wrap {
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 14px 0; margin-bottom: 16px;
+    position: relative; height: 210px;
+  }
+  .chart-wrap canvas { max-height: 186px !important; }
+  .history-table { margin-bottom: 16px; }
+  .history-table table { width: 100%; border-collapse: collapse; }
+  .history-table th {
+    padding: 7px 0 7px 0; text-align: left; font-size: 10px;
+    color: var(--muted); text-transform: uppercase; letter-spacing: .07em;
+    border-bottom: 1px solid var(--border); font-weight: 700;
+  }
+  .history-table td {
+    padding: 8px 0; font-size: 12px; border-bottom: 1px solid var(--border);
+    color: var(--ink);
+  }
+  .history-table tr:last-child td { border-bottom: none; }
+  .history-table tr:hover td { color: var(--accent); }
+  .delete-row-btn {
+    background: none; border: none; cursor: pointer; color: var(--faint);
+    padding: 2px 4px; font-size: 13px; transition: color var(--t);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .delete-row-btn:hover { color: var(--danger); }
+  .empty-state { text-align: center; padding: 40px 0; color: var(--muted); }
+  .empty-state svg { width: 36px; height: 36px; stroke: currentColor; fill: none; stroke-width: 1.2; margin-bottom: 8px; opacity: 0.4; }
+  .empty-state p { font-size: 12px; }
+
+  /* ── DATA VIEW ── */
+  .data-section { margin-bottom: 20px; }
+  .data-section h3 {
+    font-size: 10px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .07em;
+    margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .data-btn {
+    width: 100%; padding: 11px 0; background: none; border: none; border-bottom: 1px solid var(--border);
+    color: var(--ink); font-size: 13px; font-weight: 500; font-family: inherit;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: color var(--t); text-align: left;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .data-btn:hover { color: var(--accent); }
+  .data-btn.danger:hover { color: var(--danger); }
+  .data-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; color: var(--muted); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: calc(72px + env(safe-area-inset-bottom));
+    left: 50%; transform: translateX(-50%) translateY(10px);
+    background: var(--ink); color: var(--bg);
+    padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    opacity: 0; transition: all .2s ease; pointer-events: none; white-space: nowrap; z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── CONFIRM MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.45);
+    display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; max-width: 320px; width: 100%;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  }
+  .modal h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .modal p { font-size: 12px; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+  .modal-btns button {
+    padding: 7px 16px; border-radius: 6px; border: none;
+    font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+  }
+  .modal-cancel { background: var(--bg3); color: var(--ink); border: 1px solid var(--border); }
+  .modal-confirm { background: var(--danger); color: white; }
+
+  /* ── EXERCISE INFO BUTTON ── */
+  .ex-info-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--faint); padding: 0 3px; margin-left: 3px;
+    font-size: 12px; line-height: 1;
+    transition: color var(--t); vertical-align: middle; flex-shrink: 0;
+  }
+  .ex-info-btn:hover { color: var(--accent); }
+  .ex-name-row { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+
+  /* ── DEMO SHEET ── */
+  .demo-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.45);
+    z-index: 300; display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  .demo-overlay.open { opacity: 1; pointer-events: all; }
+  @media (min-width: 500px) {
+    .demo-overlay { align-items: center; }
+    .demo-sheet { border-radius: 10px !important; max-width: 540px; }
+  }
+  .demo-sheet {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px 10px 0 0; width: 100%; max-height: 88vh; overflow-y: auto;
+    transform: translateY(24px);
+    transition: transform .25s cubic-bezier(.22,1,.36,1);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .demo-overlay.open .demo-sheet { transform: translateY(0); }
+  .demo-sheet-header {
+    position: sticky; top: 0; background: var(--bg);
+    padding: 14px 16px 12px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .demo-sheet-title { font-size: 14px; font-weight: 700; flex: 1; padding-right: 8px; line-height: 1.3; }
+  .demo-close {
+    background: none; border: none; color: var(--muted);
+    width: 26px; height: 26px; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .demo-close:hover { color: var(--ink); }
+  .demo-body { padding: 14px 16px; }
+  .demo-img-wrap {
+    width: 100%; overflow: hidden; background: var(--bg3); margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: center; min-height: 140px;
+    border: 1px solid var(--border); border-radius: 6px;
+  }
+  .demo-img-wrap img { width: 100%; max-height: 280px; object-fit: contain; display: block; }
+  .demo-img-wrap svg { width: 100%; max-height: 240px; color: var(--muted); }
+  .demo-img-link {
+    display: block; text-align: center; font-size: 11px; color: var(--muted);
+    margin-bottom: 14px; text-decoration: none;
+  }
+  .demo-img-link:hover { color: var(--accent); }
+  .demo-section { margin-bottom: 14px; }
+  .demo-section-title {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--muted); margin-bottom: 6px; padding-bottom: 5px; border-bottom: 1px solid var(--border);
+  }
+  .demo-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .demo-list li { font-size: 12px; color: var(--muted); padding-left: 14px; position: relative; line-height: 1.5; }
+  .demo-list li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 5px; height: 5px; border-radius: 50%;
+  }
+  .demo-cues li::before { background: var(--accent); }
+  .demo-mistakes li::before { background: var(--danger); }
+
+  /* ── RESPONSIVE ── */
+  @media (min-width: 500px) {
+    .day-grid { grid-template-columns: 1fr; }
+    main { max-width: 560px; margin: 0 auto; }
+    nav { max-width: 560px; left: 50%; transform: translateX(-50%);
+          border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+    header { max-width: 560px; left: 50%; transform: translateX(-50%);
+             border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  /* ── SYNC DOT ── */
+  #sync-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background .3s;
+  }
+  #sync-dot.synced  { background: var(--accent2); }
+  #sync-dot.syncing { background: #d97706; animation: pulse-dot 1s ease infinite; }
+  #sync-dot.error   { background: var(--danger); cursor: pointer; }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; } 50% { opacity: .4; }
+  }
+  #sync-label { font-size: 10px; color: var(--muted); white-space: nowrap; }
+  #sync-wrap  { display: flex; align-items: center; gap: 5px; }
+
+  /* ── SUGGESTION BAR ── */
+  .suggestion-bar {
+    font-size: 11px; color: var(--muted);
+    padding: 8px 10px; margin: 10px 0 4px;
+    border-left: 3px solid var(--accent);
+    background: var(--bg3); border-radius: 0 4px 4px 0;
+  }
+  .suggestion-bar strong { color: var(--accent); font-size: 12px; font-weight: 700; }
+
+  /* ── RPE ROW ── */
+  .rpe-row { display: flex; gap: 0; margin: 4px 0 8px; border-bottom: 1px solid var(--border); }
+  .rpe-chip {
+    flex: 1; padding: 6px 4px; border: none; border-bottom: 2px solid transparent;
+    background: none; font-size: 11px; font-weight: 600; color: var(--muted);
+    cursor: pointer; font-family: inherit; text-align: center; margin-bottom: -1px;
+    transition: color var(--t), border-color var(--t);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rpe-chip:hover { color: var(--ink); }
+  .rpe-chip.selected { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── PHASE BANNER ── */
+  .phase-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 0 10px; margin-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .phase-label { font-size: 12px; font-weight: 700; color: var(--ink); letter-spacing: -.2px; }
+  .phase-sub   { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .phase-dots  { display: flex; gap: 4px; align-items: center; }
+  .phase-dot   { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); }
+  .phase-dot.done   { background: var(--accent2); }
+  .phase-dot.active { background: var(--accent); }
+
+  /* ── SWAP BUTTON & SHEET ── */
+  .swap-btn {
+    background: none; border: none; color: var(--muted); font-size: 11px; font-weight: 600;
+    padding: 0 6px; cursor: pointer; font-family: inherit;
+    transition: color var(--t); -webkit-tap-highlight-color: transparent;
+    border-left: 1px solid var(--border); margin-left: 6px;
+  }
+  .swap-btn:hover { color: var(--accent); }
+  .swap-sheet-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.45);
+    z-index: 250; display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  .swap-sheet-overlay.open { opacity: 1; pointer-events: all; }
+  .swap-sheet {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px 10px 0 0; width: 100%; max-width: 560px;
+    padding: 18px 16px calc(24px + env(safe-area-inset-bottom));
+    transform: translateY(16px);
+    transition: transform .22s cubic-bezier(.22,1,.36,1);
+  }
+  .swap-sheet-overlay.open .swap-sheet { transform: translateY(0); }
+  .swap-sheet h3 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .swap-sheet p  { font-size: 11px; color: var(--muted); margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  .swap-option {
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    cursor: pointer; font-size: 13px; font-weight: 500; color: var(--ink);
+    display: flex; align-items: center; justify-content: space-between;
+    transition: color var(--t); -webkit-tap-highlight-color: transparent;
+  }
+  .swap-option:hover { color: var(--accent); }
+  .swap-option.current { color: var(--accent2); font-weight: 700; }
+  .swap-option-badge {
+    font-size: 10px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .swap-option.current .swap-option-badge { color: var(--accent2); }
+
+  /* ── PHASE SETTINGS ── */
+  .phase-settings-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .phase-settings-row .ps-info { flex: 1; font-size: 13px; font-weight: 500; }
+  .phase-settings-row .ps-sub  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .phase-act-btn {
+    background: none; border: none; color: var(--accent); font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: inherit; padding: 4px 0; white-space: nowrap;
+    transition: color var(--t);
+  }
+  .phase-act-btn:hover { color: #1e40af; }
+  .phase-act-btn.danger { color: var(--danger); }
+  .phase-act-btn.danger:hover { color: #991b1b; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="header-title">Workout</h1>
+  <div class="header-right">
+    <div id="sync-wrap">
+      <div id="sync-dot" class="synced" title="Sync status"></div>
+      <span id="sync-label"></span>
+    </div>
+    <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- HOME VIEW -->
+  <div class="view active" id="view-home">
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-lab">Weight</div>
+        <div class="kpi-val" id="bw-display">--</div>
+        <div class="kpi-sub" id="bw-change"></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lab">7-day avg</div>
+        <div class="kpi-val" id="bw-7d">--</div>
+        <div class="kpi-sub">kg</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lab">Low</div>
+        <div class="kpi-val" id="bw-low">--</div>
+        <div class="kpi-sub">all-time</div>
+      </div>
+    </div>
+
+    <!-- BW input -->
+    <div class="bw-input-row">
+      <label for="bw-input">Log weight</label>
+      <input type="number" inputmode="decimal" id="bw-input" placeholder="kg" step="0.1">
+      <button class="bw-save-btn" id="bw-save">Save</button>
+    </div>
+
+    <!-- Week stats -->
+    <div class="week-summary" id="week-summary">
+      <div class="week-stat"><div class="week-stat-val" id="ws-week">0</div><div class="week-stat-label">This week</div></div>
+      <div class="week-stat"><div class="week-stat-val" id="ws-total">0</div><div class="week-stat-label">Sessions</div></div>
+      <div class="week-stat"><div class="week-stat-val" id="ws-streak">0</div><div class="week-stat-label">Streak</div></div>
+    </div>
+
+    <div class="day-grid" id="day-grid"></div>
+  </div>
+
+  <!-- WORKOUT LOGGING VIEW -->
+  <div class="view" id="view-workout">
+    <button class="back-btn" id="back-btn">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <div class="workout-header">
+      <h2 id="workout-title"></h2>
+      <p id="workout-subtitle"></p>
+    </div>
+    <div id="exercise-list"></div>
+    <button class="save-workout-btn" id="save-workout-btn">Save Workout</button>
+  </div>
+
+  <!-- PROGRESS VIEW -->
+  <div class="view" id="view-progress">
+    <div class="section-tabs" id="progress-tabs">
+      <button class="tab-btn active" data-tab="bodyweight">Bodyweight</button>
+      <button class="tab-btn" data-tab="exercises">Exercises</button>
+    </div>
+
+    <div id="progress-bodyweight">
+      <div class="chart-wrap"><canvas id="bw-chart"></canvas></div>
+      <div class="history-table" id="bw-table"></div>
+    </div>
+
+    <div id="progress-exercises" style="display:none">
+      <select class="exercise-select" id="exercise-select"></select>
+      <div class="section-tabs">
+        <button class="tab-btn active" data-metric="volume" id="metric-volume">Volume</button>
+        <button class="tab-btn" data-metric="maxweight" id="metric-maxweight">Max Weight</button>
+      </div>
+      <div class="chart-wrap"><canvas id="ex-chart"></canvas></div>
+      <div class="history-table" id="ex-table"></div>
+    </div>
+  </div>
+
+  <!-- DATA VIEW -->
+  <div class="view" id="view-data">
+    <div class="data-section">
+      <h3>Storage</h3>
+      <button class="data-btn" id="export-btn">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export to JSON
+      </button>
+      <button class="data-btn" id="import-btn">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import from JSON
+      </button>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+    </div>
+    <div class="data-section">
+      <h3>Danger zone</h3>
+      <button class="data-btn danger" id="reset-btn">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.36"/></svg>
+        Reset all data
+      </button>
+    </div>
+    <div class="data-section" id="phase-settings-section">
+      <h3>Phase Rotation</h3>
+      <div class="phase-settings-row">
+        <div class="ps-info">
+          <div id="phase-settings-label">Loading…</div>
+          <div class="ps-sub" id="phase-settings-sub"></div>
+        </div>
+        <button class="phase-act-btn" id="phase-advance-btn">Advance phase</button>
+      </div>
+      <div class="phase-settings-row">
+        <div class="ps-info">
+          <div>Reset to Phase A</div>
+          <div class="ps-sub">Restart the 12-week cycle from today</div>
+        </div>
+        <button class="phase-act-btn danger" id="phase-reset-btn">Reset</button>
+      </div>
+    </div>
+    <div class="data-section">
+      <h3>About</h3>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:13px;color:var(--text2);line-height:1.6">
+        <strong style="color:var(--text)">4-Day Program</strong> — Fat loss, visible muscles, slimmer legs.<br>
+        Data synced to your Google Sheet. Works across all devices.<br><br>
+        <em style="color:var(--text3)">Tip: Export JSON as an extra backup.</em>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav id="nav">
+  <button class="active" data-view="home">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+  <button data-view="progress">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Progress
+  </button>
+  <button data-view="data">
+    <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+    Data
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Confirm</h3>
+    <p id="modal-body"></p>
+    <div class="modal-btns">
+      <button class="modal-cancel" id="modal-cancel">Cancel</button>
+      <button class="modal-confirm" id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- SWAP EXERCISE SHEET -->
+<div class="swap-sheet-overlay" id="swap-overlay">
+  <div class="swap-sheet">
+    <h3 id="swap-title">Swap exercise</h3>
+    <p id="swap-sub">Pick the variation available to you today</p>
+    <div id="swap-options"></div>
+    <button class="data-btn" id="swap-cancel-btn" style="margin-top:4px;justify-content:center">Cancel</button>
+  </div>
+</div>
+
+<!-- EXERCISE DEMO MODAL -->
+<div class="demo-overlay" id="demo-overlay">
+  <div class="demo-sheet" id="demo-sheet">
+    <div class="demo-sheet-header">
+      <div class="demo-sheet-title" id="demo-title"></div>
+      <button class="demo-close" id="demo-close">×</button>
+    </div>
+    <div class="demo-body">
+      <div class="demo-img-wrap" id="demo-img-wrap"></div>
+      <a class="demo-img-link" id="demo-img-link" target="_blank" rel="noopener">See more on Google Images ↗</a>
+      <div class="demo-section">
+        <div class="demo-section-title">Form cues</div>
+        <ul class="demo-list demo-cues" id="demo-cues"></ul>
+      </div>
+      <div class="demo-section">
+        <div class="demo-section-title">Common mistakes</div>
+        <ul class="demo-list demo-mistakes" id="demo-mistakes"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const API_URL = 'https://script.google.com/macros/s/AKfycbyNk4iPmWc6QnMWiohQ9NWB4hMy6ExsMxuPY8keBerQtXD3rPEwUUHVMseXcVCsLCzUow/exec';
+const API_TOKEN = 'wkt_my_secret_2024';
+
+// ─── PHASE PROGRAM ────────────────────────────────────────────────────────────
+// Each slot defines 3 variations cycling A→B→C every 4 weeks.
+// id = canonical slot id; variations[0]=Phase A, [1]=Phase B, [2]=Phase C
+// varId is used as the key in DB for separate progression tracking.
+const PHASE_SLOTS = {
+  // Day 1 Push
+  'hpress':  { label: 'Horizontal press', variations: [
+    { varId: 'bench_flat_bb',    name: 'Flat barbell bench',         repRange: [8,10], increment: 2.5, isCompound: true },
+    { varId: 'incline_db_press', name: 'Incline DB press',           repRange: [8,10], increment: 2.5, isCompound: true },
+    { varId: 'db_flat_press',    name: 'Dumbbell flat press',        repRange: [8,10], increment: 2.5, isCompound: true },
+  ]},
+  'vpress':  { label: 'Vertical press', variations: [
+    { varId: 'ohpress_db',       name: 'Overhead DB press',          repRange: [10,12], increment: 2.5, isCompound: true },
+    { varId: 'seated_military',  name: 'Seated military press',      repRange: [10,12], increment: 2.5, isCompound: true },
+    { varId: 'arnold_press',     name: 'Arnold press',               repRange: [10,12], increment: 2.5, isCompound: true },
+  ]},
+  'lateral': { label: 'Lateral', variations: [
+    { varId: 'lateral_raises',   name: 'Lateral raises',             repRange: [12,15], increment: 1,   isCompound: false },
+    { varId: 'cable_laterals',   name: 'Cable lateral raises',       repRange: [12,15], increment: 1,   isCompound: false },
+    { varId: 'lean_lateral',     name: 'Leaning DB lateral raise',   repRange: [12,15], increment: 1,   isCompound: false },
+  ]},
+  'triceps': { label: 'Triceps', variations: [
+    { varId: 'tri_pushdown',     name: 'Triceps pushdowns',          repRange: [12,15], increment: 2.5, isCompound: false },
+    { varId: 'tri_overhead',     name: 'Overhead triceps extension', repRange: [12,15], increment: 1,   isCompound: false },
+    { varId: 'closegrip_push',   name: 'Close-grip push-ups',        repRange: [10,15], increment: 0,   isCompound: false },
+  ]},
+  // Day 2 Pull
+  'vpull':   { label: 'Vertical pull', variations: [
+    { varId: 'pullup',           name: 'Pull-ups',                   repRange: [8,10], increment: 2.5, isCompound: true },
+    { varId: 'latpull_wide',     name: 'Lat pulldown wide',          repRange: [8,10], increment: 2.5, isCompound: true },
+    { varId: 'latpull_neutral',  name: 'Lat pulldown neutral grip',  repRange: [8,10], increment: 2.5, isCompound: true },
+  ]},
+  'hpull':   { label: 'Horizontal pull', variations: [
+    { varId: 'bentrow',          name: 'Bent-over row',              repRange: [10,12], increment: 2.5, isCompound: true },
+    { varId: 'seated_cable_row', name: 'Seated cable row',           repRange: [10,12], increment: 2.5, isCompound: true },
+    { varId: 'chest_sup_row',    name: 'Chest-supported DB row',     repRange: [10,12], increment: 2.5, isCompound: true },
+  ]},
+  'reardelt':{ label: 'Rear delt', variations: [
+    { varId: 'facepull',         name: 'Face pulls',                 repRange: [15,20], increment: 2.5, isCompound: false },
+    { varId: 'rev_pec_deck',     name: 'Reverse pec deck',           repRange: [15,20], increment: 2.5, isCompound: false },
+    { varId: 'rd_fly',           name: 'Rear delt fly',              repRange: [15,20], increment: 1,   isCompound: false },
+  ]},
+  'biceps':  { label: 'Biceps', variations: [
+    { varId: 'curl_bb',          name: 'Barbell curls',              repRange: [10,12], increment: 2.5, isCompound: false },
+    { varId: 'hammer_curl',      name: 'DB hammer curls',            repRange: [10,12], increment: 1,   isCompound: false },
+    { varId: 'incline_curl',     name: 'Incline DB curls',           repRange: [10,12], increment: 1,   isCompound: false },
+  ]},
+  // Day 3 Legs
+  'lunge':   { label: 'Lunge pattern', variations: [
+    { varId: 'walk_lunge',       name: 'Walking lunges',             repRange: [16,20], increment: 2.5, isCompound: true },
+    { varId: 'rev_lunge',        name: 'Reverse lunges',             repRange: [16,20], increment: 2.5, isCompound: true },
+    { varId: 'curtsy_lunge',     name: 'Curtsy lunges',              repRange: [16,20], increment: 1,   isCompound: true },
+  ]},
+  'split':   { label: 'Split squat', variations: [
+    { varId: 'bss',              name: 'Bulgarian split squats',     repRange: [10,12], increment: 2.5, isCompound: true },
+    { varId: 'stepups',          name: 'Step-ups',                   repRange: [10,12], increment: 2.5, isCompound: true },
+    { varId: 'pistol_prog',      name: 'Pistol squat progression',   repRange: [6,8],   increment: 0,   isCompound: true },
+  ]},
+  'hinge':   { label: 'Hip hinge', variations: [
+    { varId: 'rdl',              name: 'Romanian deadlift',          repRange: [12,15], increment: 2.5, isCompound: true },
+    { varId: 'sl_rdl',           name: 'Single-leg RDL',             repRange: [10,12], increment: 1,   isCompound: true },
+    { varId: 'good_mornings',    name: 'Good mornings',              repRange: [12,15], increment: 2.5, isCompound: true },
+  ]},
+  'glute':   { label: 'Glute', variations: [
+    { varId: 'glute_bridge',     name: 'Glute bridges',              repRange: [15,20], increment: 2.5, isCompound: false },
+    { varId: 'hip_thrust',       name: 'Hip thrusts',                repRange: [12,15], increment: 2.5, isCompound: false },
+    { varId: 'cable_kickback',   name: 'Cable kickbacks',            repRange: [15,20], increment: 2.5, isCompound: false },
+  ]},
+  'calves':  { label: 'Calves', variations: [
+    { varId: 'calf_stand',       name: 'Standing calf raises',       repRange: [15,20], increment: 2.5, isCompound: false },
+    { varId: 'calf_seated',      name: 'Seated calf raises',         repRange: [15,20], increment: 2.5, isCompound: false },
+    { varId: 'calf_single',      name: 'Single-leg calf raise',      repRange: [12,15], increment: 0,   isCompound: false },
+  ]},
+  // Day 4 HIIT
+  'hiit':    { label: 'HIIT format', variations: [
+    { varId: 'bike_intervals',   name: 'Bike intervals',             repRange: [1,1],   increment: 0,   isCompound: false },
+    { varId: 'burpee_emom',      name: 'Burpee EMOM',                repRange: [1,1],   increment: 0,   isCompound: false },
+    { varId: 'sprint_repeats',   name: 'Sprint repeats',             repRange: [1,1],   increment: 0,   isCompound: false },
+  ]},
+  // Abs slots
+  'abs1':    { label: 'Abs 1', variations: [
+    { varId: 'bicycle_crunch',   name: 'Bicycle crunches',           repRange: [16,20], increment: 0,   isCompound: false },
+    { varId: 'hollow_hold',      name: 'Hollow holds',               repRange: [1,1],   increment: 0,   isCompound: false },
+    { varId: 'v_ups',            name: 'V-ups',                      repRange: [12,15], increment: 0,   isCompound: false },
+  ]},
+  'abs2':    { label: 'Abs 2', variations: [
+    { varId: 'russian_twist',    name: 'Russian twists',             repRange: [16,20], increment: 0,   isCompound: false },
+    { varId: 'cable_crunch',     name: 'Cable crunches',             repRange: [12,15], increment: 2.5, isCompound: false },
+    { varId: 'v_ups_b',          name: 'V-ups',                      repRange: [12,15], increment: 0,   isCompound: false },
+  ]},
+  'abs3':    { label: 'Abs 3', variations: [
+    { varId: 'leg_raise',        name: 'Leg raises',                 repRange: [12,15], increment: 0,   isCompound: false },
+    { varId: 'hollow_hold_b',    name: 'Hollow holds',               repRange: [1,1],   increment: 0,   isCompound: false },
+    { varId: 'cable_crunch_b',   name: 'Cable crunches',             repRange: [12,15], increment: 2.5, isCompound: false },
+  ]},
+  'abs4':    { label: 'Abs 4', variations: [
+    { varId: 'plank_to_push',    name: 'Plank to push-ups',          repRange: [8,12],  increment: 0,   isCompound: false },
+    { varId: 'v_ups_c',          name: 'V-ups',                      repRange: [12,15], increment: 0,   isCompound: false },
+    { varId: 'cable_crunch_c',   name: 'Cable crunches',             repRange: [12,15], increment: 2.5, isCompound: false },
+  ]},
+};
+
+// Maps day→ordered list of slotIds + static cardio slots
+const DAY_SLOTS = {
+  1: ['hpress','vpress','lateral','triceps'],
+  2: ['vpull','hpull','reardelt','biceps'],
+  3: ['lunge','split','hinge','glute','calves'],
+  4: ['hiit','abs1','abs2','abs3','abs4'],
+};
+
+// Static (non-rotating) entries per day that don't have phase variants
+const STATIC_EXERCISES = {
+  1: [{ id: 'plank_static', name: 'Plank', sets: 3, repsTarget: '45 sec', type: 'cardio', unit: 'sec' },
+      { id: 'walk1',        name: 'Incline Walk', sets: 1, repsTarget: '10 min', type: 'cardio', unit: 'min' }],
+  2: [{ id: 'hangraise',    name: 'Hanging Leg Raises', sets: 3, repsTarget: '12', type: 'reps', slotId: null },
+      { id: 'walk2',        name: 'Incline Walk', sets: 1, repsTarget: '10 min', type: 'cardio', unit: 'min' }],
+  3: [{ id: 'cardio3',      name: 'Steady Cardio', sets: 1, repsTarget: '30 min', type: 'cardio', unit: 'min' }],
+  4: [],
+};
+
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const DAYS = [
+  {
+    id: 1, title: 'Upper Push + Core',
+    color: 'd1',
+    exercises: [
+      { id: 'bench', name: 'Bench Press / Push-ups', sets: 4, repsTarget: '8–10', type: 'weight' },
+      { id: 'ohpress', name: 'Overhead DB Press', sets: 3, repsTarget: '10', type: 'weight' },
+      { id: 'incline', name: 'Incline DB Press', sets: 3, repsTarget: '10', type: 'weight' },
+      { id: 'lateral', name: 'Lateral Raises', sets: 3, repsTarget: '12–15', type: 'weight' },
+      { id: 'tricep', name: 'Triceps Pushdowns', sets: 3, repsTarget: '12', type: 'weight' },
+      { id: 'plank', name: 'Plank', sets: 3, repsTarget: '45 sec', type: 'cardio', unit: 'sec' },
+      { id: 'walk1', name: 'Incline Walk', sets: 1, repsTarget: '10 min', type: 'cardio', unit: 'min' },
+    ]
+  },
+  {
+    id: 2, title: 'Upper Pull + Core',
+    color: 'd2',
+    exercises: [
+      { id: 'pullup', name: 'Pull-ups / Lat Pulldown', sets: 4, repsTarget: '8–10', type: 'weight' },
+      { id: 'bentrow', name: 'Bent-over Row', sets: 4, repsTarget: '10', type: 'weight' },
+      { id: 'cablerow', name: 'Seated Cable Row', sets: 3, repsTarget: '10', type: 'weight' },
+      { id: 'facepull', name: 'Face Pulls', sets: 3, repsTarget: '15', type: 'weight' },
+      { id: 'curl', name: 'Bicep Curls', sets: 3, repsTarget: '12', type: 'weight' },
+      { id: 'hangraise', name: 'Hanging Leg Raises', sets: 3, repsTarget: '12', type: 'reps' },
+      { id: 'walk2', name: 'Incline Walk', sets: 1, repsTarget: '10 min', type: 'cardio', unit: 'min' },
+    ]
+  },
+  {
+    id: 3, title: 'Legs (Toning) + Cardio',
+    color: 'd3',
+    exercises: [
+      { id: 'lunge', name: 'Walking Lunges', sets: 3, repsTarget: '20 steps', type: 'reps' },
+      { id: 'bss', name: 'Bulgarian Split Squats', sets: 3, repsTarget: '12 each', type: 'weight' },
+      { id: 'rdl', name: 'Romanian Deadlift (light)', sets: 3, repsTarget: '15', type: 'weight' },
+      { id: 'glute', name: 'Glute Bridges', sets: 3, repsTarget: '15', type: 'reps' },
+      { id: 'calf', name: 'Calf Raises', sets: 3, repsTarget: '20', type: 'weight' },
+      { id: 'cardio3', name: 'Steady Cardio', sets: 1, repsTarget: '30 min', type: 'cardio', unit: 'min' },
+    ]
+  },
+  {
+    id: 4, title: 'HIIT + Abs',
+    color: 'd4',
+    exercises: [
+      { id: 'hiit', name: 'HIIT', sets: 1, repsTarget: '20–25 min', type: 'cardio', unit: 'min' },
+      { id: 'bicycle', name: 'Bicycle Crunches', sets: 3, repsTarget: '20', type: 'reps' },
+      { id: 'russian', name: 'Russian Twists', sets: 3, repsTarget: '20', type: 'reps' },
+      { id: 'legraise', name: 'Leg Raises', sets: 3, repsTarget: '15', type: 'reps' },
+      { id: 'planktopush', name: 'Plank to Push-ups', sets: 3, repsTarget: '10', type: 'reps' },
+    ]
+  }
+];
+
+// ─── EXERCISE INFO ────────────────────────────────────────────────────────────
+const GH = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises';
+
+const EXERCISE_INFO = {
+  bench: {
+    name: 'Bench Press / Push-ups',
+    imageUrl: `${GH}/Barbell_Bench_Press_-_Medium_Grip/images/0.jpg`,
+    googleSearch: 'bench press proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="18" r="9"/><line x1="100" y1="27" x2="100" y2="65"/><line x1="100" y1="65" x2="80" y2="90"/><line x1="100" y1="65" x2="120" y2="90"/><line x1="80" y1="90" x2="78" y2="115"/><line x1="120" y1="90" x2="122" y2="115"/><rect x="30" y="70" width="140" height="8" rx="3"/><line x1="30" y1="70" x2="10" y2="70"/><line x1="170" y1="70" x2="190" y2="70"/><line x1="10" y1="60" x2="10" y2="80"/><line x1="190" y1="60" x2="190" y2="80"/><line x1="100" y1="42" x2="60" y2="55"/><line x1="100" y1="42" x2="140" y2="55"/><line x1="60" y1="55" x2="30" y2="55"/><line x1="140" y1="55" x2="170" y2="55"/></svg>`,
+    cues: [
+      'Retract and depress shoulder blades into the bench',
+      'Grip slightly wider than shoulder-width; wrists stacked over elbows',
+      'Lower bar to mid-chest under full control (2–3 sec)',
+      'Keep feet flat on the floor, light natural arch in lower back',
+      'Drive the bar up and slightly back toward the rack at the top',
+    ],
+    mistakes: [
+      'Flaring elbows out to 90° — keep them ~45–75° from torso',
+      'Bouncing the bar off your chest to get extra momentum',
+      'Losing shoulder blade retraction mid-set, which stresses the shoulder',
+    ],
+  },
+  ohpress: {
+    name: 'Overhead DB Press',
+    imageUrl: `${GH}/Dumbbell_Shoulder_Press/images/0.jpg`,
+    googleSearch: 'overhead dumbbell shoulder press proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="20" r="9"/><line x1="100" y1="29" x2="100" y2="75"/><line x1="100" y1="75" x2="82" y2="100"/><line x1="100" y1="75" x2="118" y2="100"/><line x1="82" y1="100" x2="80" y2="128"/><line x1="118" y1="100" x2="120" y2="128"/><line x1="100" y1="42" x2="55" y2="35"/><line x1="100" y1="42" x2="145" y2="35"/><line x1="55" y1="35" x2="45" y2="20"/><line x1="145" y1="35" x2="155" y2="20"/><rect x="38" y="14" width="14" height="12" rx="2"/><rect x="148" y="14" width="14" height="12" rx="2"/></svg>`,
+    cues: [
+      'Sit or stand with core braced and spine neutral — no excessive lower-back arch',
+      'Start with dumbbells at ear height, elbows at ~90°',
+      'Press straight up, converging slightly at the top without fully locking out',
+      'Control the descent — don\'t let elbows drop below shoulder height abruptly',
+      'Exhale on the press, inhale on the way down',
+    ],
+    mistakes: [
+      'Arching the lower back excessively to compensate for tight shoulders',
+      'Letting the dumbbells drift forward instead of pressing vertically',
+      'Using momentum or leg drive (unless intentionally doing push press)',
+    ],
+  },
+  incline: {
+    name: 'Incline DB Press',
+    imageUrl: `${GH}/Incline_Dumbbell_Press/images/0.jpg`,
+    googleSearch: 'incline dumbbell press proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="90" cy="22" r="9"/><line x1="90" y1="31" x2="90" y2="72"/><line x1="90" y1="72" x2="75" y2="100"/><line x1="90" y1="72" x2="105" y2="100"/><line x1="75" y1="100" x2="72" y2="128"/><line x1="105" y1="100" x2="108" y2="128"/><line x1="90" y1="45" x2="48" y2="38"/><line x1="90" y1="45" x2="132" y2="38"/><line x1="48" y1="38" x2="38" y2="24"/><line x1="132" y1="38" x2="142" y2="24"/><rect x="30" y="55" width="120" height="12" rx="3" transform="rotate(-20 30 55)"/><line x1="20" y1="128" x2="160" y2="100"/></svg>`,
+    cues: [
+      'Set bench to 30–45°; higher angles shift load to front delts, not upper chest',
+      'Retract shoulder blades and keep them pinned throughout',
+      'Lower dumbbells to the sides of your upper chest in a controlled arc',
+      'Press up and in, keeping a slight bend in the elbows at the top',
+      'Keep wrists neutral — don\'t let them bend backward',
+    ],
+    mistakes: [
+      'Setting the bench too steep (>45°) — turns it into a shoulder press',
+      'Letting the shoulders roll forward at the bottom of the rep',
+      'Rushing the descent — the eccentric is where upper chest gains happen',
+    ],
+  },
+  lateral: {
+    name: 'Lateral Raises',
+    imageUrl: `${GH}/Dumbbell_Lateral_Raise/images/0.jpg`,
+    googleSearch: 'lateral raises proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="22" r="9"/><line x1="100" y1="31" x2="100" y2="78"/><line x1="100" y1="78" x2="84" y2="105"/><line x1="100" y1="78" x2="116" y2="105"/><line x1="84" y1="105" x2="82" y2="130"/><line x1="116" y1="105" x2="118" y2="130"/><line x1="100" y1="46" x2="40" y2="60"/><line x1="100" y1="46" x2="160" y2="60"/><rect x="26" y="54" width="16" height="10" rx="2"/><rect x="158" y="54" width="16" height="10" rx="2"/></svg>`,
+    cues: [
+      'Slight forward lean (10–15°) to better target the lateral deltoid',
+      'Lead with your elbows, not your hands — imagine pouring a pitcher of water',
+      'Raise to just above shoulder height; no need to go higher',
+      'Keep a soft bend in the elbows throughout to reduce joint stress',
+      'Lower slowly (3 sec) — the eccentric is where most growth happens',
+    ],
+    mistakes: [
+      'Using too much weight and shrugging the traps to get the weight up',
+      'Swinging or using momentum instead of isolating the side delt',
+      'Raising directly to the side — slight forward angle is more anatomical',
+    ],
+  },
+  tricep: {
+    name: 'Triceps Pushdowns',
+    imageUrl: `${GH}/Triceps_Pushdown/images/0.jpg`,
+    googleSearch: 'triceps pushdown cable proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="18" r="9"/><line x1="100" y1="27" x2="100" y2="72"/><line x1="100" y1="72" x2="84" y2="100"/><line x1="100" y1="72" x2="116" y2="100"/><line x1="84" y1="100" x2="82" y2="130"/><line x1="116" y1="100" x2="118" y2="130"/><line x1="100" y1="40" x2="80" y2="42"/><line x1="100" y1="40" x2="120" y2="42"/><line x1="80" y1="42" x2="76" y2="95"/><line x1="120" y1="42" x2="124" y2="95"/><line x1="72" y1="92" x2="128" y2="92"/><rect x="160" y="10" width="8" height="90" rx="2"/><line x1="160" y1="30" x2="130" y2="40"/></svg>`,
+    cues: [
+      'Stand close to the cable; hinge slightly forward at the hips',
+      'Pin upper arms to your sides — they should not move at all',
+      'Push the bar/rope down until elbows are fully extended',
+      'Squeeze the triceps hard at the bottom for 1 sec',
+      'Control the return — don\'t let the weight yank your elbows up',
+    ],
+    mistakes: [
+      'Letting elbows drift forward and turning it into a compound pressing motion',
+      'Using body weight to push the cable down instead of tricep strength',
+      'Not reaching full extension — you miss the peak contraction',
+    ],
+  },
+  plank: {
+    name: 'Plank',
+    imageUrl: `${GH}/Elbow_Plank/images/0.jpg`,
+    googleSearch: 'plank proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 100" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="162" cy="28" r="9"/><line x1="155" y1="35" x2="130" y2="55"/><line x1="130" y1="55" x2="40" y2="55"/><line x1="130" y1="55" x2="125" y2="78"/><line x1="40" y1="55" x2="38" y2="78"/><line x1="155" y1="35" x2="155" y2="58"/><line x1="155" y1="58" x2="130" y2="58"/><line x1="30" y1="78" x2="170" y2="78"/></svg>`,
+    cues: [
+      'Elbows directly under shoulders; body forms one straight line head to heel',
+      'Squeeze glutes and quads — don\'t just hang on your spine',
+      'Pull the belly button toward the spine to activate deep core',
+      'Keep neck neutral — look at the floor about a foot ahead of your hands',
+      'Breathe steadily — don\'t hold your breath',
+    ],
+    mistakes: [
+      'Letting hips sag down, which compresses the lower back',
+      'Piking hips too high, which shifts load off the core',
+      'Holding breath — this raises blood pressure and reduces endurance',
+    ],
+  },
+  walk1: {
+    name: 'Incline Walk',
+    imageUrl: `${GH}/Treadmill_-_Walking_Lunge/images/0.jpg`,
+    googleSearch: 'incline treadmill walk proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="120" cy="22" r="9"/><line x1="120" y1="31" x2="115" y2="70"/><line x1="115" y1="70" x2="95" y2="100"/><line x1="115" y1="70" x2="130" y2="100"/><line x1="95" y1="100" x2="88" y2="128"/><line x1="130" y1="100" x2="135" y2="128"/><line x1="20" y1="128" x2="170" y2="95"/><rect x="160" y="60" width="24" height="70" rx="3"/><line x1="20" y1="128" x2="20" y2="138"/><line x1="170" y1="95" x2="170" y2="138"/><line x1="15" y1="138" x2="175" y2="138"/></svg>`,
+    cues: [
+      'Set treadmill to 10–15% incline, speed 3–4 km/h',
+      'Don\'t hold the handrails — it defeats the purpose',
+      'Walk tall with a natural heel-to-toe stride',
+      'Engage your glutes and drive through the heel each step',
+      'Keep your gaze forward, not down at the belt',
+    ],
+    mistakes: [
+      'Holding the handrails, which offloads most of the effort',
+      'Going too fast — incline walking should be steady, controlled cardio',
+      'Leaning too far forward and losing posture',
+    ],
+  },
+  pullup: {
+    name: 'Pull-ups / Lat Pulldown',
+    imageUrl: `${GH}/Pull-up/images/0.jpg`,
+    googleSearch: 'pull-up lat pulldown proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 160" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="18" x2="180" y2="18"/><circle cx="100" cy="50" r="9"/><line x1="100" y1="41" x2="100" y2="18"/><line x1="100" y1="59" x2="100" y2="100"/><line x1="100" y1="100" x2="82" y2="130"/><line x1="100" y1="100" x2="118" y2="130"/><line x1="82" y1="130" x2="80" y2="155"/><line x1="118" y1="130" x2="120" y2="155"/><line x1="100" y1="70" x2="62" y2="42"/><line x1="100" y1="70" x2="138" y2="42"/><line x1="62" y1="42" x2="55" y2="20"/><line x1="138" y1="42" x2="145" y2="20"/></svg>`,
+    cues: [
+      'Start from a dead hang with shoulders fully protracted',
+      'Drive elbows down and back — think "elbows to hips"',
+      'Chin clears the bar at the top; chest can touch on weighted pull-ups',
+      'For lat pulldown: lean back ~15°, pull bar to upper chest',
+      'Control the full eccentric — lower slowly for max lat stretch',
+    ],
+    mistakes: [
+      'Kipping or using momentum rather than pure pulling strength',
+      'Not going through the full range — partial reps limit lat development',
+      'Shrugging at the top instead of keeping shoulder blades depressed',
+    ],
+  },
+  bentrow: {
+    name: 'Bent-over Row',
+    imageUrl: `${GH}/Barbell_Bent_Over_Row/images/0.jpg`,
+    googleSearch: 'bent over barbell row proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="148" cy="28" r="9"/><line x1="148" y1="37" x2="130" y2="65"/><line x1="130" y1="65" x2="110" y2="50"/><line x1="130" y1="65" x2="118" y2="95"/><line x1="118" y1="95" x2="105" y2="120"/><line x1="118" y1="95" x2="132" y2="118"/><line x1="148" y1="37" x2="160" y2="52"/><line x1="160" y1="52" x2="148" y2="75"/><line x1="30" y1="80" x2="148" y2="75"/><line x1="20" y1="80" x2="36" y2="80"/><line x1="148" y1="80" x2="164" y2="80"/></svg>`,
+    cues: [
+      'Hinge to ~45°; keep spine neutral and core braced throughout',
+      'Pull bar to the lower sternum/upper abdomen — not to your chest',
+      'Lead with elbows, keeping them close to your torso',
+      'Squeeze shoulder blades together at the top of each rep',
+      'Reset and brace before each rep — don\'t rush',
+    ],
+    mistakes: [
+      'Rounding the lower back under load — always hinge, never bend',
+      'Pulling to the chest (upper) which engages biceps more than lats',
+      'Using body momentum and turning it into a partial deadlift',
+    ],
+  },
+  cablerow: {
+    name: 'Seated Cable Row',
+    imageUrl: `${GH}/Seated_Cable_Rows/images/0.jpg`,
+    googleSearch: 'seated cable row proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="130" cy="30" r="9"/><line x1="130" y1="39" x2="128" y2="78"/><line x1="128" y1="78" x2="105" y2="105"/><line x1="128" y1="78" x2="145" y2="100"/><line x1="105" y1="105" x2="72" y2="105"/><line x1="145" y1="100" x2="148" y2="128"/><line x1="130" y1="50" x2="100" y2="58"/><line x1="100" y1="58" x2="60" y2="58"/><rect x="20" y="45" width="10" height="70" rx="2"/><line x1="30" y1="58" x2="58" y2="58"/><line x1="60" y1="52" x2="60" y2="65"/><line x1="68" y1="105" x2="80" y2="105"/><line x1="72" y1="100" x2="72" y2="128"/></svg>`,
+    cues: [
+      'Sit tall with slight knee bend; chest up and core engaged',
+      'Pull the handle to your navel, driving elbows straight back',
+      'Squeeze shoulder blades together fully at the end of the pull',
+      'Extend arms fully on the return, feeling a stretch in the lats',
+      'Don\'t lean back excessively — minimal torso swing only',
+    ],
+    mistakes: [
+      'Using back swing to initiate — the pull should come from the lats',
+      'Not fully extending arms on the return, losing the stretch reflex',
+      'Letting shoulders roll forward at the start instead of staying packed',
+    ],
+  },
+  facepull: {
+    name: 'Face Pulls',
+    imageUrl: `${GH}/Face_Pull/images/0.jpg`,
+    googleSearch: 'cable face pull proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="70" cy="35" r="9"/><line x1="70" y1="44" x2="70" y2="88"/><line x1="70" y1="88" x2="55" y2="115"/><line x1="70" y1="88" x2="85" y2="115"/><line x1="55" y1="115" x2="53" y2="135"/><line x1="85" y1="115" x2="87" y2="135"/><line x1="70" y1="55" x2="100" y2="42"/><line x1="70" y1="55" x2="100" y2="68"/><line x1="100" y1="42" x2="155" y2="42"/><line x1="100" y1="68" x2="155" y2="68"/><rect x="155" y="30" width="10" height="80" rx="2"/><line x1="155" y1="42" x2="165" y2="42"/><line x1="155" y1="68" x2="165" y2="68"/></svg>`,
+    cues: [
+      'Set cable at head height or slightly above; use rope attachment',
+      'Pull the rope toward your face, splitting it apart as you pull',
+      'Elbows should stay at or above shoulder height throughout',
+      'Externally rotate — hands finish beside your ears, not your chin',
+      'Hold 1 sec at the peak; control the return',
+    ],
+    mistakes: [
+      'Pulling too low — drops into a row and misses the rear delt/rotator cuff target',
+      'Not splitting the rope — limits external rotation and the key benefit',
+      'Using too much weight and turning it into a full-body pull',
+    ],
+  },
+  curl: {
+    name: 'Bicep Curls',
+    imageUrl: `${GH}/Dumbbell_Alternate_Bicep_Curl/images/0.jpg`,
+    googleSearch: 'dumbbell bicep curl proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="22" r="9"/><line x1="100" y1="31" x2="100" y2="78"/><line x1="100" y1="78" x2="84" y2="105"/><line x1="100" y1="78" x2="116" y2="105"/><line x1="84" y1="105" x2="82" y2="132"/><line x1="116" y1="105" x2="118" y2="132"/><line x1="100" y1="44" x2="82" y2="46"/><line x1="82" y1="46" x2="68" y2="38"/><rect x="58" y="32" width="14" height="10" rx="2"/><line x1="100" y1="44" x2="118" y2="72"/><line x1="118" y1="72" x2="138" y2="72"/><rect x="136" y="66" width="14" height="10" rx="2"/></svg>`,
+    cues: [
+      'Stand with upper arms pinned to your sides; they don\'t move',
+      'Supinate the wrists (turn palms up) as you curl for full bicep activation',
+      'Curl all the way until forearms are vertical and biceps fully contracted',
+      'Lower under control over 3 seconds — the eccentric builds the most size',
+      'Don\'t lean back to heave the weight up — reduce load if needed',
+    ],
+    mistakes: [
+      'Swinging the body and using momentum to get the weight up',
+      'Partial range of motion — not lowering to full extension',
+      'Letting elbows drift forward at the top, which takes load off the bicep',
+    ],
+  },
+  hangraise: {
+    name: 'Hanging Leg Raises',
+    imageUrl: `${GH}/Hanging_Leg_Raise/images/0.jpg`,
+    googleSearch: 'hanging leg raises proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 170" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="18" x2="170" y2="18"/><circle cx="100" cy="45" r="9"/><line x1="100" y1="36" x2="100" y2="18"/><line x1="100" y1="54" x2="100" y2="90"/><line x1="100" y1="90" x2="80" y2="110"/><line x1="100" y1="90" x2="120" y2="110"/><line x1="80" y1="110" x2="60" y2="130"/><line x1="120" y1="110" x2="118" y2="145"/><line x1="100" y1="65" x2="72" y2="52"/><line x1="100" y1="65" x2="128" y2="52"/></svg>`,
+    cues: [
+      'Hang from a bar with a shoulder-width grip; decompress the spine first',
+      'Posterior pelvic tilt before lifting — tuck the pelvis to engage lower abs',
+      'Raise legs until thighs are parallel or higher; go to 90° minimum',
+      'Avoid swinging — control both the up and down phase',
+      'Lower slowly; don\'t let legs just drop',
+    ],
+    mistakes: [
+      'Using hip flexors alone — you must tilt the pelvis to hit the abs',
+      'Kipping or swinging to get momentum rather than using core strength',
+      'Bending the knees excessively, which reduces the core demand',
+    ],
+  },
+  walk2: {
+    name: 'Incline Walk',
+    imageUrl: `${GH}/Treadmill_-_Walking_Lunge/images/0.jpg`,
+    googleSearch: 'incline treadmill walk proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="120" cy="22" r="9"/><line x1="120" y1="31" x2="115" y2="70"/><line x1="115" y1="70" x2="95" y2="100"/><line x1="115" y1="70" x2="130" y2="100"/><line x1="95" y1="100" x2="88" y2="128"/><line x1="130" y1="100" x2="135" y2="128"/><line x1="20" y1="128" x2="170" y2="95"/><rect x="160" y="60" width="24" height="70" rx="3"/><line x1="20" y1="128" x2="20" y2="138"/><line x1="170" y1="95" x2="170" y2="138"/><line x1="15" y1="138" x2="175" y2="138"/></svg>`,
+    cues: [
+      'Set treadmill to 10–15% incline, speed 3–4 km/h',
+      'Don\'t hold the handrails — it defeats the purpose',
+      'Walk tall with a natural heel-to-toe stride',
+      'Engage your glutes and drive through the heel each step',
+      'Keep your gaze forward, not down at the belt',
+    ],
+    mistakes: [
+      'Holding the handrails, which offloads most of the effort',
+      'Going too fast — incline walking should be steady, controlled cardio',
+      'Leaning too far forward and losing posture',
+    ],
+  },
+  lunge: {
+    name: 'Walking Lunges',
+    imageUrl: `${GH}/Dumbbell_Walking_Lunge/images/0.jpg`,
+    googleSearch: 'walking lunges proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="22" r="9"/><line x1="100" y1="31" x2="98" y2="70"/><line x1="98" y1="70" x2="70" y2="100"/><line x1="98" y1="70" x2="118" y2="85"/><line x1="70" y1="100" x2="65" y2="130"/><line x1="118" y1="85" x2="130" y2="130"/><line x1="60" y1="130" x2="140" y2="130"/><line x1="100" y1="44" x2="82" y2="54"/><line x1="100" y1="44" x2="118" y2="54"/></svg>`,
+    cues: [
+      'Take a long stride forward; front shin stays vertical over the ankle',
+      'Back knee drops toward the floor without touching it',
+      'Keep torso upright — don\'t lean forward over the front knee',
+      'Push off the front heel to drive forward into the next step',
+      'Keep hips level — don\'t let them rotate or tilt to the side',
+    ],
+    mistakes: [
+      'Front knee caving inward (valgus) — actively push it out over the 2nd toe',
+      'Taking too short a stride, which turns it into a squat instead of a lunge',
+      'Leaning the torso forward, which shifts stress to the lower back',
+    ],
+  },
+  bss: {
+    name: 'Bulgarian Split Squats',
+    imageUrl: `${GH}/Barbell_Bulgarian_Split_Squat/images/0.jpg`,
+    googleSearch: 'Bulgarian split squat proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="90" cy="22" r="9"/><line x1="90" y1="31" x2="88" y2="68"/><line x1="88" y1="68" x2="65" y2="100"/><line x1="88" y1="68" x2="105" y2="90"/><line x1="65" y1="100" x2="58" y2="130"/><line x1="105" y1="90" x2="115" y2="110"/><line x1="115" y1="110" x2="140" y2="110"/><rect x="130" y="100" width="30" height="12" rx="2"/><line x1="90" y1="44" x2="72" y2="52"/><line x1="90" y1="44" x2="108" y2="52"/><line x1="50" y1="130" x2="125" y2="130"/></svg>`,
+    cues: [
+      'Rear foot elevated on a bench at knee height; front foot far enough out',
+      'Drop the back knee straight down — don\'t push the hips back',
+      'Front shin stays vertical or close to it; weight on front heel',
+      'Keep torso upright with core braced throughout',
+      'Drive through the front foot to return — squeeze the glute at the top',
+    ],
+    mistakes: [
+      'Foot too close — causes front knee to travel too far past the toes',
+      'Leaning the torso too far forward, turning it into a lunge',
+      'Rushing the descent — control is essential to avoid hip flexor strain',
+    ],
+  },
+  rdl: {
+    name: 'Romanian Deadlift (light)',
+    imageUrl: `${GH}/Romanian_Deadlift/images/0.jpg`,
+    googleSearch: 'Romanian deadlift proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="140" cy="28" r="9"/><line x1="140" y1="37" x2="128" y2="72"/><line x1="128" y1="72" x2="108" y2="58"/><line x1="128" y1="72" x2="118" y2="105"/><line x1="118" y1="105" x2="105" y2="130"/><line x1="118" y1="105" x2="132" y2="128"/><line x1="140" y1="45" x2="155" y2="60"/><line x1="155" y1="60" x2="145" y2="85"/><line x1="30" y1="90" x2="145" y2="82"/><line x1="20" y1="90" x2="36" y2="90"/><line x1="145" y1="90" x2="162" y2="90"/><line x1="95" y1="130" x2="142" y2="130"/></svg>`,
+    cues: [
+      'Soft knee bend throughout — this is a hip hinge, not a squat',
+      'Push hips back as you lower the bar, feeling a stretch in the hamstrings',
+      'Bar stays in contact with your legs the entire way down',
+      'Keep chest up and spine neutral — no rounding the lower back',
+      'Drive hips forward to return; squeeze glutes at the top',
+    ],
+    mistakes: [
+      'Rounding the lower back — brace your core and hinge, don\'t bend',
+      'Bending the knees too much, which turns it into a conventional deadlift',
+      'Letting the bar drift away from the legs, increasing lumbar stress',
+    ],
+  },
+  glute: {
+    name: 'Glute Bridges',
+    imageUrl: `${GH}/Glute_Bridge/images/0.jpg`,
+    googleSearch: 'glute bridge proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="148" cy="28" r="9"/><line x1="148" y1="37" x2="148" y2="52"/><line x1="148" y1="52" x2="120" y2="52"/><line x1="120" y1="52" x2="100" y2="68"/><line x1="100" y1="68" x2="80" y2="90"/><line x1="80" y1="90" x2="65" y2="100"/><line x1="100" y1="68" x2="115" y2="90"/><line x1="115" y1="90" x2="118" y2="105"/><line x1="148" y1="52" x2="155" y2="68"/><line x1="30" y1="105" x2="170" y2="105"/></svg>`,
+    cues: [
+      'Lie flat, feet hip-width apart, knees bent at ~90°',
+      'Drive through heels — not the balls of your feet',
+      'Posterior pelvic tilt at the top to fully contract the glutes',
+      'Hold the top for 1–2 seconds; don\'t just bounce up and down',
+      'Keep ribs down — avoid arching the lower back to get the hips higher',
+    ],
+    mistakes: [
+      'Using the lower back to lift instead of the glutes',
+      'Feet too far out or too close, reducing glute activation',
+      'Not reaching full hip extension at the top of each rep',
+    ],
+  },
+  calf: {
+    name: 'Calf Raises',
+    imageUrl: `${GH}/Calf_Raises/images/0.jpg`,
+    googleSearch: 'calf raises proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 160" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="22" r="9"/><line x1="100" y1="31" x2="100" y2="78"/><line x1="100" y1="78" x2="85" y2="108"/><line x1="100" y1="78" x2="115" y2="108"/><line x1="85" y1="108" x2="82" y2="135"/><line x1="115" y1="108" x2="118" y2="135"/><line x1="78" y1="130" x2="88" y2="135"/><line x1="114" y1="130" x2="124" y2="135"/><line x1="60" y1="135" x2="140" y2="135"/><line x1="100" y1="44" x2="80" y2="50"/><line x1="100" y1="44" x2="120" y2="50"/></svg>`,
+    cues: [
+      'Full range of motion: start in a deep stretch, rise to maximum height',
+      'Pause 1 sec at the top and squeeze hard — don\'t bounce through reps',
+      'Stay on the ball of your foot; keep weight balanced across all toes',
+      'Control the descent — 3+ seconds down for maximum hypertrophy',
+      'Do single-leg for greater overload if bodyweight feels too easy',
+    ],
+    mistakes: [
+      'Partial reps — not going through the full stretch at the bottom',
+      'Bouncing at the bottom to use the Achilles tendon elasticity as a cheat',
+      'Turning feet in or out excessively — keep them parallel or very slightly out',
+    ],
+  },
+  cardio3: {
+    name: 'Steady Cardio',
+    imageUrl: `${GH}/Stationary_Bike_Run_-_Distance/images/0.jpg`,
+    googleSearch: 'steady state cardio zone 2 proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="22" r="9"/><line x1="100" y1="31" x2="100" y2="75"/><line x1="100" y1="75" x2="80" y2="105"/><line x1="100" y1="75" x2="120" y2="105"/><line x1="80" y1="105" x2="75" y2="130"/><line x1="120" y1="105" x2="125" y2="130"/><line x1="100" y1="46" x2="78" y2="55"/><line x1="100" y1="46" x2="122" y2="55"/><path d="M55 118 a28 28 0 1 0 56 0" stroke-dasharray="4 3"/><path d="M89 118 a28 28 0 1 0 56 0" stroke-dasharray="4 3"/></svg>`,
+    cues: [
+      'Stay in Zone 2: you should be able to hold a conversation',
+      'Target heart rate: roughly 60–70% of your max HR',
+      'Choose any modality: bike, treadmill, elliptical, row, walk',
+      'Keep intensity consistent — avoid surges that spike HR too high',
+      'Hydrate before, during, and after',
+    ],
+    mistakes: [
+      'Going too hard — steady cardio should feel easy but sustainable',
+      'Skipping warm-up and cool-down, which increases injury risk',
+      'Doing it immediately after a heavy leg session — place it after or on a separate day if possible',
+    ],
+  },
+  hiit: {
+    name: 'HIIT',
+    imageUrl: `${GH}/Burpees/images/0.jpg`,
+    googleSearch: 'HIIT workout proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="22" r="8"/><line x1="60" y1="30" x2="58" y2="68"/><line x1="58" y1="68" x2="44" y2="95"/><line x1="58" y1="68" x2="72" y2="95"/><line x1="44" y1="95" x2="42" y2="120"/><line x1="72" y1="95" x2="74" y2="120"/><line x1="58" y1="44" x2="40" y2="52"/><line x1="58" y1="44" x2="76" y2="52"/><circle cx="145" cy="22" r="8"/><line x1="145" y1="30" x2="143" y2="60"/><line x1="143" y1="60" x2="128" y2="85"/><line x1="143" y1="60" x2="158" y2="85"/><line x1="128" y1="85" x2="118" y2="110"/><line x1="158" y1="85" x2="165" y2="110"/><line x1="143" y1="42" x2="125" y2="32"/><line x1="143" y1="42" x2="161" y2="32"/></svg>`,
+    cues: [
+      'Work intervals at 85–95% max effort — not comfortable',
+      'Rest intervals should be long enough to partially recover (1:2 or 1:3 ratio)',
+      'Common protocol: 20 sec sprint / 40 sec rest × 10–15 rounds',
+      'Pick low-impact options (bike, row) if joints are sensitive',
+      'Warm up 5 min and cool down 5 min around the HIIT block',
+    ],
+    mistakes: [
+      'Not going hard enough in work intervals — HIIT only works if you push',
+      'Rest intervals too short — incomplete recovery means later rounds suffer',
+      'Doing HIIT every day — 2–3× per week max; it\'s high CNS demand',
+    ],
+  },
+  bicycle: {
+    name: 'Bicycle Crunches',
+    imageUrl: `${GH}/Bicycle_Crunch/images/0.jpg`,
+    googleSearch: 'bicycle crunches proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 130" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="140" cy="30" r="9"/><line x1="140" y1="39" x2="130" y2="68"/><line x1="130" y1="68" x2="100" y2="58"/><line x1="130" y1="68" x2="120" y2="92"/><line x1="120" y1="92" x2="100" y2="110"/><line x1="120" y1="92" x2="145" y2="105"/><line x1="140" y1="39" x2="155" y2="52"/><line x1="155" y1="52" x2="165" y2="45"/><line x1="100" y1="55" x2="70" y2="62"/><line x1="30" y1="110" x2="170" y2="110"/></svg>`,
+    cues: [
+      'Hands behind head — don\'t pull on your neck',
+      'Bring opposite elbow to opposite knee; rotate from the ribcage, not the shoulder',
+      'Keep the unused leg straight and hovering above the floor',
+      'Slow and controlled — aim for 2 sec per side, not speed',
+      'Keep lower back pressed into the floor throughout',
+    ],
+    mistakes: [
+      'Pulling the neck forward with hands — causes cervical strain',
+      'Rotating only the shoulders instead of the entire ribcage',
+      'Going so fast the movement becomes momentum, not muscle',
+    ],
+  },
+  russian: {
+    name: 'Russian Twists',
+    imageUrl: `${GH}/Russian_Twist/images/0.jpg`,
+    googleSearch: 'Russian twists proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 130" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="32" r="9"/><line x1="100" y1="41" x2="100" y2="75"/><line x1="100" y1="75" x2="78" y2="100"/><line x1="100" y1="75" x2="122" y2="100"/><line x1="78" y1="100" x2="70" y2="118"/><line x1="122" y1="100" x2="130" y2="118"/><line x1="100" y1="52" x2="65" y2="62"/><line x1="65" y1="62" x2="48" y2="58"/><rect x="38" y="52" width="14" height="12" rx="2"/><line x1="60" y1="118" x2="140" y2="118"/></svg>`,
+    cues: [
+      'Sit with knees bent at ~90°; lean back to ~45° and hold this angle',
+      'Rotate the torso, not just the arms — the movement comes from the obliques',
+      'Touch hands or weight to the floor on each side',
+      'Keep feet off the floor for more core demand (or plant them if needed)',
+      'Exhale on each rotation',
+    ],
+    mistakes: [
+      'Moving just the arms side to side without any torso rotation',
+      'Letting the lower back round — brace core and maintain the lean',
+      'Using momentum on a heavy plate rather than controlling the rotation',
+    ],
+  },
+  legraise: {
+    name: 'Leg Raises',
+    imageUrl: `${GH}/Flat_Bench_Lying_Leg_Raise/images/0.jpg`,
+    googleSearch: 'lying leg raises proper form abs',
+    fallbackSvg: `<svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="155" cy="32" r="9"/><line x1="155" y1="41" x2="155" y2="60"/><line x1="155" y1="60" x2="130" y2="60"/><line x1="130" y1="60" x2="80" y2="45"/><line x1="80" y1="45" x2="40" y2="35"/><line x1="130" y1="60" x2="125" y2="82"/><line x1="125" y1="82" x2="118" y2="100"/><line x1="155" y1="50" x2="165" y2="60"/><line x1="30" y1="100" x2="175" y2="100"/></svg>`,
+    cues: [
+      'Lie flat; press lower back into the floor before you start',
+      'Keep legs straight and lower them only as far as the lower back stays flat',
+      'Posterior pelvic tilt on the way up — this engages the abs, not just hip flexors',
+      'Pause at the top with hips slightly off the floor for peak contraction',
+      'Lower legs slowly — 3–4 seconds down',
+    ],
+    mistakes: [
+      'Letting the lower back arch off the floor — reduces abs and strains the spine',
+      'Dropping legs too fast and losing tension at the bottom',
+      'Not tilting the pelvis — hip flexors do all the work if you skip this',
+    ],
+  },
+  planktopush: {
+    name: 'Plank to Push-ups',
+    imageUrl: `${GH}/Push_Ups/images/0.jpg`,
+    googleSearch: 'plank to push up transition proper form',
+    fallbackSvg: `<svg viewBox="0 0 200 120" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="158" cy="25" r="9"/><line x1="158" y1="34" x2="145" y2="58"/><line x1="145" y1="58" x2="40" y2="58"/><line x1="145" y1="58" x2="140" y2="80"/><line x1="40" y1="58" x2="38" y2="80"/><line x1="158" y1="34" x2="168" y2="50"/><line x1="168" y1="50" x2="145" y2="58"/><line x1="30" y1="80" x2="175" y2="80"/></svg>`,
+    cues: [
+      'Start in a forearm plank; keep hips level and core braced throughout',
+      'Press up one hand at a time into a high plank (push-up position)',
+      'Alternate the leading arm each rep to balance shoulder work',
+      'Don\'t let hips rotate or drop as you transition',
+      'Maintain a controlled pace — this is core stability, not speed work',
+    ],
+    mistakes: [
+      'Letting hips rotate to one side as you push up — huge red flag for core',
+      'Going so fast the hips bounce around and lose stability',
+      'Sagging the lower back in the high plank position at the top',
+    ],
+  },
+};
+
+// Maps phase varIds → EXERCISE_INFO key so the demo modal works for rotated exercises
+const VARINFO_MAP = {
+  // Push — horizontal
+  bench_flat_bb:    'bench',
+  incline_db_press: 'incline',
+  db_flat_press:    'bench',
+  // Push — vertical
+  ohpress_db:       'ohpress',
+  seated_military:  'ohpress',
+  arnold_press:     'ohpress',
+  // Push — lateral
+  lateral_raises:   'lateral',
+  cable_laterals:   'lateral',
+  lean_lateral:     'lateral',
+  // Push — triceps
+  tri_pushdown:     'tricep',
+  tri_overhead:     'tricep',
+  closegrip_push:   'planktopush',
+  // Pull — vertical
+  pullup:           'pullup',
+  latpull_wide:     'pullup',
+  latpull_neutral:  'pullup',
+  // Pull — horizontal
+  bentrow:          'bentrow',
+  seated_cable_row: 'cablerow',
+  chest_sup_row:    'bentrow',
+  // Pull — rear delt
+  facepull:         'facepull',
+  rev_pec_deck:     'facepull',
+  rd_fly:           'facepull',
+  // Pull — biceps
+  curl_bb:          'curl',
+  hammer_curl:      'curl',
+  incline_curl:     'curl',
+  // Legs — lunge
+  walk_lunge:       'lunge',
+  rev_lunge:        'lunge',
+  curtsy_lunge:     'lunge',
+  // Legs — split squat
+  bss:              'bss',
+  stepups:          'bss',
+  pistol_prog:      'bss',
+  // Legs — hinge
+  rdl:              'rdl',
+  sl_rdl:           'rdl',
+  good_mornings:    'rdl',
+  // Legs — glute
+  glute_bridge:     'glute',
+  hip_thrust:       'glute',
+  cable_kickback:   'glute',
+  // Legs — calves
+  calf_stand:       'calf',
+  calf_seated:      'calf',
+  calf_single:      'calf',
+  // HIIT / abs
+  bike_intervals:   'hiit',
+  burpee_emom:      'hiit',
+  sprint_repeats:   'hiit',
+  bicycle_crunch:   'bicycle',
+  hollow_hold:      'plank',
+  v_ups:            'hangraise',
+  v_ups_b:          'hangraise',
+  v_ups_c:          'hangraise',
+  russian_twist:    'russian',
+  cable_crunch:     'russian',
+  cable_crunch_b:   'russian',
+  cable_crunch_c:   'russian',
+  leg_raise:        'legraise',
+  hollow_hold_b:    'plank',
+  plank_to_push:    'planktopush',
+  plank_static:     'plank',
+  hangraise:        'hangraise',
+};
+
+function resolveInfoKey(exId) {
+  return VARINFO_MAP[exId] || exId;
+}
+
+// ─── DEMO MODAL ───────────────────────────────────────────────────────────────
+function openDemoModal(exId) {
+  const info = EXERCISE_INFO[resolveInfoKey(exId)];
+  if (!info) return;
+
+  document.getElementById('demo-title').textContent = info.name;
+
+  const wrap = document.getElementById('demo-img-wrap');
+  const img = document.createElement('img');
+  img.loading = 'lazy';
+  img.alt = info.name + ' demonstration';
+  img.src = info.imageUrl;
+  img.onerror = () => {
+    wrap.innerHTML = info.fallbackSvg;
+  };
+  wrap.innerHTML = '';
+  wrap.appendChild(img);
+
+  const searchQ = encodeURIComponent(info.googleSearch);
+  document.getElementById('demo-img-link').href = `https://www.google.com/search?q=${searchQ}&tbm=isch`;
+
+  document.getElementById('demo-cues').innerHTML = info.cues.map(c => `<li>${c}</li>`).join('');
+  document.getElementById('demo-mistakes').innerHTML = info.mistakes.map(m => `<li>${m}</li>`).join('');
+
+  document.getElementById('demo-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDemoModal() {
+  document.getElementById('demo-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('demo-close').addEventListener('click', closeDemoModal);
+document.getElementById('demo-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('demo-overlay')) closeDemoModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDemoModal(); });
+
+// ─── SYNC ─────────────────────────────────────────────────────────────────────
+const CACHE_KEY = 'workout_tracker_cache';
+let syncTimer = null;
+let isSyncing = false;
+let offlineQueue = [];      // pending pushes while offline
+let lastSyncError = false;
+
+function setSyncState(state, label) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  if (!dot) return;
+  dot.className = state;     // 'synced' | 'syncing' | 'error'
+  lbl.textContent = label || '';
+}
+
+// retry on error dot click
+document.getElementById('sync-dot').addEventListener('click', () => {
+  if (lastSyncError) flushOfflineQueue();
+});
+
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Ensure new fields exist
+      if (!parsed.startDate) parsed.startDate = null;
+      if (!parsed.phaseOverride) parsed.phaseOverride = null;
+      if (!parsed.swapOverrides) parsed.swapOverrides = {};
+      if (!parsed.rpeHistory) parsed.rpeHistory = {};
+      if (!parsed.draftSession) parsed.draftSession = null;
+      return parsed;
+    }
+  } catch(e) {}
+  return { sessions: [], bodyweight: [], theme: 'dark', startDate: null, phaseOverride: null, swapOverrides: {}, rpeHistory: {}, draftSession: null };
+}
+
+function writeCache(data) {
+  localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+}
+
+// Auto-save draft on every input change (Feature 1)
+function saveDraft() {
+  const list = document.getElementById('exercise-list');
+  if (!list || !activeDay) return;
+  const draft = {};
+  list.querySelectorAll('.set-input').forEach(inp => {
+    const key = `${inp.dataset.ex}|${inp.dataset.set}|${inp.dataset.field}`;
+    draft[key] = inp.value;
+  });
+  // Also capture done-state
+  const done = {};
+  list.querySelectorAll('.set-done').forEach((btn, i) => {
+    done[i] = btn.classList.contains('done');
+  });
+  DB.draftSession = { dayId: activeDay.id, draft, done };
+  writeCache(DB);
+  scheduleSyncDebounced();
+}
+
+let draftSyncTimer = null;
+function scheduleSyncDebounced() {
+  clearTimeout(draftSyncTimer);
+  draftSyncTimer = setTimeout(() => {
+    if (!navigator.onLine) { offlineQueue.push({ ...DB }); setSyncState('error', 'Offline'); return; }
+    pushToSheet(DB);
+  }, 2000);
+}
+
+async function flushOfflineQueue() {
+  if (!navigator.onLine || offlineQueue.length === 0) return;
+  const payload = offlineQueue[offlineQueue.length - 1]; // latest wins
+  offlineQueue = [];
+  await pushToSheet(payload);
+}
+
+window.addEventListener('online',  () => { setSyncState('syncing', 'Syncing…'); flushOfflineQueue(); });
+window.addEventListener('offline', () => setSyncState('error', 'Offline'));
+
+async function fetchFromSheet() {
+  setSyncState('syncing', 'Syncing…');
+  try {
+    const res = await fetch(`${API_URL}?token=${API_TOKEN}`);
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    if (json.data) {
+      const cached = loadCache();
+      const merged = { ...cached, ...json.data };
+      // Preserve new fields that the sheet may not have yet
+      if (!merged.swapOverrides)   merged.swapOverrides   = cached.swapOverrides   || {};
+      if (!merged.rpeHistory)      merged.rpeHistory      = cached.rpeHistory      || {};
+      if (!merged.draftSession)    merged.draftSession    = cached.draftSession    || null;
+      if (!merged.startDate)       merged.startDate       = cached.startDate       || null;
+      if (!merged.phaseOverride)   merged.phaseOverride   = cached.phaseOverride   || null;
+      DB = merged;
+      writeCache(DB);
+    }
+    lastSyncError = false;
+    setSyncState('synced', '');
+  } catch(e) {
+    console.warn('Fetch failed, using cache:', e);
+    lastSyncError = true;
+    setSyncState('error', 'Tap to retry');
+  }
+}
+
+async function pushToSheet(data) {
+  writeCache(data);
+  if (isSyncing) { offlineQueue.push(data); return; }
+  if (!navigator.onLine) { offlineQueue.push(data); setSyncState('error', 'Offline'); return; }
+  isSyncing = true;
+  setSyncState('syncing', 'Saving…');
+  try {
+    const payload = JSON.stringify({ token: API_TOKEN, data });
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: payload,
+    });
+    lastSyncError = false;
+    setSyncState('synced', '');
+  } catch(e) {
+    console.error('Push failed:', e);
+    lastSyncError = true;
+    setSyncState('error', 'Tap to retry');
+    offlineQueue.push(data);
+  } finally {
+    isSyncing = false;
+  }
+}
+
+function saveData(data) {
+  DB = data;
+  writeCache(data);
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => pushToSheet(data), 600);
+}
+
+// Legacy helpers kept for compat
+function showSyncIndicator() {}
+function hideSyncIndicator() {}
+
+let DB = loadCache();
+let activeDay = null;
+let activeMetric = 'volume';
+let progressTab = 'bodyweight';
+let bwChart = null;
+let exChart = null;
+let currentView = 'home';
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function daysAgo(dateStr) {
+  if (!dateStr) return null;
+  const d = Math.round((Date.now() - new Date(dateStr).getTime()) / 86400000);
+  if (d === 0) return 'Today';
+  if (d === 1) return 'Yesterday';
+  return `${d}d ago`;
+}
+
+function toast(msg, duration = 2200) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
+
+function confirm(title, body, onConfirm) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent = body;
+  document.getElementById('modal').classList.add('show');
+  document.getElementById('modal-confirm').onclick = () => {
+    document.getElementById('modal').classList.remove('show');
+    onConfirm();
+  };
+  document.getElementById('modal-cancel').onclick = () => {
+    document.getElementById('modal').classList.remove('show');
+  };
+}
+
+function getLastSession(dayId) {
+  return DB.sessions.filter(s => s.dayId === dayId).slice(-1)[0] || null;
+}
+
+function calcVolume(setData) {
+  if (!setData) return 0;
+  return setData.reduce((sum, s) => {
+    const w = parseFloat(s.weight) || 0;
+    const r = parseFloat(s.reps) || 0;
+    return sum + (w > 0 ? w * r : r);
+  }, 0);
+}
+
+// ─── THEME ────────────────────────────────────────────────────────────────────
+function applyTheme() {
+  document.body.classList.toggle('dark', DB.theme === 'dark');
+  const icon = document.querySelector('#theme-toggle svg');
+  icon.innerHTML = DB.theme === 'dark'
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+}
+
+// ─── HOME ─────────────────────────────────────────────────────────────────────
+function renderHome() {
+  // bodyweight
+  const bws = DB.bodyweight.sort((a,b) => a.date.localeCompare(b.date));
+  if (bws.length > 0) {
+    const latest = bws[bws.length - 1];
+    document.getElementById('bw-display').textContent = latest.weight;
+    if (bws.length > 1) {
+      const prev = bws[bws.length - 2];
+      const diff = (latest.weight - prev.weight).toFixed(1);
+      const sign = diff > 0 ? '+' : '';
+      document.getElementById('bw-change').textContent = `${sign}${diff} kg since last weigh-in`;
+    } else {
+      document.getElementById('bw-change').textContent = 'First weigh-in logged';
+    }
+    const last7 = bws.filter(b => {
+      const d = (Date.now() - new Date(b.date).getTime()) / 86400000;
+      return d <= 7;
+    });
+    document.getElementById('bw-7d').textContent = last7.length > 0
+      ? (last7.reduce((s,b) => s + b.weight, 0) / last7.length).toFixed(1) + ' kg'
+      : '--';
+    document.getElementById('bw-low').textContent = Math.min(...bws.map(b => b.weight)).toFixed(1) + ' kg';
+  }
+
+  // week summary
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+  const thisWeek = DB.sessions.filter(s => s.date >= weekAgo).length;
+  document.getElementById('ws-week').textContent = thisWeek;
+  document.getElementById('ws-total').textContent = DB.sessions.length;
+
+  // streak
+  let streak = 0;
+  const sessionDates = [...new Set(DB.sessions.map(s => s.date))].sort((a,b) => b.localeCompare(a));
+  let checkDate = today();
+  for (const d of sessionDates) {
+    if (d === checkDate) { streak++; checkDate = offsetDate(checkDate, -1); }
+    else if (d < checkDate) break;
+  }
+  document.getElementById('ws-streak').textContent = streak;
+
+  // day cards
+  const grid = document.getElementById('day-grid');
+  grid.innerHTML = '';
+  DAYS.forEach(day => {
+    const last = getLastSession(day.id);
+    const lastDate = last ? last.date : null;
+    const ago = daysAgo(lastDate);
+    const phaseIdx = getPhaseIndex(day.id);
+    const exCount = resolveExercises(day.id).length;
+    const card = document.createElement('div');
+    card.className = 'day-card';
+    card.innerHTML = `
+      <div class="day-num d${day.id}">${day.id}</div>
+      <div class="day-info">
+        <div class="day-title">${day.title}</div>
+        <div class="day-sub">${exCount} exercises · Phase ${getPhaseLabel(phaseIdx)}</div>
+      </div>
+      <div class="day-badge${ago === 'Today' ? ' today' : ''}">${ago || 'Not done'}</div>
+      <div class="day-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    `;
+    card.addEventListener('click', () => startWorkout(day.id));
+    grid.appendChild(card);
+  });
+}
+
+function offsetDate(dateStr, days) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+// ─── PHASE HELPERS ────────────────────────────────────────────────────────────
+function getPhaseIndex(dayId) {
+  // If phaseOverride is set per-day, use that; else compute from startDate
+  if (DB.phaseOverride && DB.phaseOverride[dayId] != null) {
+    return DB.phaseOverride[dayId] % 3;
+  }
+  if (!DB.startDate) return 0;
+  const elapsed = Math.floor((Date.now() - new Date(DB.startDate).getTime()) / 86400000);
+  return Math.floor(elapsed / 28) % 3;
+}
+
+function getPhaseLabel(phaseIdx) {
+  return ['A','B','C'][phaseIdx];
+}
+
+function getWeekInPhase(dayId) {
+  if (!DB.startDate) return 1;
+  const elapsed = Math.floor((Date.now() - new Date(DB.startDate).getTime()) / 86400000);
+  return ((elapsed % 28) / 7 | 0) + 1;
+}
+
+function getWeekOverall() {
+  if (!DB.startDate) return 1;
+  const elapsed = Math.floor((Date.now() - new Date(DB.startDate).getTime()) / 86400000);
+  return Math.floor(elapsed / 7) + 1;
+}
+
+// Resolve the active exercise objects for a given day, respecting phase + swapOverrides
+function resolveExercises(dayId) {
+  const phaseIdx = getPhaseIndex(dayId);
+  const slots = DAY_SLOTS[dayId] || [];
+  const resolved = [];
+  const SETS_MAP = { 1: 4, 2: 4, 3: 3, 4: 3 };  // default sets per day
+
+  slots.forEach(slotId => {
+    const slot = PHASE_SLOTS[slotId];
+    if (!slot) return;
+    // check if user has swapped this slot
+    const swapKey = `${dayId}_${slotId}`;
+    let varIdx = phaseIdx;
+    const swapMap = DB.swapOverrides || {};
+    if (swapMap[swapKey] != null) {
+      varIdx = swapMap[swapKey];
+    }
+    const vari = slot.variations[varIdx];
+    const setsCount = slotId.startsWith('abs') ? 3 : (slotId === 'hiit' ? 1 : (SETS_MAP[dayId] || 3));
+    const repRng = vari.repRange;
+    const repsTarget = repRng[0] === repRng[1] ? `${repRng[0]}` : `${repRng[0]}–${repRng[1]}`;
+    const isBodyweight = vari.increment === 0 && !vari.isCompound;
+    resolved.push({
+      id: vari.varId,
+      name: vari.name,
+      sets: setsCount,
+      repsTarget,
+      type: (slotId === 'hiit' ? 'cardio' : (isBodyweight && repRng[0] > 1 ? 'reps' : 'weight')),
+      unit: slotId === 'hiit' ? 'min' : undefined,
+      slotId,
+      varIdx,
+      repRange: repRng,
+      increment: vari.increment,
+      isCompound: vari.isCompound,
+    });
+  });
+
+  // Append static exercises
+  const statics = STATIC_EXERCISES[dayId] || [];
+  statics.forEach(s => resolved.push(s));
+  return resolved;
+}
+
+// ─── PROGRESSION ENGINE ───────────────────────────────────────────────────────
+function getLastSessionForVariant(varId) {
+  // Find last session that has data for this varId
+  for (let i = DB.sessions.length - 1; i >= 0; i--) {
+    const s = DB.sessions[i];
+    if (s.exercises && s.exercises[varId] && s.exercises[varId].some(set => set.weight || set.reps)) {
+      return s.exercises[varId];
+    }
+  }
+  return null;
+}
+
+function getRpeHistory(varId) {
+  return (DB.rpeHistory || {})[varId] || [];
+}
+
+function computeSuggestion(ex) {
+  if (ex.type !== 'weight') return null;
+  const lastSets = getLastSessionForVariant(ex.id);
+  if (!lastSets) return null;
+
+  const [low, high] = ex.repRange;
+  const rpeHist = getRpeHistory(ex.id);
+  const lastWeights = lastSets.map(s => parseFloat(s.weight) || 0);
+  const lastReps   = lastSets.map(s => parseInt(s.reps) || 0);
+  const baseWeight = Math.max(...lastWeights.filter(w => w > 0));
+  if (!baseWeight) return null;
+
+  const inc = ex.increment || 2.5;
+
+  // RPE overrides
+  const recentRpe = rpeHist.slice(-3);
+  const allEasy   = recentRpe.length >= 3 && recentRpe.every(r => r === 'easy');
+  const twoFailed = rpeHist.slice(-2).length >= 2 && rpeHist.slice(-2).every(r => r === 'failed');
+
+  let sugWeight = baseWeight;
+  let sugRepTarget = `${low}–${high}`;
+
+  if (twoFailed) {
+    sugWeight = Math.max(baseWeight - inc, inc);
+    sugRepTarget = `${low}`;
+  } else if (allEasy) {
+    sugWeight = baseWeight + inc;
+    sugRepTarget = `${low}`;
+  } else {
+    const allHitTop = lastReps.every(r => r >= high);
+    const anyBelowBottom = lastReps.some(r => r > 0 && r < low);
+    if (allHitTop) {
+      sugWeight = baseWeight + inc;
+      sugRepTarget = `${low}`;
+    } else if (anyBelowBottom) {
+      sugWeight = Math.max(baseWeight - inc, inc);
+      sugRepTarget = `${low}`;
+    } else {
+      // suggest +1 rep on weakest set
+      const minRep = Math.min(...lastReps.filter(r => r > 0));
+      sugRepTarget = `${Math.min(minRep + 1, high)}`;
+    }
+  }
+
+  const lastStr = lastSets.map(s => s.reps || s.duration).join(',');
+  return {
+    weight: sugWeight,
+    repTarget: sugRepTarget,
+    lastWeight: baseWeight,
+    lastStr,
+  };
+}
+
+// ─── WORKOUT LOGGING ──────────────────────────────────────────────────────────
+let activeDayExercises = [];  // resolved exercises for the current day
+
+function startWorkout(dayId) {
+  try {
+  activeDay = DAYS.find(d => d.id === dayId);
+  if (!DB.startDate) { DB.startDate = today(); writeCache(DB); }
+  // Ensure required fields exist (defensive guard after potential bad sync)
+  if (!DB.swapOverrides) DB.swapOverrides = {};
+  if (!DB.rpeHistory)    DB.rpeHistory    = {};
+  if (!DB.phaseOverride) DB.phaseOverride = null;
+
+  activeDayExercises = resolveExercises(dayId);
+  const last = getLastSession(dayId);
+  const phaseIdx = getPhaseIndex(dayId);
+  const weekOverall = getWeekOverall();
+  const weekInPhase = ((weekOverall - 1) % 12) + 1;
+
+  document.getElementById('workout-title').textContent = `Day ${dayId} — ${activeDay.title}`;
+  document.getElementById('workout-subtitle').textContent = last
+    ? `Last done: ${daysAgo(last.date)} · Tap each set to log`
+    : 'First time · Let\'s go!';
+
+  const list = document.getElementById('exercise-list');
+  list.innerHTML = '';
+
+  // ── Phase banner ──
+  const phaseBanner = document.createElement('div');
+  phaseBanner.className = 'phase-banner';
+  const dots = [0,1,2].map(i => `<div class="phase-dot${i < phaseIdx ? ' done' : (i === phaseIdx ? ' active' : '')}"></div>`).join('');
+  phaseBanner.innerHTML = `
+    <div>
+      <div class="phase-label">Phase ${getPhaseLabel(phaseIdx)} — Week ${weekInPhase} of 12</div>
+      <div class="phase-sub">${['Foundational lifts','Variation B — different angles','Variation C — fresh stimulus'][phaseIdx]}</div>
+    </div>
+    <div class="phase-dots">${dots}</div>
+  `;
+  list.appendChild(phaseBanner);
+
+  // Restore draft inputs if any
+  const draft = (DB.draftSession && DB.draftSession.dayId === dayId) ? DB.draftSession.draft : {};
+  const draftDone = (DB.draftSession && DB.draftSession.dayId === dayId) ? DB.draftSession.done : {};
+  let doneIndex = 0;
+
+  activeDayExercises.forEach((ex, exIdx) => {
+    // lastEx keyed by varId so each variation is independent
+    const lastEx = last ? (last.exercises[ex.id] || null) : null;
+    const suggestion = ex.slotId ? computeSuggestion(ex) : null;
+    const card = document.createElement('div');
+    card.className = 'exercise-card';
+
+    const isCardio = ex.type === 'cardio';
+    const isReps = ex.type === 'reps';
+
+    const checkBtn = `<button class="set-done"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button>`;
+
+    let suggestionHTML = '';
+    if (suggestion) {
+      suggestionHTML = `<div class="suggestion-bar"><strong>Target: ${suggestion.weight} kg × ${suggestion.repTarget}</strong>&nbsp;&nbsp;last: ${suggestion.lastWeight} kg × ${suggestion.lastStr}</div>`;
+    }
+
+    let bodyHTML = suggestionHTML;
+    if (isCardio) {
+      bodyHTML += `<div class="sets-header cardio-type"><span>Set</span><span>${ex.unit || 'duration'}</span><span></span></div>`;
+      for (let i = 0; i < ex.sets; i++) {
+        const dKey = `${ex.id}|${i}|duration`;
+        const prev = lastEx && lastEx[i] ? lastEx[i].duration : '';
+        const val = draft[dKey] || '';
+        const isDone = draftDone[doneIndex] || false;
+        bodyHTML += `
+          <div class="set-row cardio-type">
+            <div class="set-num">${i+1}</div>
+            <input class="set-input" type="number" inputmode="decimal"
+              data-ex="${ex.id}" data-set="${i}" data-field="duration"
+              placeholder="${ex.unit || 'min'}" value="${val}">
+            <button class="set-done${isDone ? ' done' : ''}"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button>
+          </div>`;
+        if (prev) bodyHTML += `<div class="beat-hint">Last: <span>${prev} ${ex.unit || 'min'}</span></div>`;
+        doneIndex++;
+      }
+    } else if (isReps) {
+      bodyHTML += `<div class="sets-header has-weight"><span>Set</span><span>Reps</span><span></span><span></span></div>`;
+      for (let i = 0; i < ex.sets; i++) {
+        const dKey = `${ex.id}|${i}|reps`;
+        const prev = lastEx && lastEx[i] ? lastEx[i].reps : '';
+        const val = draft[dKey] || '';
+        const isDone = draftDone[doneIndex] || false;
+        bodyHTML += `
+          <div class="set-row has-weight">
+            <div class="set-num">${i+1}</div>
+            <input class="set-input" type="number" inputmode="decimal"
+              data-ex="${ex.id}" data-set="${i}" data-field="reps"
+              placeholder="reps" value="${val}">
+            <div></div>
+            <button class="set-done${isDone ? ' done' : ''}"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button>
+          </div>`;
+        if (prev) bodyHTML += `<div class="beat-hint">Last: <span>${prev} reps</span> — beat it!</div>`;
+        doneIndex++;
+      }
+    } else {
+      bodyHTML += `<div class="sets-header has-weight"><span>Set</span><span>Weight (kg)</span><span>Reps</span><span></span></div>`;
+      for (let i = 0; i < ex.sets; i++) {
+        const wKey = `${ex.id}|${i}|weight`;
+        const rKey = `${ex.id}|${i}|reps`;
+        const prev = lastEx && lastEx[i] ? lastEx[i] : null;
+        const wVal = draft[wKey] || '';
+        const rVal = draft[rKey] || '';
+        const isDone = draftDone[doneIndex] || false;
+        bodyHTML += `
+          <div class="set-row has-weight">
+            <div class="set-num">${i+1}</div>
+            <input class="set-input" type="number" inputmode="decimal"
+              data-ex="${ex.id}" data-set="${i}" data-field="weight"
+              placeholder="kg" value="${wVal}">
+            <input class="set-input" type="number" inputmode="decimal"
+              data-ex="${ex.id}" data-set="${i}" data-field="reps"
+              placeholder="reps" value="${rVal}">
+            <button class="set-done${isDone ? ' done' : ''}"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button>
+          </div>`;
+        if (prev) bodyHTML += `<div class="beat-hint">Last: <span>${prev.weight}kg × ${prev.reps}</span> — beat it!</div>`;
+        doneIndex++;
+      }
+    }
+
+    const hasInfo = !!EXERCISE_INFO[resolveInfoKey(ex.id)];
+    const isPhaseSlot = !!ex.slotId;
+    const swapBtnHTML = isPhaseSlot ? `<button class="swap-btn" data-slot="${ex.slotId}" data-day="${dayId}" data-cur="${ex.varIdx}">swap</button>` : '';
+
+    card.innerHTML = `
+      <div class="exercise-header" data-idx="${exIdx}">
+        <div style="flex:1;min-width:0">
+          <div class="ex-name-row">
+            <span class="exercise-name">${ex.name}</span>
+            ${hasInfo ? `<button class="ex-info-btn" data-ex-id="${ex.id}" title="How to do this exercise">ⓘ</button>` : ''}
+            ${swapBtnHTML}
+          </div>
+          <div class="exercise-meta">${ex.sets} sets · ${ex.repsTarget}</div>
+        </div>
+        <div class="exercise-chevron open">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="exercise-body open">${bodyHTML}</div>
+    `;
+    list.appendChild(card);
+  });
+
+  // toggle collapse
+  list.querySelectorAll('.exercise-header').forEach(h => {
+    h.addEventListener('click', () => {
+      const body = h.nextElementSibling;
+      const chevron = h.querySelector('.exercise-chevron');
+      body.classList.toggle('open');
+      chevron.classList.toggle('open');
+    });
+  });
+
+  list.querySelectorAll('.ex-info-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      openDemoModal(btn.dataset.exId);
+    });
+  });
+
+  // Swap button
+  list.querySelectorAll('.swap-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      openSwapSheet(parseInt(btn.dataset.day), btn.dataset.slot, parseInt(btn.dataset.cur));
+    });
+  });
+
+  // Auto-save on any input change
+  list.addEventListener('input', () => saveDraft());
+
+  // per-set check button + RPE chips
+  list.querySelectorAll('.set-done').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (btn.classList.contains('done')) return; // already confirmed
+      btn.classList.add('done');
+      saveDraft();
+
+      // Show RPE chips below this set row
+      const row = btn.closest('.set-row');
+      if (row) {
+        const exId = row.querySelector('.set-input') ? row.querySelector('.set-input').dataset.ex : null;
+        if (exId) {
+          const existing = row.nextElementSibling;
+          if (!existing || !existing.classList.contains('rpe-row')) {
+            const rpeRow = document.createElement('div');
+            rpeRow.className = 'rpe-row';
+            rpeRow.dataset.exId = exId;
+            rpeRow.innerHTML = `
+              <button class="rpe-chip" data-rpe="easy">Easy</button>
+              <button class="rpe-chip" data-rpe="right">Just right</button>
+              <button class="rpe-chip" data-rpe="hard">Hard</button>
+              <button class="rpe-chip" data-rpe="failed">Failed</button>
+            `;
+            row.insertAdjacentElement('afterend', rpeRow);
+            rpeRow.querySelectorAll('.rpe-chip').forEach(chip => {
+              chip.addEventListener('click', e => {
+                e.stopPropagation();
+                rpeRow.querySelectorAll('.rpe-chip').forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+                if (!DB.rpeHistory) DB.rpeHistory = {};
+                if (!DB.rpeHistory[exId]) DB.rpeHistory[exId] = [];
+                DB.rpeHistory[exId].push(chip.dataset.rpe);
+                saveDraft();
+              });
+            });
+          }
+        }
+      }
+
+      const card = btn.closest('.exercise-card');
+      const allBtns = card.querySelectorAll('.set-done');
+      const allDone = [...allBtns].every(b => b.classList.contains('done'));
+      if (allDone) {
+        // Sync this exercise immediately on all-sets-done
+        scheduleSyncDebounced();
+        setTimeout(() => {
+          const body = card.querySelector('.exercise-body');
+          const chevron = card.querySelector('.exercise-chevron');
+          body.classList.remove('open');
+          chevron.classList.remove('open');
+          const nextCard = card.nextElementSibling;
+          if (nextCard && nextCard.classList.contains('exercise-card')) {
+            nextCard.querySelector('.exercise-body').classList.add('open');
+            nextCard.querySelector('.exercise-chevron').classList.add('open');
+            nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 400);
+      }
+    });
+  });
+
+  showView('workout');
+  } catch(err) {
+    console.error('startWorkout error:', err);
+    alert('Error loading workout: ' + err.message + '\n\nCheck console for details.');
+  }
+}
+
+function saveWorkout() {
+  const list = document.getElementById('exercise-list');
+  const exerciseData = {};
+
+  activeDayExercises.forEach(ex => {
+    const sets = [];
+    for (let i = 0; i < ex.sets; i++) {
+      if (ex.type === 'cardio') {
+        const dur = list.querySelector(`[data-ex="${ex.id}"][data-set="${i}"][data-field="duration"]`);
+        sets.push({ duration: dur ? dur.value : '' });
+      } else if (ex.type === 'reps') {
+        const reps = list.querySelector(`[data-ex="${ex.id}"][data-set="${i}"][data-field="reps"]`);
+        sets.push({ reps: reps ? reps.value : '' });
+      } else {
+        const weight = list.querySelector(`[data-ex="${ex.id}"][data-set="${i}"][data-field="weight"]`);
+        const reps = list.querySelector(`[data-ex="${ex.id}"][data-set="${i}"][data-field="reps"]`);
+        sets.push({ weight: weight ? weight.value : '', reps: reps ? reps.value : '' });
+      }
+    }
+    exerciseData[ex.id] = sets;
+  });
+
+  const session = {
+    id: Date.now(),
+    dayId: activeDay.id,
+    date: today(),
+    exercises: exerciseData,
+  };
+
+  DB.sessions.push(session);
+  DB.draftSession = null;   // clear draft
+  writeCache(DB);
+  renderHome();
+  showView('home');
+  toast('Workout saved! Syncing…');
+  pushToSheet(DB).then(() => toast('Saved to Google Sheets!'));
+}
+
+// ─── SWAP SHEET ───────────────────────────────────────────────────────────────
+function openSwapSheet(dayId, slotId, curVarIdx) {
+  const slot = PHASE_SLOTS[slotId];
+  if (!slot) return;
+  const overlay = document.getElementById('swap-overlay');
+  document.getElementById('swap-title').textContent = `Swap: ${slot.label}`;
+  document.getElementById('swap-sub').textContent = 'Pick the variation available to you today';
+  const container = document.getElementById('swap-options');
+  container.innerHTML = '';
+  slot.variations.forEach((vari, idx) => {
+    const phaseLabel = ['Phase A','Phase B','Phase C'][idx];
+    const isCurrent = idx === curVarIdx;
+    const opt = document.createElement('div');
+    opt.className = `swap-option${isCurrent ? ' current' : ''}`;
+    opt.innerHTML = `<span>${vari.name}</span><span class="swap-option-badge">${phaseLabel}${isCurrent ? ' · active' : ''}</span>`;
+    opt.addEventListener('click', () => {
+      const swapKey = `${dayId}_${slotId}`;
+      if (!DB.swapOverrides) DB.swapOverrides = {};
+      if (idx === curVarIdx) {
+        // deselect override — restore phase default
+        delete DB.swapOverrides[swapKey];
+      } else {
+        DB.swapOverrides[swapKey] = idx;
+      }
+      writeCache(DB);
+      pushToSheet(DB);
+      closeSwapSheet();
+      startWorkout(dayId);
+      toast(`Swapped to: ${vari.name}`);
+    });
+    container.appendChild(opt);
+  });
+  overlay.classList.add('open');
+}
+
+function closeSwapSheet() {
+  document.getElementById('swap-overlay').classList.remove('open');
+}
+
+document.getElementById('swap-cancel-btn').addEventListener('click', closeSwapSheet);
+document.getElementById('swap-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('swap-overlay')) closeSwapSheet();
+});
+
+// ─── PROGRESS ─────────────────────────────────────────────────────────────────
+function renderProgress() {
+  renderProgressTab(progressTab);
+}
+
+function renderProgressTab(tab) {
+  progressTab = tab;
+  document.getElementById('progress-bodyweight').style.display = tab === 'bodyweight' ? '' : 'none';
+  document.getElementById('progress-exercises').style.display = tab === 'exercises' ? '' : 'none';
+  document.querySelectorAll('#progress-tabs .tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+
+  if (tab === 'bodyweight') renderBWProgress();
+  else renderExProgress();
+}
+
+function renderBWProgress() {
+  const bws = [...DB.bodyweight].sort((a,b) => a.date.localeCompare(b.date));
+  const labels = bws.map(b => b.date.slice(5));
+  const weights = bws.map(b => b.weight);
+
+  if (bwChart) { bwChart.destroy(); bwChart = null; }
+  if (bws.length > 0) {
+    const ctx = document.getElementById('bw-chart').getContext('2d');
+    const trendline = weights.length >= 2 ? linearRegression(weights) : null;
+    const datasets = [{
+      label: 'Weight (kg)',
+      data: weights,
+      borderColor: '#7c6af7',
+      backgroundColor: 'rgba(124,106,247,0.1)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+    }];
+    if (trendline) {
+      datasets.push({
+        label: 'Trend',
+        data: weights.map((_, i) => trendline.m * i + trendline.b),
+        borderColor: '#56cfb2',
+        borderDash: [5, 5],
+        fill: false,
+        pointRadius: 0,
+        tension: 0,
+      });
+    }
+    bwChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets },
+      options: chartOptions('kg'),
+    });
+  }
+
+  const table = document.getElementById('bw-table');
+  if (bws.length === 0) {
+    table.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18"/></svg><p>No weigh-ins yet.<br>Log your first from the home screen.</p></div>`;
+    return;
+  }
+  let rows = '';
+  for (let i = bws.length - 1; i >= 0; i--) {
+    const b = bws[i];
+    const diff = i > 0 ? (b.weight - bws[i-1].weight).toFixed(1) : '--';
+    const sign = diff !== '--' && parseFloat(diff) > 0 ? '+' : '';
+    const color = diff !== '--' ? (parseFloat(diff) < 0 ? '#56cfb2' : parseFloat(diff) > 0 ? '#e05c5c' : '') : '';
+    rows += `<tr><td>${b.date}</td><td>${b.weight} kg</td><td style="color:${color}">${diff !== '--' ? sign+diff+' kg' : '--'}</td><td><button class="delete-row-btn" data-date="${b.date}" data-type="bw" title="Delete">✕</button></td></tr>`;
+  }
+  table.innerHTML = `<table><thead><tr><th>Date</th><th>Weight</th><th>Change</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+  table.querySelectorAll('.delete-row-btn[data-type="bw"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const date = btn.dataset.date;
+      confirm('Delete weigh-in?', `Remove the entry for ${date}?`, () => {
+        DB.bodyweight = DB.bodyweight.filter(b => b.date !== date);
+        writeCache(DB);
+        pushToSheet(DB);
+        renderBWProgress();
+        renderHome();
+        toast('Entry deleted');
+      });
+    });
+  });
+}
+
+function getAllKnownExercises() {
+  // Collect every variation from PHASE_SLOTS + legacy DAYS exercises
+  const seen = new Set();
+  const result = [];
+  Object.values(PHASE_SLOTS).forEach(slot => {
+    slot.variations.forEach(v => {
+      if (!seen.has(v.varId)) {
+        seen.add(v.varId);
+        result.push({ id: v.varId, name: v.name });
+      }
+    });
+  });
+  // Also include old-style IDs still in sessions (from before phase system)
+  DAYS.forEach(d => d.exercises.forEach(e => {
+    if ((e.type === 'weight' || e.type === 'reps') && !seen.has(e.id)) {
+      seen.add(e.id);
+      result.push({ id: e.id, name: e.name });
+    }
+  }));
+  return result;
+}
+
+function renderExProgress() {
+  const sel = document.getElementById('exercise-select');
+
+  // Show only exercises that actually have session data, plus all known ones
+  const allEx = getAllKnownExercises();
+  const withData = allEx.filter(e =>
+    DB.sessions.some(s => s.exercises[e.id] && s.exercises[e.id].some(set => set.weight || set.reps))
+  );
+  // If no data yet, show all; otherwise show only those with data
+  const listToShow = withData.length > 0 ? withData : allEx;
+  sel.innerHTML = listToShow.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+
+  sel.onchange = () => renderExChart(sel.value);
+  if (sel.value) renderExChart(sel.value);
+}
+
+function renderExChart(exId) {
+  // Look up exercise info — try phase slots first, then DAYS
+  let exName = exId;
+  let exType = 'weight';
+  outer: for (const slot of Object.values(PHASE_SLOTS)) {
+    for (const v of slot.variations) {
+      if (v.varId === exId) { exName = v.name; break outer; }
+    }
+  }
+  const legacyEx = DAYS.flatMap(d => d.exercises).find(e => e.id === exId);
+  if (legacyEx) { exName = legacyEx.name; exType = legacyEx.type; }
+
+  const sessions = DB.sessions
+    .filter(s => s.exercises[exId] && s.exercises[exId].some(set => set.weight || set.reps))
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  const labels = sessions.map(s => s.date.slice(5));
+  let datapoints;
+  if (activeMetric === 'volume') {
+    datapoints = sessions.map(s => {
+      return s.exercises[exId].reduce((sum, set) => {
+        const w = parseFloat(set.weight) || 0;
+        const r = parseFloat(set.reps) || 0;
+        return sum + (w > 0 ? w * r : r);
+      }, 0);
+    });
+  } else {
+    datapoints = sessions.map(s => {
+      return Math.max(...s.exercises[exId].map(set => parseFloat(set.weight) || 0));
+    });
+  }
+
+  if (exChart) { exChart.destroy(); exChart = null; }
+  if (sessions.length > 0) {
+    const ctx = document.getElementById('ex-chart').getContext('2d');
+    exChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: activeMetric === 'volume' ? 'Volume (kg×reps)' : 'Max Weight (kg)',
+          data: datapoints,
+          borderColor: '#7c6af7',
+          backgroundColor: 'rgba(124,106,247,0.1)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }]
+      },
+      options: chartOptions(activeMetric === 'volume' ? 'vol' : 'kg'),
+    });
+  }
+
+  const table = document.getElementById('ex-table');
+  if (sessions.length === 0) {
+    table.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><p>No data for this exercise yet.</p></div>`;
+    return;
+  }
+  let rows = '';
+  for (let i = sessions.length - 1; i >= 0; i--) {
+    const s = sessions[i];
+    const sets = s.exercises[exId];
+    const vol = sets.reduce((sum, set) => {
+      const w = parseFloat(set.weight) || 0;
+      const r = parseFloat(set.reps) || 0;
+      return sum + (w > 0 ? w * r : r);
+    }, 0);
+    const maxW = Math.max(...sets.map(set => parseFloat(set.weight) || 0));
+    const setsStr = sets.map(set => set.weight ? `${set.weight}×${set.reps}` : `${set.reps}r`).join(', ');
+    rows += `<tr><td>${s.date}</td><td style="font-size:11px;color:var(--text2)">${setsStr}</td><td>${vol > 0 ? vol : '--'}</td><td><button class="delete-row-btn" data-id="${s.id}" data-type="session" title="Delete">✕</button></td></tr>`;
+  }
+  table.innerHTML = `<table><thead><tr><th>Date</th><th>Sets</th><th>Volume</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+  table.querySelectorAll('.delete-row-btn[data-type="session"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = Number(btn.dataset.id);
+      const s = DB.sessions.find(s => s.id === id);
+      confirm('Delete session?', `Remove the session logged on ${s ? s.date : ''}?`, () => {
+        DB.sessions = DB.sessions.filter(s => s.id !== id);
+        writeCache(DB);
+        pushToSheet(DB);
+        renderExChart(exId);
+        renderHome();
+        toast('Session deleted');
+      });
+    });
+  });
+}
+
+function chartOptions(unit) {
+  const isDark = !document.body.classList.contains('light');
+  const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
+  const textColor = isDark ? '#9090a8' : '#5a5a7a';
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: isDark ? '#24242f' : '#fff',
+        borderColor: isDark ? '#2e2e3e' : '#d0d0e0',
+        borderWidth: 1,
+        titleColor: isDark ? '#e8e8f0' : '#1a1a2e',
+        bodyColor: isDark ? '#9090a8' : '#5a5a7a',
+        callbacks: {
+          label: ctx => ` ${ctx.parsed.y.toFixed(1)} ${unit}`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: textColor, maxTicksLimit: 7 } },
+      y: { grid: { color: gridColor }, ticks: { color: textColor } }
+    }
+  };
+}
+
+function linearRegression(values) {
+  const n = values.length;
+  const sumX = values.reduce((s, _, i) => s + i, 0);
+  const sumY = values.reduce((s, v) => s + v, 0);
+  const sumXY = values.reduce((s, v, i) => s + i * v, 0);
+  const sumX2 = values.reduce((s, _, i) => s + i * i, 0);
+  const m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const b = (sumY - m * sumX) / n;
+  return { m, b };
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  currentView = name;
+
+  const titles = { home: 'Workout', progress: 'Progress', data: 'Data', workout: '' };
+  document.getElementById('header-title').textContent = titles[name] || '';
+
+  document.querySelectorAll('nav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === name);
+  });
+
+  if (name === 'progress') renderProgress();
+  if (name === 'home') renderHome();
+  if (name === 'data') renderPhaseSettings();
+  window.scrollTo(0, 0);
+}
+
+// ─── EVENT LISTENERS ──────────────────────────────────────────────────────────
+document.querySelectorAll('nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.view) showView(btn.dataset.view);
+  });
+});
+
+document.getElementById('back-btn').addEventListener('click', () => {
+  showView('home');
+});
+
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  DB.theme = DB.theme === 'dark' ? 'light' : 'dark';  // toggle
+  writeCache(DB);
+  pushToSheet(DB);
+  applyTheme();
+  if (currentView === 'progress') {
+    if (bwChart) { bwChart.destroy(); bwChart = null; }
+    if (exChart) { exChart.destroy(); exChart = null; }
+    renderProgress();
+  }
+});
+
+document.getElementById('bw-save').addEventListener('click', () => {
+  const val = parseFloat(document.getElementById('bw-input').value);
+  if (isNaN(val) || val < 20 || val > 300) { toast('Enter a valid weight'); return; }
+  const existing = DB.bodyweight.findIndex(b => b.date === today());
+  if (existing >= 0) DB.bodyweight[existing].weight = val;
+  else DB.bodyweight.push({ date: today(), weight: val });
+  document.getElementById('bw-input').value = '';
+  writeCache(DB);
+  renderHome();
+  toast('Weight logged! Syncing…');
+  pushToSheet(DB).then(() => toast('Saved to Google Sheets!'));
+});
+
+document.getElementById('bw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('bw-save').click();
+});
+
+document.getElementById('save-workout-btn').addEventListener('click', saveWorkout);
+
+document.querySelectorAll('#progress-tabs .tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => renderProgressTab(btn.dataset.tab));
+});
+
+document.getElementById('metric-volume').addEventListener('click', () => {
+  activeMetric = 'volume';
+  document.getElementById('metric-volume').classList.add('active');
+  document.getElementById('metric-maxweight').classList.remove('active');
+  renderExChart(document.getElementById('exercise-select').value);
+});
+
+document.getElementById('metric-maxweight').addEventListener('click', () => {
+  activeMetric = 'maxweight';
+  document.getElementById('metric-maxweight').classList.add('active');
+  document.getElementById('metric-volume').classList.remove('active');
+  renderExChart(document.getElementById('exercise-select').value);
+});
+
+// data management
+document.getElementById('export-btn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(DB, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `workout-backup-${today()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Exported!');
+});
+
+document.getElementById('import-btn').addEventListener('click', () => {
+  document.getElementById('import-file').click();
+});
+
+document.getElementById('import-file').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const imported = JSON.parse(ev.target.result);
+      if (!imported.sessions || !imported.bodyweight) throw new Error('Invalid format');
+      DB = { ...DB, ...imported };
+      writeCache(DB);
+      applyTheme();
+      renderHome();
+      toast('Importing…');
+      pushToSheet(DB).then(() => toast('Imported to Google Sheets!'));
+    } catch(err) {
+      toast('Invalid file format');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  confirm(
+    'Reset all data?',
+    'This will permanently delete all sessions, bodyweight logs, and settings. This cannot be undone.',
+    () => {
+      DB = { sessions: [], bodyweight: [], theme: 'dark', startDate: null, phaseOverride: null, swapOverrides: {}, rpeHistory: {}, draftSession: null };
+      writeCache(DB);
+      applyTheme();
+      renderHome();
+      toast('Clearing…');
+      pushToSheet(DB).then(() => toast('All data cleared'));
+    }
+  );
+});
+
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('show');
+  }
+});
+
+// ─── PHASE SETTINGS WIRING ────────────────────────────────────────────────────
+function renderPhaseSettings() {
+  const phaseIdx = getPhaseIndex(1); // use day 1 as reference
+  const weekOverall = getWeekOverall();
+  const weekInPhase = ((weekOverall - 1) % 12) + 1;
+  const lbl = document.getElementById('phase-settings-label');
+  const sub = document.getElementById('phase-settings-sub');
+  if (lbl) lbl.textContent = `Phase ${getPhaseLabel(phaseIdx)} — Week ${weekInPhase} of 12`;
+  if (sub) sub.textContent = DB.startDate ? `Started ${DB.startDate}` : 'Start date not set (opens on first workout)';
+}
+
+document.getElementById('phase-advance-btn').addEventListener('click', () => {
+  // Advance by 28 days: shift start date back by 28 days
+  if (!DB.startDate) DB.startDate = today();
+  const d = new Date(DB.startDate);
+  d.setDate(d.getDate() - 28);
+  DB.startDate = d.toISOString().slice(0, 10);
+  DB.swapOverrides = {}; // clear swaps on advance
+  writeCache(DB);
+  pushToSheet(DB);
+  renderPhaseSettings();
+  const phaseIdx = getPhaseIndex(1);
+  toast(`Advanced to Phase ${getPhaseLabel(phaseIdx)}`);
+});
+
+document.getElementById('phase-reset-btn').addEventListener('click', () => {
+  confirm('Reset phase to A?', 'This will restart the 12-week cycle from today and clear any exercise swaps.', () => {
+    DB.startDate = today();
+    DB.swapOverrides = {};
+    DB.phaseOverride = null;
+    writeCache(DB);
+    pushToSheet(DB);
+    renderPhaseSettings();
+    toast('Phase reset to A');
+  });
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+applyTheme();
+renderHome();
+renderPhaseSettings();
+// Load latest data from Google Sheets, then re-render
+fetchFromSheet().then(() => {
+  applyTheme();
+  renderHome();
+  renderPhaseSettings();
+});
+</script>
+</body>
+</html>
