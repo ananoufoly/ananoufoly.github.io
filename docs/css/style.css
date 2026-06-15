@@ -1,9 +1,11 @@
 /* ================================================================
    style.css — Foly Ananou personal site
-   Fonts: Instrument Serif (titles) + DM Sans (body)
+   Fonts: Carlito (body + UI) + Instrument Serif (display titles)
    ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
+/* Carlito — metric-compatible with Calibri, matches the CV typeface */
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/carlito@5.0.13/index.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
 
 /* ── Reset ─────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,7 +13,7 @@
 /* ── Base ──────────────────────────────────────────────────── */
 html { font-size: 16px; }
 body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Carlito', 'Calibri', -apple-system, BlinkMacSystemFont, sans-serif;
   background: #FAFAF8;
   color: #1a1a1a;
   line-height: 1.7;
@@ -386,6 +388,41 @@ a:hover { text-decoration: underline; }
 .edito-nav-title:hover { text-decoration: underline; }
 .edito-nav-right { text-align: right; margin-left: auto; }
 
+/* ── CV page ───────────────────────────────────────────────── */
+.cv-contact-line {
+  font-size: 14px;
+  color: #555;
+  margin: -4px 0 36px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.cv-contact-line a { color: #1a1a1a; text-decoration: underline; text-underline-offset: 2px; }
+.cv-contact-line span { color: #bbb; }
+
+.cv-list { list-style: none; margin-bottom: 8px; }
+.cv-entry { padding: 14px 0; border-bottom: 1px solid #efefef; }
+.cv-entry:last-child { border-bottom: none; }
+.cv-entry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.cv-role { font-weight: 600; font-size: 16px; color: #1a1a1a; }
+.cv-date { font-size: 13px; color: #999; white-space: nowrap; }
+.cv-org { font-style: italic; color: #555; font-size: 14px; margin-top: 1px; }
+.cv-note { font-size: 14px; color: #666; margin-top: 4px; }
+.cv-bullets { margin: 8px 0 0 0; padding-left: 18px; }
+.cv-bullets li { font-size: 14.5px; color: #333; margin-bottom: 4px; line-height: 1.55; }
+.cv-tagline {
+  font-size: 14.5px;
+  color: #444;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .site-container { padding: 0 18px; }
@@ -404,4 +441,6 @@ a:hover { text-decoration: underline; }
   .edito-nav { flex-direction: column; }
   .edito-nav-item { max-width: 100%; }
   .edito-nav-right { text-align: left; margin-left: 0; }
+  .cv-entry-head { flex-direction: column; gap: 2px; }
+  .cv-date { font-size: 12px; }
 }
