@@ -25,3 +25,9 @@ env/
 encrypt_agenda.py
 research_agenda.html
 research_agenda.csv
+
+# Local-only loan-planner encryption tool + plaintext planner source + seeder.
+# Only docs/planner/planner.enc (ciphertext) should ever be committed.
+encrypt_planner.py
+seed_planner.js
+loan_planner_seeded.html

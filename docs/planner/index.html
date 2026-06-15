@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Keep this page out of search engines and previews -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow">
+<title>Restricted</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    background:#0b1220;color:#e5e7eb;display:flex;align-items:center;
+    justify-content:center;min-height:100vh;padding:24px;
+  }
+  .card{width:100%;max-width:340px;text-align:center}
+  .lock{font-size:32px;margin-bottom:18px;opacity:.7}
+  h1{font-size:16px;font-weight:600;margin-bottom:6px}
+  p{font-size:13px;color:#9aa4b2;margin-bottom:22px}
+  form{display:flex;flex-direction:column;gap:10px}
+  input{
+    padding:11px 13px;border-radius:8px;border:1px solid #2a3650;
+    background:#111a2e;color:#e5e7eb;font-size:14px;outline:none;font-family:inherit;
+  }
+  input:focus{border-color:#3b82f6}
+  button{
+    padding:11px 13px;border-radius:8px;border:none;background:#2563eb;
+    color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
+  }
+  button:disabled{opacity:.55;cursor:default}
+  .err{color:#f87171;font-size:12px;min-height:16px;margin-top:4px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="lock">🔒</div>
+    <h1>Private</h1>
+    <p>This area is restricted.</p>
+    <form id="gate" autocomplete="off">
+      <input id="pw" type="password" placeholder="Password" autofocus
+             autocomplete="current-password" aria-label="Password">
+      <button id="go" type="submit">Unlock</button>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+  </div>
+
+<script>
+// ---------------------------------------------------------------------------
+// Client-side gate. The planner is AES-GCM encrypted in planner.enc; the only
+// way to render it is to derive the right key from the correct password.
+// A wrong password makes decryption throw -> we redirect home. No plaintext
+// planner content and no usable hash is present in this file.
+// ---------------------------------------------------------------------------
+
+// PBKDF2 parameters — must match encrypt_planner.py exactly.
+const PBKDF2_ITERS = 250000;
+const HOME = "/";              // where to send people who fail / cancel
+
+const form = document.getElementById("gate");
+const pwEl = document.getElementById("pw");
+const goEl = document.getElementById("go");
+const errEl = document.getElementById("err");
+
+const b64ToBytes = (b64) => Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+
+async function deriveKey(password, salt) {
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey(
+    "raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]
+  );
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt, iterations: PBKDF2_ITERS, hash: "SHA-256" },
+    baseKey,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"]
+  );
+}
+
+async function unlock(password) {
+  // Fetch the encrypted blob. Format (JSON): { salt, iv, ct } all base64.
+  const res = await fetch("planner.enc", { cache: "no-store" });
+  if (!res.ok) throw new Error("missing");
+  const { salt, iv, ct } = await res.json();
+
+  const key = await deriveKey(password, b64ToBytes(salt));
+  // decrypt throws on wrong key (auth tag mismatch) — that's our password check.
+  const plainBuf = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: b64ToBytes(iv) },
+    key,
+    b64ToBytes(ct)
+  );
+  return new TextDecoder().decode(plainBuf);
+}
+
+function renderPlanner(html) {
+  // Replace the whole document with the decrypted planner app.
+  document.open();
+  document.write(html);
+  document.close();
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const pw = pwEl.value;
+  if (!pw) return;
+  errEl.textContent = "";
+  goEl.disabled = true;
+  goEl.textContent = "Unlocking…";
+  try {
+    const html = await unlock(pw);
+    renderPlanner(html);
+  } catch (err) {
+    // Wrong password (decrypt failed) or missing file.
+    errEl.textContent = "Incorrect.";
+    pwEl.value = "";
+    goEl.disabled = false;
+    goEl.textContent = "Unlock";
+    setTimeout(() => { window.location.replace(HOME); }, 1200);
+  }
+});
+</script>
+</body>
+</html>
