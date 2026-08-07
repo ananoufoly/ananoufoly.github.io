@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simulateur économique de Cika Invest — financement participatif d'élevages de poules pondeuses en zone FCFA.">
+  <title>Cika Invest — Simulateur économique — Foly Ananou</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+  /* ================================================================
+     Cika Invest — styles spécifiques au simulateur (inline, autonomes)
+     ================================================================ */
+  .sim-wrap { max-width: 1180px; margin: 0 auto; }
+  .sim-container { max-width: 1180px; }
+
+  .sim-lede { font-size: 1.05rem; color: #555; max-width: 720px; margin-bottom: 18px; line-height: 1.6; }
+
+  .sim-toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    margin-bottom: 26px; padding-bottom: 18px; border-bottom: 1px solid #e5e5e5;
+  }
+  .sim-btn {
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    padding: 7px 14px; border: 1px solid #d5d5d0; border-radius: 4px;
+    background: #fff; color: #1a1a1a; cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .sim-btn:hover { background: #f3f3ef; border-color: #b5b5b0; }
+  .sim-btn:focus-visible { outline: 2px solid #1D39C4; outline-offset: 2px; }
+  .sim-btn.primary { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+  .sim-btn.primary:hover { background: #333; }
+  .sim-btn[aria-pressed="true"] { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+  .sim-btn[disabled] { opacity: .5; cursor: progress; }
+  .sim-status { font-size: 12px; color: #888; }
+
+  /* ── Grille deux colonnes ─────────────────────────────────── */
+  .sim-grid { display: grid; grid-template-columns: 320px 1fr; gap: 34px; align-items: start; }
+
+  /* ── Panneau de saisie ────────────────────────────────────── */
+  .sim-panel fieldset { border: none; margin-bottom: 22px; }
+  .sim-panel legend {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+    color: #888; margin-bottom: 12px; padding-bottom: 7px;
+    border-bottom: 1px solid #e5e5e5; width: 100%;
+  }
+  .fld { margin-bottom: 14px; }
+  .fld-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+  .fld label { font-size: 13px; color: #333; line-height: 1.35; }
+  .fld-unit { font-size: 11px; color: #999; white-space: nowrap; }
+  .fld-row { display: flex; align-items: center; gap: 9px; }
+  .fld input[type="number"] {
+    width: 88px; flex: 0 0 88px; font-family: inherit; font-size: 13px;
+    padding: 4px 7px; border: 1px solid #ddd; border-radius: 3px; background: #fff; color: #1a1a1a;
+  }
+  .fld input[type="number"]:focus { outline: 2px solid #1D39C4; outline-offset: 0; border-color: #1D39C4; }
+  .fld input[type="range"] { flex: 1 1 auto; min-width: 0; accent-color: #1D39C4; height: 20px; }
+  .fld input[type="range"]:focus-visible { outline: 2px solid #1D39C4; outline-offset: 3px; }
+
+  /* Infobulle source */
+  .src {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 14px; height: 14px; margin-left: 5px; border-radius: 50%;
+    background: #e8e8e2; color: #666; font-size: 9.5px; font-weight: 700;
+    cursor: help; vertical-align: middle; position: relative; line-height: 1;
+  }
+  .src:focus-visible { outline: 2px solid #1D39C4; outline-offset: 2px; }
+  .src::after {
+    content: attr(data-src); position: absolute; left: 50%; bottom: calc(100% + 7px);
+    transform: translateX(-50%); width: 230px; padding: 8px 10px;
+    background: #1a1a1a; color: #fff; font-size: 11.5px; font-weight: 400;
+    line-height: 1.45; border-radius: 4px; text-align: left;
+    opacity: 0; visibility: hidden; transition: opacity .12s; z-index: 40; pointer-events: none;
+  }
+  .src:hover::after, .src:focus::after, .src:focus-visible::after { opacity: 1; visibility: visible; }
+
+  .split-note { font-size: 12px; margin-top: -4px; margin-bottom: 12px; font-weight: 600; }
+  .split-ok { color: #237804; }
+  .split-bad { color: #A8071A; }
+
+  /* ── Cartes KPI ───────────────────────────────────────────── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 26px; }
+  .kpi {
+    border: 1px solid #e8e8e2; border-radius: 6px; padding: 13px 15px; background: #fff;
+  }
+  .kpi-label {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+    color: #999; margin-bottom: 6px;
+  }
+  .kpi-value { font-size: 1.5rem; line-height: 1.15; letter-spacing: -.02em; font-weight: 600; color: #1a1a1a; }
+  .kpi-sub { font-size: 12px; color: #777; margin-top: 5px; line-height: 1.5; }
+  .kpi-sub b { font-weight: 600; color: #444; }
+  .pos { color: #237804; }
+  .neg { color: #A8071A; }
+
+  .verdict {
+    border: 1px solid #e8e8e2; border-left: 4px solid #1D39C4; border-radius: 6px;
+    padding: 14px 17px; background: #fff; margin-bottom: 30px; font-size: 14.5px; line-height: 1.65;
+  }
+  .verdict b { font-weight: 600; }
+
+  /* ── Sections de résultats ────────────────────────────────── */
+  .sim-block { margin-bottom: 34px; }
+  .sim-h {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+    color: #888; margin-bottom: 14px; padding-bottom: 7px; border-bottom: 1px solid #e5e5e5;
+  }
+  .sim-hint { font-size: 12.5px; color: #888; margin-bottom: 12px; line-height: 1.5; }
+
+  /* ── Tableaux ─────────────────────────────────────────────── */
+  .sim-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .sim-table th, .sim-table td { padding: 7px 9px; text-align: right; border-bottom: 1px solid #f0f0f0; }
+  .sim-table th {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: #888; border-bottom: 1px solid #e5e5e5; white-space: nowrap;
+  }
+  .sim-table th:first-child, .sim-table td:first-child { text-align: left; }
+  .sim-table tbody tr:last-child td { border-bottom: none; }
+  .sim-scroll { overflow-x: auto; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ── Heatmap ──────────────────────────────────────────────── */
+  .hm-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .hm-table { border-collapse: collapse; font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .hm-table th { font-size: 10px; font-weight: 600; color: #888; padding: 3px 5px; white-space: nowrap; }
+  .hm-table td {
+    padding: 6px 7px; text-align: center; color: #1a1a1a; min-width: 52px;
+    border: 1px solid rgba(255,255,255,.65);
+  }
+  .hm-table td.cur { outline: 2.5px solid #1a1a1a; outline-offset: -2.5px; font-weight: 700; }
+  .hm-corner { font-size: 9.5px; color: #aaa; font-weight: 600; }
+  .hm-legend { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: #888; margin-top: 9px; flex-wrap: wrap; }
+  .hm-swatch { display: inline-block; width: 15px; height: 12px; border: 1px solid rgba(0,0,0,.12); vertical-align: middle; }
+
+  /* ── Stress ───────────────────────────────────────────────── */
+  details.stress { border: 1px solid #e8e8e2; border-radius: 6px; background: #fff; margin-bottom: 30px; }
+  details.stress > summary {
+    cursor: pointer; padding: 13px 17px; font-weight: 600; font-size: 15px; list-style: none;
+  }
+  details.stress > summary::-webkit-details-marker { display: none; }
+  details.stress > summary::before { content: "▸ "; color: #999; }
+  details.stress[open] > summary::before { content: "▾ "; }
+  details.stress > summary:focus-visible { outline: 2px solid #1D39C4; outline-offset: -2px; }
+  .stress-body { padding: 4px 17px 20px; border-top: 1px solid #f0f0f0; }
+  .stress-params { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0 22px; margin: 16px 0 4px; }
+  .stress-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 26px; margin-top: 20px; }
+  .chk { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #333; }
+  .chk input { accent-color: #1D39C4; width: 15px; height: 15px; }
+
+  .stat-list { list-style: none; font-size: 13px; }
+  .stat-list li { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid #f5f5f5; }
+  .stat-list li:last-child { border-bottom: none; }
+  .stat-list .k { color: #666; }
+  .stat-list .v { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  /* ── Encadré sources ──────────────────────────────────────── */
+  .sources {
+    border: 1px solid #eee; border-radius: 6px; background: #F4F4F0;
+    padding: 16px 19px; font-size: 12.5px; color: #666; line-height: 1.65; margin-top: 12px;
+  }
+  .sources h2 {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+    color: #888; margin-bottom: 9px;
+  }
+  .sources ul { margin: 0 0 10px 1.1em; }
+  .sources li { margin-bottom: 3px; }
+  .sources .warn { color: #A8071A; font-weight: 600; }
+
+  svg text { font-family: 'Carlito', 'Calibri', -apple-system, sans-serif; }
+
+  @media (max-width: 900px) {
+    .sim-grid { grid-template-columns: 1fr; gap: 26px; }
+    .sim-panel { border-bottom: 1px solid #e5e5e5; padding-bottom: 10px; }
+  }
+  @media (max-width: 600px) {
+    .kpi-value { font-size: 1.3rem; }
+    .sim-toolbar { gap: 8px; }
+  }
+  </style>
+</head>
+<body>
+
+<div class="site-container sim-container">
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-name">Foly Ananou</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="editos.html">Éditos</a></li>
+      <li><a href="cv.html">CV</a></li>
+      <li><a href="cika-invest.html" class="active">Cika Invest</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1 class="page-title">Cika Invest — Simulateur économique</h1>
+    <p class="sim-lede">
+      Réglez les paramètres d'un cycle de ponte et voyez, en direct, si le montage fait gagner de
+      l'argent aux trois parties — le projet agricole, le participant qui préfinance, et Cika.
+    </p>
+
+    <div class="sim-toolbar">
+      <button type="button" class="sim-btn" id="btnReset">Réinitialiser aux valeurs de base</button>
+      <button type="button" class="sim-btn" id="btnCcy" aria-pressed="false">Afficher en EUR</button>
+      <span class="sim-status" id="ccyNote">Montants en FCFA · 1 EUR = 655,957 FCFA</span>
+    </div>
+
+    <div class="sim-grid">
+
+      <!-- ════════════ PANNEAU DE SAISIE ════════════ -->
+      <form class="sim-panel" id="panel" autocomplete="off" onsubmit="return false;">
+
+        <fieldset>
+          <legend>Technique — par poule / cycle</legend>
+          <div id="grp-technique"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Prix</legend>
+          <div id="grp-prix"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Répartition &amp; marges Cika</legend>
+          <div id="grp-repartition"></div>
+          <p class="split-note" id="splitNote"></p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Société &amp; bande</legend>
+          <div id="grp-societe"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Capital immobilisé &amp; risque</legend>
+          <div id="grp-risque"></div>
+        </fieldset>
+
+      </form>
+
+      <!-- ════════════ RÉSULTATS ════════════ -->
+      <section class="sim-results" aria-live="polite">
+
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-label">BND par poule</div>
+            <div class="kpi-value" id="kBnd">—</div>
+            <div class="kpi-sub" id="kBndSub"></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Rendement participant</div>
+            <div class="kpi-value" id="kRoi">—</div>
+            <div class="kpi-sub" id="kRoiSub"></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Seuil Cika</div>
+            <div class="kpi-value" id="kSeuil">—</div>
+            <div class="kpi-sub" id="kSeuilSub"></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Résultat Cika à la bande</div>
+            <div class="kpi-value" id="kCika">—</div>
+            <div class="kpi-sub" id="kCikaSub"></div>
+          </div>
+        </div>
+
+        <div class="verdict" id="verdict"></div>
+
+        <div class="sim-block">
+          <h2 class="sim-h">Cascade — des produits au partage du BND</h2>
+          <div class="sim-scroll"><div id="waterfall"></div></div>
+        </div>
+
+        <div class="sim-block">
+          <h2 class="sim-h">Tickets participant</h2>
+          <div class="sim-scroll">
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th scope="col">Ticket</th>
+                  <th scope="col">Capital avancé</th>
+                  <th scope="col">Capital immobilisé</th>
+                  <th scope="col">Gain net annualisé</th>
+                  <th scope="col">Gain espéré (risque)</th>
+                </tr>
+              </thead>
+              <tbody id="tickets"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sim-block">
+          <h2 class="sim-h">Grille de sensibilité — prix de l'œuf × prix de l'aliment</h2>
+          <div class="hm-tabs">
+            <button type="button" class="sim-btn" id="hmA" aria-pressed="true">A — ROI espéré participant</button>
+            <button type="button" class="sim-btn" id="hmB" aria-pressed="false">B — Seuil Cika (poules)</button>
+          </div>
+          <p class="sim-hint" id="hmHint"></p>
+          <div class="sim-scroll"><div id="heatmap"></div></div>
+          <div class="hm-legend" id="hmLegend"></div>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- ════════════ STRESS ════════════ -->
+    <details class="stress" id="stressBox">
+      <summary>Stress test — distribution, corrélation et cascade de pertes</summary>
+      <div class="stress-body">
+        <p class="sim-hint" style="max-width:760px">
+          Le cas central ci-dessus suppose que tout se passe comme prévu. Ici, on tire
+          <span id="nSimTxt">5 000</span> scénarios : chocs de prix communs à toutes les fermes
+          (systémiques), chocs de production propres à chaque bande, sinistres et défauts d'éleveur.
+          Les pertes passent par une <b>cascade</b> : réserve, puis backstop Cika, puis capital du
+          participant (plafonné par la protection), puis Cika en dernier ressort.
+        </p>
+
+        <div class="stress-params" id="grp-stress"></div>
+
+        <div class="sim-toolbar" style="border:none; padding-bottom:0; margin-bottom:0; margin-top:14px">
+          <button type="button" class="sim-btn primary" id="btnRun">Lancer le stress test</button>
+          <label class="chk"><input type="checkbox" id="chkSeed" checked> Figer l'aléa (reproductible)</label>
+          <span class="sim-status" id="runStatus"></span>
+        </div>
+
+        <div id="stressOut" hidden>
+          <div class="stress-results">
+            <div>
+              <h3 class="sim-h">Participant — rendement annualisé</h3>
+              <ul class="stat-list" id="statPart"></ul>
+              <div style="margin-top:14px" id="histPart"></div>
+            </div>
+            <div>
+              <h3 class="sim-h">Cika — résultat annuel à la bande de référence</h3>
+              <ul class="stat-list" id="statCika"></ul>
+              <div style="margin-top:14px" id="histCika"></div>
+            </div>
+          </div>
+
+          <div class="sim-block" style="margin-top:30px">
+            <h3 class="sim-h">Tornado — quel paramètre casse le modèle en premier</h3>
+            <p class="sim-hint">Choc défavorable appliqué seul, toutes choses égales par ailleurs. Trié par ampleur sur le rendement participant.</p>
+            <div class="sim-scroll">
+              <table class="sim-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Choc</th>
+                    <th scope="col">ROI espéré participant</th>
+                    <th scope="col">Δ ROI</th>
+                    <th scope="col">Résultat Cika à la bande</th>
+                    <th scope="col">Δ Cika</th>
+                  </tr>
+                </thead>
+                <tbody id="tornado"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ════════════ SOURCES ════════════ -->
+    <aside class="sources">
+      <h2>Sources &amp; avertissement</h2>
+      <ul>
+        <li>Aliment ponte 238 F/kg, poussin ponte 580 F : grille de prix <b>Sedima (Sénégal)</b>.</li>
+        <li>110–120 g/j, 250–300 œufs/an, plateau de 30 œufs à 2 000–2 300 F : <b>guide d'élevage pondeuses Afrique 2025</b> et <b>fiche technico-économique RECA Niger</b>.</li>
+        <li>Tension haussière sur les œufs et les intrants en Côte d'Ivoire (2026) : <b>presse locale</b>.</li>
+        <li>655,957 FCFA/EUR : <b>parité fixe du franc CFA</b>.</li>
+        <li><b>Dérivés</b> (calculés, non relevés) : prix de la poulette, œufs par poule.</li>
+        <li><b>Hypothèses de travail à valider</b> — ce ne sont pas des données de marché : charges de structure annuelles, clé de répartition 45/40/15, coût de collecte, mortalité, probabilité et sévérité de sinistre, ainsi que tous les paramètres du module de stress.</li>
+      </ul>
+      <p class="warn">Chiffres de cadrage issus de sources publiques, destinés à tester la viabilité du modèle — pas un business plan validé.</p>
+    </aside>
+
+  </main>
+
+  <footer class="site-footer">
+    <a href="index.html">Foly Ananou</a> &middot; 2026
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ==============================================================
+     1. PARAMÈTRES — defaults, bornes, unités, sources
+     ============================================================== */
+
+  var SRC = {
+    derive:   "Dérivé (calculé, non relevé). Cadrage à partir des grilles de prix Sedima (Sénégal) — poussin ponte 580 F, élevé jusqu'au stade prête-à-pondre.",
+    hypo:     "Hypothèse de travail à valider — ce n'est pas une donnée de marché.",
+    sedima:   "Grille de prix Sedima (Sénégal) : aliment ponte 238 F/kg. Valeur de base relevée à la hausse pour le cadrage régional (tension 2026).",
+    guide:    "Guide d'élevage pondeuses Afrique 2025 et fiche technico-économique RECA Niger : 250–300 œufs/an, 110–120 g d'aliment/jour.",
+    marche:   "Prix de marché de l'œuf. Repère : plateau de 30 œufs à 2 000–2 300 F (guide 2025, RECA Niger). Tension haussière en Côte d'Ivoire en 2026 (presse locale).",
+    parite:   "Parité fixe du franc CFA : 1 EUR = 655,957 FCFA.",
+    struct:   "Paramètre de structure du montage Cika — choix commercial, pas une donnée observée.",
+    stress:   "Paramètre du module de stress : hypothèse de travail, à calibrer sur historique quand les données seront disponibles."
+  };
+
+  // key, label, unit, min, max, step, default, source, group, [decimals]
+  var PARAMS = [
+    // Technique
+    ["prixPoulette","Prix d'une poulette prête à pondre","FCFA/tête",1000,10000,50,4000,SRC.derive,"technique",0],
+    ["mortalite","Taux de mortalité sur le cycle","part",0,0.4,0.005,0.08,SRC.guide,"technique",3],
+    ["oeufsParPoule","Œufs vendables par poule","œufs/cycle",100,340,1,260,SRC.guide,"technique",0],
+    ["consoAliment","Aliment consommé","kg/poule/cycle",20,60,0.5,42,SRC.guide,"technique",1],
+    ["prixAliment","Prix de l'aliment ponte","FCFA/kg",150,400,5,260,SRC.sedima,"technique",0],
+    ["sante","Frais sanitaires / vétérinaire","FCFA/tête",0,2000,25,500,SRC.hypo,"technique",0],
+    ["autres","Autres charges directes","FCFA/tête",0,3000,25,600,SRC.hypo,"technique",0],
+    ["valeurReforme","Revente d'une poule réformée","FCFA/tête",0,6000,50,2500,SRC.guide,"technique",0],
+    // Prix
+    ["prixOeuf","Prix de vente de l'œuf","FCFA/œuf",40,120,1,70,SRC.marche,"prix",0],
+    // Répartition & marges
+    ["coutCollectePct","Coût de collecte / commercialisation","part de la recette œufs",0,0.25,0.005,0.06,SRC.hypo,"repartition",3],
+    ["margeAliment","Marge Cika sur l'aliment","FCFA/kg",0,60,1,0,SRC.struct,"repartition",0],
+    ["margeOeuf","Marge Cika sur l'œuf commercialisé","FCFA/œuf",0,20,0.5,0,SRC.struct,"repartition",1],
+    ["partCika","Part Cika du bénéfice net distribuable","part",0,1,0.01,0.15,SRC.hypo,"repartition",2],
+    ["partProducteur","Part producteur","part",0,1,0.01,0.40,SRC.hypo,"repartition",2],
+    // Société & bande
+    ["nbPoules","Taille de bande de référence","poules",100,20000,100,1000,SRC.struct,"societe",0],
+    ["cycleMois","Durée du cycle de participation","mois",6,24,1,12,SRC.struct,"societe",0],
+    ["opexAnnuel","Charges annuelles de structure Cika","FCFA/an",0,300000000,1000000,60000000,SRC.hypo,"societe",0],
+    ["fx","Taux de change","FCFA/EUR",655.957,655.957,0.001,655.957,SRC.parite,"societe",3],
+    // Capital & risque
+    ["partPrefin","Part des intrants réellement préfinancée","part",0.05,1,0.01,1.00,SRC.struct,"risque",2],
+    ["probaSinistre","Probabilité d'un sinistre majeur / cycle","part",0,0.5,0.005,0.05,SRC.hypo,"risque",3],
+    ["perteSinistre","Perte en cas de sinistre","part du capital",0,1,0.01,0.70,SRC.hypo,"risque",2],
+    // Stress
+    ["volPrixOeuf","Volatilité du prix de l'œuf (systémique)","écart-type, FCFA",0,25,0.5,6,SRC.stress,"stress",1],
+    ["volPrixAliment","Volatilité du prix de l'aliment (systémique)","écart-type, FCFA/kg",0,80,1,20,SRC.stress,"stress",0],
+    ["volMortalite","Volatilité de la mortalité (ferme)","écart-type",0,0.15,0.005,0.03,SRC.stress,"stress",3],
+    ["volOeufs","Volatilité des œufs/poule (ferme)","écart-type",0,80,1,20,SRC.stress,"stress",0],
+    ["probaDefaut","Probabilité de défaut / fraude de l'éleveur","part",0,0.3,0.005,0.03,SRC.stress,"stress",3],
+    ["perteDefaut","Part du capital perdue si défaut","part",0,1,0.01,0.50,SRC.stress,"stress",2],
+    ["correlation","Corrélation des chocs entre fermes","0 = diversifiable, 1 = systémique",0,1,0.01,0.30,SRC.stress,"stress",2],
+    ["nbBandesParticipant","Nombre de bandes détenues","bandes",1,50,1,1,SRC.struct,"stress",0],
+    ["reservePct","Fonds de réserve (absorbe en premier)","part du capital",0,0.5,0.01,0.0,SRC.struct,"stress",2],
+    ["cikaBackstop","Backstop Cika après la réserve","FCFA/poule",0,10000,100,0,SRC.struct,"stress",0],
+    ["protectionCapital","Capital participant garanti","part",0,1,0.01,0.0,SRC.struct,"stress",2],
+    ["nbSimulations","Nombre de tirages Monte-Carlo","tirages",500,20000,500,5000,SRC.stress,"stress",0]
+  ];
+
+  var DEFAULTS = {}, META = {};
+  PARAMS.forEach(function (p) {
+    META[p[0]] = { key:p[0], label:p[1], unit:p[2], min:p[3], max:p[4], step:p[5],
+                   def:p[6], src:p[7], group:p[8], dec:p[9] };
+    DEFAULTS[p[0]] = p[6];
+  });
+
+  var S = {};                                    // état courant (en mémoire uniquement)
+  Object.keys(DEFAULTS).forEach(function (k) { S[k] = DEFAULTS[k]; });
+
+  var showEUR = false;
+  var hmView  = "A";
+  var lastStress = null;
+
+  /* ==============================================================
+     2. FORMATAGE
+     ============================================================== */
+
+  var FX_LABEL = "655,957";
+
+  function nf(x, dec) {
+    if (!isFinite(x)) return "n/a";
+    return x.toLocaleString("fr-FR", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  }
+  // Montant : suit la bascule FCFA / EUR
+  function money(fcfa, dec) {
+    if (!isFinite(fcfa)) return "n/a";
+    if (showEUR) {
+      var e = fcfa / (S.fx || 655.957);
+      // En euros les montants par poule sont petits : on garde 2 décimales sous 1 000 €,
+      // sinon l'arrondi à l'unité écrase l'information (3 388 F → « 5 € » au lieu de 5,16 €).
+      var d = Math.abs(e) >= 1000 ? 0 : 2;
+      return nf(e, d) + " €";
+    }
+    return nf(fcfa, dec === undefined ? 0 : dec) + " F";
+  }
+  // Montant toujours dans les deux unités
+  function money2(fcfa) {
+    if (!isFinite(fcfa)) return "n/a";
+    var e = fcfa / (S.fx || 655.957);
+    return nf(fcfa, 0) + " F · " + nf(e, Math.abs(e) >= 1000 ? 0 : 2) + " €";
+  }
+  function pct(x, dec) {
+    if (!isFinite(x)) return "n/a";
+    return nf(x * 100, dec === undefined ? 1 : dec) + " %";
+  }
+  function sgn(x) { return x >= 0 ? "pos" : "neg"; }
+  function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  /* ==============================================================
+     3. LE MODÈLE — cas central déterministe
+     ============================================================== */
+
+  function safeDiv(a, b) { return (b === 0 || !isFinite(b)) ? NaN : a / b; }
+
+  // Modèle par poule / cycle. `o` peut surcharger n'importe quel paramètre.
+  function model(o) {
+    var p = o || S;
+    var g = function (k) { return (p[k] === undefined) ? S[k] : p[k]; };
+
+    var oeufsParPoule = g("oeufsParPoule"), prixOeuf = g("prixOeuf"), margeOeuf = g("margeOeuf");
+    var valeurReforme = g("valeurReforme"), mortalite = g("mortalite");
+    var prixPoulette = g("prixPoulette"), consoAliment = g("consoAliment");
+    var prixAliment = g("prixAliment"), margeAliment = g("margeAliment");
+    var sante = g("sante"), autres = g("autres"), coutCollectePct = g("coutCollectePct");
+    var partCika = g("partCika"), partProducteur = g("partProducteur");
+    var cycleMois = g("cycleMois") || 12;
+    var partPrefin = g("partPrefin"), probaSinistre = g("probaSinistre"), perteSinistre = g("perteSinistre");
+    var nbPoules = g("nbPoules"), opexAnnuel = g("opexAnnuel");
+
+    var partParticipant = 1 - partCika - partProducteur;
+    var annualise = 12 / cycleMois;
+
+    var recetteOeufsPool = oeufsParPoule * (prixOeuf - margeOeuf);
+    var recetteReforme   = valeurReforme * (1 - mortalite);
+    var produitsBruts    = recetteOeufsPool + recetteReforme;
+
+    var capitalIntrants  = prixPoulette + consoAliment * (prixAliment + margeAliment) + sante + autres;
+    var coutCollecte     = coutCollectePct * oeufsParPoule * prixOeuf;
+
+    var BND         = produitsBruts - capitalIntrants - coutCollecte;
+    var partCikaBND = BND * partCika;
+    var partProdBND = BND * partProducteur;
+    var partPartBND = BND * partParticipant;
+
+    var roiCycle  = safeDiv(partPartBND, capitalIntrants);
+    var roiAnnuel = roiCycle * annualise;
+
+    var capitalImmobilise = capitalIntrants * partPrefin;
+    var roiImmobilise     = safeDiv(partPartBND, capitalImmobilise) * annualise;
+
+    var gainEspere = (1 - probaSinistre) * partPartBND
+                   - probaSinistre * perteSinistre * capitalImmobilise;
+    var roiEspere  = safeDiv(gainEspere, capitalImmobilise) * annualise;
+
+    var revenuCikaParPoule   = partCikaBND + margeAliment * consoAliment + margeOeuf * oeufsParPoule;
+    var revenuCikaParPouleAn = revenuCikaParPoule * annualise;
+    var seuilPoules          = revenuCikaParPouleAn > 0 ? opexAnnuel / revenuCikaParPouleAn : null;
+    var resultatCikaBande    = nbPoules * revenuCikaParPouleAn - opexAnnuel;
+
+    return {
+      partParticipant: partParticipant, annualise: annualise,
+      recetteOeufsPool: recetteOeufsPool, recetteReforme: recetteReforme, produitsBruts: produitsBruts,
+      capitalIntrants: capitalIntrants, coutCollecte: coutCollecte,
+      BND: BND, partCikaBND: partCikaBND, partProdBND: partProdBND, partPartBND: partPartBND,
+      roiCycle: roiCycle, roiAnnuel: roiAnnuel,
+      capitalImmobilise: capitalImmobilise, roiImmobilise: roiImmobilise,
+      gainEspere: gainEspere, roiEspere: roiEspere,
+      revenuCikaParPoule: revenuCikaParPoule, revenuCikaParPouleAn: revenuCikaParPouleAn,
+      seuilPoules: seuilPoules, resultatCikaBande: resultatCikaBande
+    };
+  }
+
+  /* ==============================================================
+     4. CASCADE DE PERTES (Brique A)
+     ============================================================== */
+
+  // grossResult et capital sont exprimés AU NIVEAU DE LA BANDE (nbPoules poules).
+  function waterfall(grossResult, capital, o) {
+    var p = o || S;
+    var g = function (k) { return (p[k] === undefined) ? S[k] : p[k]; };
+
+    var nbPoules = g("nbPoules");
+    var cikaMarges = g("margeAliment") * g("consoAliment") * nbPoules
+                   + g("margeOeuf") * g("oeufsParPoule") * nbPoules;
+
+    var cikaFee, producer, participantNet, perteCapitalPart, perteResiduelleCika = 0;
+    var absorbReserve = 0, absorbCika = 0;
+
+    if (grossResult >= 0) {
+      cikaFee          = grossResult * g("partCika");
+      producer         = grossResult * g("partProducteur");
+      participantNet   = grossResult * (1 - g("partCika") - g("partProducteur"));
+      perteCapitalPart = 0;
+    } else {
+      var L  = -grossResult;
+      var reserve = g("reservePct") * capital;
+      absorbReserve = Math.min(L, reserve);
+      var L1 = L - absorbReserve;
+      absorbCika = Math.min(L1, g("cikaBackstop") * nbPoules);
+      var L2 = L1 - absorbCika;
+      var perteMaxPart = capital * (1 - g("protectionCapital"));
+      perteCapitalPart = Math.min(L2, perteMaxPart);
+      var L3 = L2 - perteCapitalPart;
+      perteResiduelleCika = L3;
+      cikaFee        = -(absorbCika + perteResiduelleCika);
+      producer       = 0;
+      participantNet = -perteCapitalPart;
+    }
+
+    return {
+      cikaFee: cikaFee, cikaMarges: cikaMarges, cikaTotal: cikaFee + cikaMarges,
+      producer: producer, participantNet: participantNet,
+      perteCapitalPart: perteCapitalPart, absorbReserve: absorbReserve,
+      absorbCika: absorbCika, perteResiduelleCika: perteResiduelleCika
+    };
+  }
+
+  /* ==============================================================
+     5. MONTE-CARLO (Brique B)
+     ============================================================== */
+
+  // PRNG déterministe (mulberry32) — sert quand « figer l'aléa » est coché.
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function makeNormal(rand) {
+    var spare = null;
+    return function () {                                   // Box-Muller
+      if (spare !== null) { var v = spare; spare = null; return v; }
+      var u, v2, s;
+      do { u = rand() * 2 - 1; v2 = rand() * 2 - 1; s = u * u + v2 * v2; }
+      while (s === 0 || s >= 1);
+      var m = Math.sqrt(-2 * Math.log(s) / s);
+      spare = v2 * m;
+      return u * m;
+    };
+  }
+  function clamp(x, lo, hi) { return x < lo ? lo : (x > hi ? hi : x); }
+
+  // Quantile de la loi normale centrée réduite (approximation rationnelle d'Acklam).
+  // Sert à convertir une probabilité d'évènement en seuil sur la variable latente.
+  function invNorm(p) {
+    if (p <= 0) return -Infinity;
+    if (p >= 1) return Infinity;
+    var a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
+              1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+    var b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
+              6.680131188771972e+01, -1.328068155288572e+01];
+    var c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
+             -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+    var d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00,
+             3.754408661907416e+00];
+    var pl = 0.02425, q, r;
+    if (p < pl) {
+      q = Math.sqrt(-2 * Math.log(p));
+      return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+             ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    }
+    if (p > 1 - pl) {
+      q = Math.sqrt(-2 * Math.log(1 - p));
+      return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+              ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    }
+    q = p - 0.5; r = q * q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5]) * q /
+           (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  }
+
+  function runMonteCarlo(seeded) {
+    var n        = Math.max(100, Math.round(S.nbSimulations));
+    var nBandes  = Math.max(1, Math.round(S.nbBandesParticipant));
+    var nbPoules = S.nbPoules;
+    var annualise = 12 / (S.cycleMois || 12);
+    var rho = Math.sqrt(clamp(S.correlation, 0, 1));
+    var rand = seeded ? mulberry32(20260807) : Math.random;
+    var N = makeNormal(rand);
+
+    var partRet = new Float64Array(n);      // rendement annualisé du participant
+    var cikaRes = new Float64Array(n);      // résultat annuel Cika à la bande de référence
+
+    // Éléments invariants au tirage
+    var base = model(S);
+    var capitalParPoule = base.capitalIntrants;   // recalculé par tirage (dépend du prix aliment)
+
+    for (var i = 0; i < n; i++) {
+      // ── Chocs systémiques de PRIX
+      var prixOeufSim    = Math.max(20, S.prixOeuf    + S.volPrixOeuf    * N());
+      var prixAlimentSim = Math.max(50, S.prixAliment + S.volPrixAliment * N());
+      // ── Facteurs systémiques : production, sinistralité, défaut
+      var M = N(), Msin = N(), Mdef = N();
+
+      var sumPartNet = 0, sumCapital = 0, sumCikaTotal = 0;
+
+      for (var b = 0; b < nBandes; b++) {
+        var e = N();
+        var a = rho * M + Math.sqrt(1 - rho * rho) * e;      // adversité de la bande
+
+        var mortalite_b = clamp(S.mortalite + S.volMortalite * a, 0, 0.95);
+        var oeufs_b     = Math.max(0, S.oeufsParPoule - S.volOeufs * a);
+
+        var over = {
+          prixOeuf: prixOeufSim, prixAliment: prixAlimentSim,
+          mortalite: mortalite_b, oeufsParPoule: oeufs_b
+        };
+        var m = model(over);
+
+        var capitalBande = m.capitalIntrants * S.partPrefin * nbPoules;
+        var gross        = m.BND * nbPoules;
+
+        // ── Évènements binaires, corrélés par la même copule à un facteur.
+        // On tire une variable latente aL = rho*ML + sqrt(1-rho²)*eL et on déclenche
+        // l'évènement quand elle dépasse le seuil correspondant à sa probabilité :
+        // à correlation = 1, toutes les bandes sinistrent ensemble (non diversifiable) ;
+        // à correlation = 0, les sinistres sont indépendants (diversifiables).
+        var pSin = clamp(S.probaSinistre * (1 + Math.max(0, M)), 0, 1);
+        var aSin = rho * Msin + Math.sqrt(1 - rho * rho) * N();
+        var aDef = rho * Mdef + Math.sqrt(1 - rho * rho) * N();
+        var sinistre = aSin > invNorm(1 - pSin);
+        var defaut   = aDef > invNorm(1 - S.probaDefaut);
+        var perteEvt = 0;
+        if (sinistre) perteEvt = Math.max(perteEvt, S.perteSinistre * capitalBande);
+        if (defaut)   perteEvt = Math.max(perteEvt, S.perteDefaut   * capitalBande);
+        perteEvt = Math.min(perteEvt, capitalBande);
+        gross -= perteEvt;
+
+        var w = waterfall(gross, capitalBande, S);
+        sumPartNet   += w.participantNet;
+        sumCapital   += capitalBande;
+        sumCikaTotal += w.cikaTotal;
+      }
+
+      partRet[i] = sumCapital > 0 ? (sumPartNet / sumCapital) * annualise : 0;
+      // Cika : résultat annuel à la taille de référence (une bande), hors diversification
+      cikaRes[i] = (sumCikaTotal / nBandes) * annualise - S.opexAnnuel;
+    }
+
+    return { part: partRet, cika: cikaRes, n: n, capitalParPoule: capitalParPoule };
+  }
+
+  function stats(arr) {
+    var a = Array.prototype.slice.call(arr).sort(function (x, y) { return x - y; });
+    var n = a.length;
+    var q = function (p) {
+      if (n === 0) return NaN;
+      var idx = clamp(Math.floor(p * n), 0, n - 1);
+      return a[idx];
+    };
+    var sum = 0, i;
+    for (i = 0; i < n; i++) sum += a[i];
+    var mean = sum / n;
+    var v = 0;
+    for (i = 0; i < n; i++) v += (a[i] - mean) * (a[i] - mean);
+    var sd = Math.sqrt(v / Math.max(1, n - 1));
+    var pLoss = 0;
+    for (i = 0; i < n; i++) if (a[i] < 0) pLoss++;
+    pLoss /= n;
+    var k = Math.max(1, Math.floor(0.05 * n)), es = 0;
+    for (i = 0; i < k; i++) es += a[i];
+    es /= k;
+    return {
+      mean: mean, median: q(0.5), sd: sd,
+      p5: q(0.05), p10: q(0.10), p90: q(0.90), p95: q(0.95),
+      min: a[0], max: a[n - 1], pLoss: pLoss, var95: q(0.05), es95: es
+    };
+  }
+
+  /* ==============================================================
+     6. CONSTRUCTION DU PANNEAU
+     ============================================================== */
+
+  function fieldHTML(m) {
+    var id = "f_" + m.key;
+    return '<div class="fld">' +
+      '<div class="fld-head">' +
+        '<label for="' + id + '">' + esc(m.label) +
+          '<span class="src" tabindex="0" role="note" aria-label="Source : ' + esc(m.src) + '" data-src="' + esc(m.src) + '">i</span>' +
+        '</label>' +
+        '<span class="fld-unit">' + esc(m.unit) + '</span>' +
+      '</div>' +
+      '<div class="fld-row">' +
+        '<input type="number" id="' + id + '" data-k="' + m.key + '" data-role="num" ' +
+          'min="' + m.min + '" max="' + m.max + '" step="' + m.step + '" value="' + m.def + '">' +
+        '<input type="range" data-k="' + m.key + '" data-role="rng" aria-labelledby="' + id + '" ' +
+          'min="' + m.min + '" max="' + m.max + '" step="' + m.step + '" value="' + m.def + '">' +
+      '</div>' +
+    '</div>';
+  }
+
+  function buildPanel() {
+    var groups = { technique:[], prix:[], repartition:[], societe:[], risque:[], stress:[] };
+    PARAMS.forEach(function (p) { groups[p[8]].push(fieldHTML(META[p[0]])); });
+    Object.keys(groups).forEach(function (g) {
+      var el = document.getElementById("grp-" + g);
+      if (el) el.innerHTML = groups[g].join("");
+    });
+  }
+
+  function syncInputs() {
+    var nums = document.querySelectorAll('input[data-role="num"]');
+    var i;
+    for (i = 0; i < nums.length; i++) {
+      var k = nums[i].getAttribute("data-k");
+      var m = META[k];
+      var val = +S[k].toFixed(m.dec === 0 ? 0 : 6);
+      if (document.activeElement !== nums[i]) nums[i].value = val;
+    }
+    var rngs = document.querySelectorAll('input[data-role="rng"]');
+    for (i = 0; i < rngs.length; i++) {
+      rngs[i].value = S[rngs[i].getAttribute("data-k")];
+    }
+  }
+
+  // Contrainte : partCika + partProducteur <= 1
+  function enforceSplit(changedKey) {
+    var sum = S.partCika + S.partProducteur;
+    if (sum > 1) {
+      if (changedKey === "partCika")            S.partProducteur = Math.max(0, 1 - S.partCika);
+      else if (changedKey === "partProducteur") S.partCika       = Math.max(0, 1 - S.partProducteur);
+      else                                      S.partProducteur = Math.max(0, 1 - S.partCika);
+    }
+  }
+
+  function onInput(e) {
+    var t = e.target;
+    var k = t.getAttribute("data-k");
+    if (!k) return;
+    var m = META[k];
+    var v = parseFloat(t.value);
+    if (!isFinite(v)) return;                       // champ en cours de saisie
+    v = clamp(v, m.min, m.max);
+    S[k] = v;
+    if (k === "partCika" || k === "partProducteur") enforceSplit(k);
+    syncInputs();
+    render();
+  }
+
+  function onBlurFix(e) {
+    var t = e.target;
+    var k = t.getAttribute("data-k");
+    if (!k || t.getAttribute("data-role") !== "num") return;
+    var m = META[k];
+    var v = parseFloat(t.value);
+    if (!isFinite(v)) v = S[k];
+    S[k] = clamp(v, m.min, m.max);
+    syncInputs();
+    render();
+  }
+
+  /* ==============================================================
+     7. RENDU — KPI, verdict
+     ============================================================== */
+
+  function render() {
+    var r = model(S);
+
+    // Part participant + garde-fou visuel
+    var note = document.getElementById("splitNote");
+    var pp = r.partParticipant;
+    note.className = "split-note " + (pp >= 0 ? "split-ok" : "split-bad");
+    note.textContent = "Part participant (calculée) : " + pct(pp, 1)
+      + (pp >= 0 ? "" : " — la somme Cika + producteur dépasse 100 %");
+
+    // KPI 1 — BND
+    document.getElementById("kBnd").innerHTML =
+      '<span class="' + sgn(r.BND) + '">' + money(r.BND, 0) + "</span>";
+    document.getElementById("kBndSub").innerHTML =
+      "soit <b>" + pct(safeDiv(r.BND, r.produitsBruts), 1) + "</b> des produits bruts ("
+      + money(r.produitsBruts, 0) + ")";
+
+    // KPI 2 — rendement participant
+    document.getElementById("kRoi").innerHTML =
+      '<span class="' + sgn(r.roiEspere) + '">' + pct(r.roiEspere, 1) + "</span>";
+    document.getElementById("kRoiSub").innerHTML =
+      "espéré, ajusté du risque<br>nominal <b>" + pct(r.roiAnnuel, 1)
+      + "</b> · sur capital immobilisé <b>" + pct(r.roiImmobilise, 1) + "</b>";
+
+    // KPI 3 — seuil Cika
+    var seuilTxt = (r.seuilPoules === null || !isFinite(r.seuilPoules))
+      ? "n/a" : nf(Math.ceil(r.seuilPoules), 0);
+    document.getElementById("kSeuil").textContent = seuilTxt;
+    document.getElementById("kSeuilSub").innerHTML = (r.seuilPoules === null || !isFinite(r.seuilPoules))
+      ? "revenu Cika par poule nul ou négatif — aucun volume n'équilibre la structure"
+      : "poules à financer en permanence · <b>" + nf(r.seuilPoules / 1000, 1) + "</b> bandes de 1 000";
+
+    // KPI 4 — résultat Cika à la bande
+    document.getElementById("kCika").innerHTML =
+      '<span class="' + sgn(r.resultatCikaBande) + '">' + money(r.resultatCikaBande, 0) + "</span>";
+    document.getElementById("kCikaSub").innerHTML =
+      "à " + nf(S.nbPoules, 0) + " poules · revenu Cika <b>" + money(r.revenuCikaParPouleAn, 0)
+      + "</b>/poule/an, OPEX " + money(S.opexAnnuel, 0);
+
+    renderVerdict(r);
+    renderWaterfall(r);
+    renderTickets(r);
+    renderHeatmap(r);
+
+    document.getElementById("nSimTxt").textContent = nf(S.nbSimulations, 0);
+    document.getElementById("ccyNote").textContent = showEUR
+      ? "Montants en EUR · 1 EUR = " + FX_LABEL + " FCFA"
+      : "Montants en FCFA · 1 EUR = " + FX_LABEL + " FCFA";
+  }
+
+  function renderVerdict(r) {
+    var parts = [];
+
+    parts.push(r.BND > 0
+      ? '<b class="pos">Projet rentable ✓</b> — BND ' + money(r.BND, 0) + "/poule"
+      : '<b class="neg">Projet en perte ✗</b> — BND ' + money(r.BND, 0) + "/poule");
+
+    parts.push(r.roiEspere > 0
+      ? '<b class="pos">Participant ~' + pct(r.roiEspere, 1) + "/an</b> (risque intégré)"
+      : '<b class="neg">Participant ' + pct(r.roiEspere, 1) + "/an</b> — perd de l'argent une fois le risque intégré");
+
+    if (r.resultatCikaBande > 0) {
+      parts.push('<b class="pos">Cika bénéficiaire</b> à ' + nf(S.nbPoules, 0) + " poules ("
+        + money(r.resultatCikaBande, 0) + "/an)");
+    } else if (r.seuilPoules !== null && isFinite(r.seuilPoules)) {
+      parts.push('<b class="neg">Cika déficitaire</b> tant que moins de ' + nf(Math.ceil(r.seuilPoules), 0)
+        + " poules sont sous gestion");
+    } else {
+      parts.push('<b class="neg">Cika déficitaire</b> à tout volume — son revenu par poule est nul ou négatif');
+    }
+
+    var html = parts.join(" · ");
+
+    if (lastStress) {
+      var sp = lastStress.sp;
+      html += '<br><span style="font-size:13.5px;color:#555">Stress ('
+        + nf(lastStress.n, 0) + " tirages) : <b>P(perte) = " + pct(sp.pLoss, 1)
+        + "</b>, VaR 95 % = <b class=\"" + sgn(sp.var95) + "\">" + pct(sp.var95, 1)
+        + "</b>, écart-type " + pct(sp.sd, 1)
+        + " · Cika : P(perte) = <b>" + pct(lastStress.sc.pLoss, 1) + "</b>"
+        + " — le cas central seul est trompeur.</span>";
+    }
+
+    document.getElementById("verdict").innerHTML = html;
+  }
+
+  /* ==============================================================
+     8. CASCADE (waterfall SVG)
+     ============================================================== */
+
+  function renderWaterfall(r) {
+    var W = 640, H = 260, padL = 8, padB = 62, padT = 26;
+    var steps = [
+      { l: "Produits bruts",  v: r.produitsBruts,      type: "total" },
+      { l: "− Intrants",      v: -r.capitalIntrants,   type: "neg" },
+      { l: "− Collecte",      v: -r.coutCollecte,      type: "neg" },
+      { l: "BND",             v: r.BND,                type: "total" },
+      { l: "Participant",     v: r.partPartBND,        type: "part" },
+      { l: "Producteur",      v: r.partProdBND,        type: "prod" },
+      { l: "Cika",            v: r.partCikaBND,        type: "cika" }
+    ];
+
+    // Positions cumulées : les 4 premières barres sont un waterfall, les 3 dernières un découpage du BND.
+    var cum = 0, bars = [], i, s;
+    for (i = 0; i < 4; i++) {
+      s = steps[i];
+      if (s.type === "total") { bars.push({ l: s.l, y0: 0, y1: s.v, v: s.v, type: s.type }); cum = s.v; }
+      else { bars.push({ l: s.l, y0: cum, y1: cum + s.v, v: s.v, type: s.type }); cum += s.v; }
+    }
+    var base = 0;
+    for (i = 4; i < 7; i++) {
+      s = steps[i];
+      bars.push({ l: s.l, y0: base, y1: base + s.v, v: s.v, type: s.type });
+      base += s.v;
+    }
+
+    var lo = 0, hi = 0;
+    bars.forEach(function (b) { lo = Math.min(lo, b.y0, b.y1); hi = Math.max(hi, b.y0, b.y1); });
+    if (hi === lo) hi = lo + 1;
+    var pad = (hi - lo) * 0.08; hi += pad; lo -= pad;
+    var plotH = H - padB - padT;
+    var y = function (v) { return padT + plotH * (hi - v) / (hi - lo); };
+
+    var n = bars.length, gap = 14;
+    var bw = (W - padL * 2 - gap * (n - 1)) / n;
+    var COL = { total: "#1a1a1a", neg: "#A8071A", part: "#1D39C4", prod: "#237804", cika: "#D48806" };
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-width:' + W + 'px;height:auto" role="img" aria-label="Cascade des produits au partage du bénéfice net distribuable">';
+    svg += '<line x1="' + padL + '" y1="' + y(0).toFixed(1) + '" x2="' + (W - padL) + '" y2="' + y(0).toFixed(1) + '" stroke="#ddd" stroke-width="1"/>';
+
+    bars.forEach(function (b, idx) {
+      var x = padL + idx * (bw + gap);
+      var yTop = y(Math.max(b.y0, b.y1)), yBot = y(Math.min(b.y0, b.y1));
+      var h = Math.max(1.5, yBot - yTop);
+      var c = COL[b.type];
+      svg += '<rect x="' + x.toFixed(1) + '" y="' + yTop.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '" fill="' + c + '" opacity="' + (b.type === "total" ? 1 : 0.85) + '" rx="2"/>';
+      // valeur
+      var vy = b.v >= 0 ? yTop - 5 : yBot + 13;
+      svg += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + vy.toFixed(1) + '" text-anchor="middle" font-size="11" font-weight="600" fill="' + (b.v >= 0 ? "#333" : "#A8071A") + '">' + nf(Math.round(b.v), 0) + '</text>';
+      // libellé
+      var lbl = b.l.split(" ");
+      var ly = H - padB + 16;
+      svg += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + ly + '" text-anchor="middle" font-size="10.5" fill="#666">' + esc(lbl[0]) + '</text>';
+      if (lbl.length > 1) {
+        svg += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (ly + 12) + '" text-anchor="middle" font-size="10.5" fill="#666">' + esc(lbl.slice(1).join(" ")) + '</text>';
+      }
+    });
+
+    svg += '<line x1="' + (padL + 3.5 * (bw + gap) - gap / 2).toFixed(1) + '" y1="' + padT + '" x2="' + (padL + 3.5 * (bw + gap) - gap / 2).toFixed(1) + '" y2="' + (H - padB + 4) + '" stroke="#e0e0da" stroke-width="1" stroke-dasharray="3 3"/>';
+    svg += '<text x="' + (W - padL) + '" y="' + (H - 8) + '" text-anchor="end" font-size="10.5" fill="#999">FCFA par poule et par cycle · découpage du BND à droite du pointillé</text>';
+    svg += '</svg>';
+
+    document.getElementById("waterfall").innerHTML = svg;
+  }
+
+  /* ==============================================================
+     9. TICKETS PARTICIPANT
+     ============================================================== */
+
+  function renderTickets(r) {
+    var sizes = [50, 120, 250, 500];
+    var rows = sizes.map(function (nb) {
+      var cap  = r.capitalIntrants * nb;
+      var capI = r.capitalImmobilise * nb;
+      var gain = r.partPartBND * nb * r.annualise;
+      var gainE = r.gainEspere * nb * r.annualise;
+      return "<tr>" +
+        "<td>" + nb + " poules</td>" +
+        '<td class="num">' + money2(cap) + "</td>" +
+        '<td class="num">' + money2(capI) + "</td>" +
+        '<td class="num ' + sgn(gain) + '">' + money2(gain) + "</td>" +
+        '<td class="num ' + sgn(gainE) + '">' + money2(gainE) + "</td>" +
+      "</tr>";
+    });
+    document.getElementById("tickets").innerHTML = rows.join("");
+  }
+
+  /* ==============================================================
+     10. HEATMAP
+     ============================================================== */
+
+  var HM_OEUF = [60, 65, 70, 75, 80, 85, 90];
+  var HM_ALIM = [220, 240, 260, 280, 300, 320];
+
+  function lerpColor(c1, c2, t) {
+    var r = Math.round(c1[0] + (c2[0] - c1[0]) * t);
+    var g = Math.round(c1[1] + (c2[1] - c1[1]) * t);
+    var b = Math.round(c1[2] + (c2[2] - c1[2]) * t);
+    return "rgb(" + r + "," + g + "," + b + ")";
+  }
+  // Divergente autour de 0 : rouge → blanc → vert (accessible, contraste texte foncé conservé)
+  function divColor(v, scale) {
+    var t = clamp(Math.abs(v) / scale, 0, 1);
+    return v < 0 ? lerpColor([250, 250, 248], [255, 163, 158], t)
+                 : lerpColor([250, 250, 248], [140, 209, 140], t);
+  }
+  // Séquentielle : clair (bon = seuil bas) → foncé (mauvais = seuil élevé)
+  function seqColor(t) { return lerpColor([243, 247, 255], [140, 175, 235], clamp(t, 0, 1)); }
+
+  function renderHeatmap(rCur) {
+    var vals = [], i, j;
+    for (i = 0; i < HM_OEUF.length; i++) {
+      vals.push([]);
+      for (j = 0; j < HM_ALIM.length; j++) {
+        var m = model({ prixOeuf: HM_OEUF[i], prixAliment: HM_ALIM[j] });
+        vals[i].push(hmView === "A" ? m.roiEspere : m.seuilPoules);
+      }
+    }
+
+    var scale = 0, maxSeuil = 0;
+    for (i = 0; i < vals.length; i++) for (j = 0; j < vals[i].length; j++) {
+      var v = vals[i][j];
+      if (hmView === "A") { if (isFinite(v)) scale = Math.max(scale, Math.abs(v)); }
+      else if (v !== null && isFinite(v)) maxSeuil = Math.max(maxSeuil, v);
+    }
+    if (scale === 0) scale = 0.01;
+    if (maxSeuil === 0) maxSeuil = 1;
+
+    // Cellule courante (arrondi au point de grille le plus proche)
+    var nearest = function (arr, x) {
+      var bi = 0, bd = Infinity;
+      arr.forEach(function (a, k) { var d = Math.abs(a - x); if (d < bd) { bd = d; bi = k; } });
+      return bd <= (arr[1] - arr[0]) / 2 ? bi : -1;
+    };
+    var ci = nearest(HM_OEUF, S.prixOeuf), cj = nearest(HM_ALIM, S.prixAliment);
+
+    var h = '<table class="hm-table"><thead><tr><th class="hm-corner">Œuf \\ Aliment</th>';
+    HM_ALIM.forEach(function (a) { h += "<th scope=\"col\">" + a + "</th>"; });
+    h += "</tr></thead><tbody>";
+    for (i = 0; i < HM_OEUF.length; i++) {
+      h += '<tr><th scope="row">' + HM_OEUF[i] + " F</th>";
+      for (j = 0; j < HM_ALIM.length; j++) {
+        var val = vals[i][j], bg, txt;
+        if (hmView === "A") {
+          bg = divColor(val, scale);
+          txt = isFinite(val) ? nf(val * 100, 0) + "%" : "n/a";
+        } else {
+          if (val === null || !isFinite(val)) { bg = "#EDEDE8"; txt = "n/a"; }
+          else { bg = seqColor(val / maxSeuil); txt = val >= 10000 ? nf(val / 1000, 0) + "k" : nf(val, 0); }
+        }
+        var cur = (i === ci && j === cj) ? " cur" : "";
+        h += '<td class="' + cur.trim() + '" style="background:' + bg + '">' + txt + "</td>";
+      }
+      h += "</tr>";
+    }
+    h += "</tbody></table>";
+    document.getElementById("heatmap").innerHTML = h;
+
+    document.getElementById("hmHint").textContent = hmView === "A"
+      ? "ROI annuel espéré du participant (ajusté du risque), en %. Lignes : prix de l'œuf. Colonnes : prix de l'aliment. Tous les autres paramètres restent inchangés."
+      : "Nombre de poules à financer en permanence pour équilibrer les charges de structure de Cika. Plus clair = seuil plus bas = plus atteignable.";
+
+    var lg;
+    if (hmView === "A") {
+      lg = '<span class="hm-swatch" style="background:' + divColor(-scale, scale) + '"></span> perte'
+         + '<span class="hm-swatch" style="background:' + divColor(0, scale) + '"></span> 0 %'
+         + '<span class="hm-swatch" style="background:' + divColor(scale, scale) + '"></span> ' + nf(scale * 100, 0) + " %"
+         + ' · cadre noir = couple courant (' + nf(S.prixOeuf, 0) + " F / " + nf(S.prixAliment, 0) + " F/kg)";
+    } else {
+      lg = '<span class="hm-swatch" style="background:' + seqColor(0) + '"></span> seuil bas'
+         + '<span class="hm-swatch" style="background:' + seqColor(1) + '"></span> ' + nf(maxSeuil, 0) + " poules"
+         + '<span class="hm-swatch" style="background:#EDEDE8"></span> n/a (revenu Cika ≤ 0)'
+         + ' · cadre noir = couple courant';
+    }
+    document.getElementById("hmLegend").innerHTML = lg;
+  }
+
+  /* ==============================================================
+     11. HISTOGRAMMES
+     ============================================================== */
+
+  function histogram(arr, opts) {
+    var W = 420, H = 180, padL = 34, padR = 10, padT = 12, padB = 30;
+    var a = Array.prototype.slice.call(arr);
+    var lo = Math.min.apply(null, a), hi = Math.max.apply(null, a);
+    if (!isFinite(lo) || !isFinite(hi)) return "";
+    if (hi === lo) { hi = lo + 1; lo -= 1; }
+    var K = 34, counts = new Array(K).fill(0), i;
+    for (i = 0; i < a.length; i++) {
+      var k = clamp(Math.floor((a[i] - lo) / (hi - lo) * K), 0, K - 1);
+      counts[k]++;
+    }
+    var maxC = Math.max.apply(null, counts);
+    var pw = W - padL - padR, ph = H - padT - padB;
+    var x = function (v) { return padL + pw * (v - lo) / (hi - lo); };
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-width:' + W + 'px;height:auto" role="img" aria-label="' + esc(opts.aria) + '">';
+    var bw = pw / K;
+    for (i = 0; i < K; i++) {
+      var cx = lo + (i + 0.5) * (hi - lo) / K;
+      var bh = maxC > 0 ? ph * counts[i] / maxC : 0;
+      var col = cx < 0 ? "#E8A9A5" : "#9DB6E8";
+      svg += '<rect x="' + (padL + i * bw).toFixed(1) + '" y="' + (padT + ph - bh).toFixed(1) + '" width="' + Math.max(0.8, bw - 0.8).toFixed(1) + '" height="' + bh.toFixed(1) + '" fill="' + col + '"/>';
+    }
+    // axe
+    svg += '<line x1="' + padL + '" y1="' + (padT + ph) + '" x2="' + (W - padR) + '" y2="' + (padT + ph) + '" stroke="#ccc"/>';
+    // repère 0
+    if (lo < 0 && hi > 0) {
+      svg += '<line x1="' + x(0).toFixed(1) + '" y1="' + padT + '" x2="' + x(0).toFixed(1) + '" y2="' + (padT + ph) + '" stroke="#A8071A" stroke-width="1.5"/>';
+      svg += '<text x="' + x(0).toFixed(1) + '" y="' + (padT - 2) + '" text-anchor="middle" font-size="9.5" fill="#A8071A">0</text>';
+    }
+    // repère cas central
+    if (opts.central !== undefined && isFinite(opts.central) && opts.central >= lo && opts.central <= hi) {
+      svg += '<line x1="' + x(opts.central).toFixed(1) + '" y1="' + padT + '" x2="' + x(opts.central).toFixed(1) + '" y2="' + (padT + ph) + '" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="4 3"/>';
+      svg += '<text x="' + x(opts.central).toFixed(1) + '" y="' + (padT - 2) + '" text-anchor="middle" font-size="9.5" fill="#1a1a1a">central</text>';
+    }
+    // ticks
+    [lo, (lo + hi) / 2, hi].forEach(function (t, k) {
+      svg += '<text x="' + x(t).toFixed(1) + '" y="' + (H - 12) + '" text-anchor="' + (k === 0 ? "start" : k === 2 ? "end" : "middle") + '" font-size="9.5" fill="#999">' + opts.fmt(t) + "</text>";
+    });
+    svg += '<text x="' + padL + '" y="' + (padT + 8) + '" font-size="9.5" fill="#bbb">n = ' + nf(a.length, 0) + "</text>";
+    svg += "</svg>";
+    return svg;
+  }
+
+  /* ==============================================================
+     12. TORNADO
+     ============================================================== */
+
+  function buildTornado(base) {
+    var shocks = [
+      { l: "Prix de l'œuf −10 F",         o: { prixOeuf: Math.max(20, S.prixOeuf - 10) } },
+      { l: "Prix de l'aliment +40 F/kg",  o: { prixAliment: S.prixAliment + 40 } },
+      { l: "Mortalité ×2",                o: { mortalite: clamp(S.mortalite * 2, 0, 0.95) } },
+      { l: "Œufs/poule −1 écart-type ("+ nf(S.volOeufs,0) +")", o: { oeufsParPoule: Math.max(0, S.oeufsParPoule - S.volOeufs) } },
+      { l: "Probabilité de sinistre ×2",  o: { probaSinistre: clamp(S.probaSinistre * 2, 0, 1) } }
+    ];
+    var rows = shocks.map(function (s) {
+      var m = model(Object.assign({}, S, s.o));
+      return { l: s.l, roi: m.roiEspere, dRoi: m.roiEspere - base.roiEspere,
+               cika: m.resultatCikaBande, dCika: m.resultatCikaBande - base.resultatCikaBande };
+    });
+    rows.sort(function (a, b) { return Math.abs(b.dRoi) - Math.abs(a.dRoi); });
+
+    document.getElementById("tornado").innerHTML = rows.map(function (r) {
+      return "<tr><td>" + esc(r.l) + "</td>" +
+        '<td class="num ' + sgn(r.roi) + '">' + pct(r.roi, 1) + "</td>" +
+        '<td class="num ' + sgn(r.dRoi) + '">' + (r.dRoi >= 0 ? "+" : "") + pct(r.dRoi, 1) + "</td>" +
+        '<td class="num ' + sgn(r.cika) + '">' + money(r.cika, 0) + "</td>" +
+        '<td class="num ' + sgn(r.dCika) + '">' + (r.dCika >= 0 ? "+" : "") + money(r.dCika, 0) + "</td></tr>";
+    }).join("");
+  }
+
+  /* ==============================================================
+     13. LANCER LE STRESS
+     ============================================================== */
+
+  function runStress() {
+    var btn = document.getElementById("btnRun");
+    var st  = document.getElementById("runStatus");
+    btn.disabled = true;
+    st.textContent = "Calcul en cours…";
+
+    // laisse le navigateur peindre l'état « en cours » avant de bloquer
+    setTimeout(function () {
+      var t0 = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
+      var mc = runMonteCarlo(document.getElementById("chkSeed").checked);
+      var sp = stats(mc.part), sc = stats(mc.cika);
+      var base = model(S);
+      lastStress = { sp: sp, sc: sc, n: mc.n };
+
+      document.getElementById("statPart").innerHTML = [
+        ["Moyenne",                  pct(sp.mean, 1),  sgn(sp.mean)],
+        ["Médiane",                  pct(sp.median, 1), sgn(sp.median)],
+        ["Écart-type",               pct(sp.sd, 1), ""],
+        ["P5 / P10",                 pct(sp.p5, 1) + " / " + pct(sp.p10, 1), sgn(sp.p5)],
+        ["P90 / P95",                pct(sp.p90, 1) + " / " + pct(sp.p95, 1), sgn(sp.p90)],
+        ["Probabilité de perte",     pct(sp.pLoss, 1), sp.pLoss > 0.1 ? "neg" : ""],
+        ["VaR 95 %",                 pct(sp.var95, 1), sgn(sp.var95)],
+        ["Perte moyenne, 5 % pires", pct(sp.es95, 1), sgn(sp.es95)],
+        ["Pire tirage",              pct(sp.min, 1), sgn(sp.min)]
+      ].map(function (r) {
+        return '<li><span class="k">' + r[0] + '</span><span class="v ' + r[2] + '">' + r[1] + "</span></li>";
+      }).join("");
+
+      document.getElementById("statCika").innerHTML = [
+        ["Moyenne",              money(sc.mean, 0), sgn(sc.mean)],
+        ["Médiane",              money(sc.median, 0), sgn(sc.median)],
+        ["Écart-type",           money(sc.sd, 0), ""],
+        ["P5",                   money(sc.p5, 0), sgn(sc.p5)],
+        ["P95",                  money(sc.p95, 0), sgn(sc.p95)],
+        ["Probabilité de perte", pct(sc.pLoss, 1), sc.pLoss > 0.5 ? "neg" : ""],
+        ["Pire tirage",          money(sc.min, 0), sgn(sc.min)]
+      ].map(function (r) {
+        return '<li><span class="k">' + r[0] + '</span><span class="v ' + r[2] + '">' + r[1] + "</span></li>";
+      }).join("");
+
+      document.getElementById("histPart").innerHTML = histogram(mc.part, {
+        central: base.roiEspere,
+        fmt: function (v) { return nf(v * 100, 0) + "%"; },
+        aria: "Distribution du rendement annualisé du participant"
+      });
+      document.getElementById("histCika").innerHTML = histogram(mc.cika, {
+        central: base.resultatCikaBande,
+        fmt: function (v) { return nf(v / 1e6, 0) + "M"; },
+        aria: "Distribution du résultat annuel de Cika à la bande de référence"
+      });
+
+      buildTornado(base);
+      document.getElementById("stressOut").hidden = false;
+      renderVerdict(base);
+
+      var t1 = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
+      st.textContent = nf(mc.n, 0) + " tirages · " + nf(Math.max(0, t1 - t0), 0) + " ms"
+        + " · " + nf(S.nbBandesParticipant, 0) + (S.nbBandesParticipant > 1 ? " bandes" : " bande")
+        + ", corrélation " + nf(S.correlation, 2);
+      btn.disabled = false;
+    }, 20);
+  }
+
+  /* ==============================================================
+     14. ÉVÈNEMENTS & INITIALISATION
+     ============================================================== */
+
+  var stressTimer = null;
+  function scheduleStress() {
+    if (document.getElementById("stressOut").hidden) return;   // pas encore lancé : ne rien faire
+    clearTimeout(stressTimer);
+    stressTimer = setTimeout(runStress, 320);
+  }
+
+  buildPanel();
+
+  var panel = document.getElementById("panel");
+  panel.addEventListener("input", function (e) {
+    onInput(e);
+    var k = e.target.getAttribute("data-k");
+    if (k && META[k] && (META[k].group === "stress" || lastStress)) scheduleStress();
+  });
+  panel.addEventListener("change", onBlurFix);
+  panel.addEventListener("blur", onBlurFix, true);
+
+  document.getElementById("btnReset").addEventListener("click", function () {
+    Object.keys(DEFAULTS).forEach(function (k) { S[k] = DEFAULTS[k]; });
+    lastStress = null;
+    document.getElementById("stressOut").hidden = true;
+    document.getElementById("runStatus").textContent = "";
+    syncInputs();
+    render();
+  });
+
+  document.getElementById("btnCcy").addEventListener("click", function () {
+    showEUR = !showEUR;
+    this.setAttribute("aria-pressed", showEUR ? "true" : "false");
+    this.textContent = showEUR ? "Afficher en FCFA" : "Afficher en EUR";
+    render();
+    if (lastStress) runStress();
+  });
+
+  document.getElementById("hmA").addEventListener("click", function () {
+    hmView = "A";
+    this.setAttribute("aria-pressed", "true");
+    document.getElementById("hmB").setAttribute("aria-pressed", "false");
+    renderHeatmap(model(S));
+  });
+  document.getElementById("hmB").addEventListener("click", function () {
+    hmView = "B";
+    this.setAttribute("aria-pressed", "true");
+    document.getElementById("hmA").setAttribute("aria-pressed", "false");
+    renderHeatmap(model(S));
+  });
+
+  document.getElementById("btnRun").addEventListener("click", runStress);
+
+  syncInputs();
+  render();
+
+  // Exposé pour vérification manuelle en console (tests de non-régression).
+  window.CIKA = { model: model, waterfall: waterfall, state: S, defaults: DEFAULTS, mc: runMonteCarlo, stats: stats };
+})();
+</script>
+
+</body>
+</html>
