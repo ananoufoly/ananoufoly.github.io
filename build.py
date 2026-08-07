@@ -120,7 +120,6 @@ def render_edito_page(slug, meta, body_html, prev_entry=None, next_entry=None):
       <li><a href="../index.html">Home</a></li>
       <li><a href="../research.html">Research</a></li>
       <li><a href="../editos.html" class="active">Éditos</a></li>
-      <li><a href="../cika-invest.html">Cika Invest</a></li>
     </ul>
   </nav>
 
@@ -197,7 +196,6 @@ def render_editos_listing(entries):
       <li><a href="index.html">Home</a></li>
       <li><a href="research.html">Research</a></li>
       <li><a href="editos.html" class="active">Éditos</a></li>
-      <li><a href="cika-invest.html">Cika Invest</a></li>
     </ul>
   </nav>
 

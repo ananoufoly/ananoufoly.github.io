@@ -1,2 +1,3 @@
 User-agent: *
 Disallow: /agenda/
+Disallow: /cika-invest.html
