@@ -15,6 +15,14 @@
   .sim-wrap { max-width: 1180px; margin: 0 auto; }
   .sim-container { max-width: 1180px; }
 
+  /* Bandeau autonome : la page n'appartient pas à la navigation du site. */
+  .sim-header {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    padding: 28px 0 24px; border-bottom: 1px solid #e5e5e5; margin-bottom: 52px;
+  }
+  .sim-brand { font-size: 20px; letter-spacing: -.01em; color: #1a1a1a; font-weight: 600; }
+  .sim-tag { font-size: 13px; color: #888; }
+
   .sim-lede { font-size: 1.05rem; color: #555; max-width: 720px; margin-bottom: 18px; line-height: 1.6; }
 
   .sim-toolbar {
@@ -176,6 +184,7 @@
   @media (max-width: 600px) {
     .kpi-value { font-size: 1.3rem; }
     .sim-toolbar { gap: 8px; }
+    .sim-header { flex-direction: column; gap: 4px; padding: 20px 0 18px; margin-bottom: 36px; }
   }
   </style>
 </head>
@@ -183,15 +192,10 @@
 
 <div class="site-container sim-container">
 
-  <nav class="site-nav">
-    <a href="index.html" class="nav-name">Foly Ananou</a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="research.html">Research</a></li>
-      <li><a href="editos.html">Éditos</a></li>
-      <li><a href="cv.html">CV</a></li>
-    </ul>
-  </nav>
+  <header class="sim-header">
+    <span class="sim-brand">Cika Invest</span>
+    <span class="sim-tag">Simulateur économique · zone FCFA</span>
+  </header>
 
   <main>
     <h1 class="page-title">Cika Invest — Simulateur économique</h1>
@@ -377,7 +381,7 @@
   </main>
 
   <footer class="site-footer">
-    <a href="index.html">Foly Ananou</a> &middot; 2026
+    Cika Invest &middot; simulateur de cadrage &middot; 2026
   </footer>
 
 </div>
