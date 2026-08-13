@@ -87,6 +87,47 @@
   .split-ok { color: #237804; }
   .split-bad { color: #A8071A; }
 
+  .fld-help { font-size: 11.5px; color: #999; line-height: 1.5; margin: -6px 0 12px; }
+
+  /* Sélecteurs segmentés (installation, profil, financement) */
+  .seg { display: inline-flex; border: 1px solid #ddd; border-radius: 5px; overflow: hidden; margin-bottom: 8px; }
+  .seg-btn {
+    font-family: inherit; font-size: 12px; font-weight: 500; padding: 5px 11px;
+    border: none; border-right: 1px solid #ddd; background: #fff; color: #555; cursor: pointer;
+  }
+  .seg-btn:last-child { border-right: none; }
+  .seg-btn:hover { background: #f3f3ef; }
+  .seg-btn[aria-pressed="true"] { background: #1a1a1a; color: #fff; }
+  .seg-btn:focus-visible { outline: 2px solid #1D39C4; outline-offset: -2px; }
+  .seg-note { font-size: 11.5px; color: #999; line-height: 1.5; margin: 0 0 12px; }
+
+  /* Bandeau de test « valeur créée » */
+  .vc {
+    border: 1px solid #e8e8e2; border-left: 4px solid #237804; border-radius: 6px;
+    background: #fff; padding: 12px 15px; margin-bottom: 18px; font-size: 13.5px; line-height: 1.6;
+  }
+  .vc.ko { border-left-color: #A8071A; background: #FFF6F5; }
+  .vc-title { font-weight: 600; margin-bottom: 4px; }
+  .vc-legs { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 6px; font-size: 12.5px; color: #555; }
+  .vc-legs b { font-variant-numeric: tabular-nums; }
+
+  /* Attractivité */
+  .attract-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; margin-top: 18px; }
+  .warn { color: #AD6800; }
+  .verdict-pill {
+    display: inline-block; padding: 3px 11px; border-radius: 4px; font-size: 12.5px; font-weight: 700;
+    letter-spacing: .02em;
+  }
+  .verdict-pill.pos  { background: #D9F7BE; color: #135200; }
+  .verdict-pill.warn { background: #FFF1B8; color: #7C4A00; }
+  .verdict-pill.neg  { background: #FFCCC7; color: #820014; }
+
+  .prot-alert {
+    border: 1px solid #FFE58F; background: #FFFBE6; border-radius: 6px;
+    padding: 11px 14px; font-size: 13px; color: #7C4A00; line-height: 1.6; margin-top: 14px;
+  }
+  .prot-alert.bad { border-color: #FFA39E; background: #FFF1F0; color: #820014; }
+
   /* ── Cartes KPI ───────────────────────────────────────────── */
   .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 26px; }
   .kpi {
@@ -200,8 +241,9 @@
   <main>
     <h1 class="page-title">Cika Invest — Simulateur économique</h1>
     <p class="sim-lede">
-      Réglez les paramètres d'un cycle de ponte et voyez, en direct, si le montage fait gagner de
-      l'argent aux trois parties — le projet agricole, le participant qui préfinance, et Cika.
+      Réglez les paramètres d'un cycle de ponte et voyez, en direct, si le montage tient : le projet
+      dégage-t-il un bénéfice, le participant est-il payé pour son risque face à ce qu'il obtiendrait
+      ailleurs, et Cika couvre-t-elle sa structure sans prélever sur le pool ?
     </p>
 
     <div class="sim-toolbar">
@@ -217,17 +259,24 @@
 
         <fieldset>
           <legend>Technique — par poule / cycle</legend>
+          <div class="seg" role="radiogroup" aria-label="Option d'installation">
+            <button type="button" class="seg-btn" data-inst="poulettes" aria-pressed="true">Poulettes</button>
+            <button type="button" class="seg-btn" data-inst="poussins" aria-pressed="false">Poussins 1 j</button>
+          </div>
+          <p class="seg-note" id="instNote"></p>
           <div id="grp-technique"></div>
         </fieldset>
 
         <fieldset>
-          <legend>Prix</legend>
+          <legend>Prix de référence — l'éleveur seul</legend>
+          <p class="fld-help">Ce que l'éleveur paierait et obtiendrait <b>sans</b> Cika. Sert de repère au test de valeur créée.</p>
           <div id="grp-prix"></div>
         </fieldset>
 
         <fieldset>
-          <legend>Répartition &amp; marges Cika</legend>
-          <div id="grp-repartition"></div>
+          <legend>Intermédiation Cika</legend>
+          <p class="fld-help">Cika ne prend ni stock ni titre : elle négocie pour le programme et facture l'intermédiation.</p>
+          <div id="grp-interm"></div>
           <p class="split-note" id="splitNote"></p>
         </fieldset>
 
@@ -241,10 +290,24 @@
           <div id="grp-risque"></div>
         </fieldset>
 
+        <fieldset>
+          <legend>Attractivité — coût d'opportunité</legend>
+          <div class="seg" role="radiogroup" aria-label="Profil d'investisseur">
+            <button type="button" class="seg-btn" data-profil="diaspora" aria-pressed="true">Diaspora EUR</button>
+            <button type="button" class="seg-btn" data-profil="local" aria-pressed="false">Local UEMOA</button>
+            <button type="button" class="seg-btn" data-profil="perso" aria-pressed="false">Perso.</button>
+          </div>
+          <p class="seg-note" id="profilNote"></p>
+          <div id="grp-attract"></div>
+        </fieldset>
+
       </form>
 
       <!-- ════════════ RÉSULTATS ════════════ -->
       <section class="sim-results" aria-live="polite">
+
+        <!-- Test de valeur créée : l'intermédiation est-elle positive-somme ? -->
+        <div id="valeurCreee"></div>
 
         <div class="kpi-grid">
           <div class="kpi">
@@ -270,6 +333,20 @@
         </div>
 
         <div class="verdict" id="verdict"></div>
+
+        <!-- ════════ ATTRACTIVITÉ — le juge de paix ════════ -->
+        <div class="sim-block">
+          <h2 class="sim-h">Attractivité — le rendement face à l'alternative de l'investisseur</h2>
+          <p class="sim-hint">
+            Un rendement ne vaut que comparé à ce que l'investisseur obtiendrait ailleurs.
+            L'écart <b>α</b> = rendement espéré − taux exigé est le verdict.
+          </p>
+          <div id="attractBar"></div>
+          <div class="attract-grid">
+            <div id="attractProfils"></div>
+            <div id="attractPointMort"></div>
+          </div>
+        </div>
 
         <div class="sim-block">
           <h2 class="sim-h">Cascade — des produits au partage du BND</h2>
@@ -364,18 +441,62 @@
       </div>
     </details>
 
+    <!-- ════════════ PROTECTION TARIFÉE ════════════ -->
+    <details class="stress" id="protBox">
+      <summary>Protection — une fonctionnalité tarifée, pas un curseur gratuit</summary>
+      <div class="stress-body">
+        <p class="sim-hint" style="max-width:800px">
+          Réserve, backstop et garantie de capital font deux choses à la fois : ils <b>élèvent le
+          rendement espéré</b> du participant (donc rendent le produit vendable, donc élargissent
+          l'assiette de Cika), et ils ont une <b>prime</b> — la perte attendue qu'ils absorbent —
+          qui se dispute le même pool. Le pricing juste est là où la valeur dépasse la prime.
+        </p>
+
+        <div class="stress-params" id="grp-protection"></div>
+
+        <div class="sim-toolbar" style="border:none; padding-bottom:0; margin-bottom:6px; margin-top:14px">
+          <span class="fld-unit" style="font-size:12.5px">Qui finance la prime&nbsp;:</span>
+          <div class="seg" role="radiogroup" aria-label="Source de financement de la protection">
+            <button type="button" class="seg-btn" data-ressrc="mutualisee" aria-pressed="true">Réserve mutualisée</button>
+            <button type="button" class="seg-btn" data-ressrc="bilan" aria-pressed="false">Bilan Cika</button>
+          </div>
+        </div>
+        <p class="seg-note" id="resSrcNote"></p>
+
+        <div id="protAlert"></div>
+
+        <div class="sim-block" style="margin-top:18px">
+          <h3 class="sim-h">Readout de pricing — prime, valeur, marge</h3>
+          <div class="sim-scroll">
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th scope="col">Ligne</th>
+                  <th scope="col">Par poule / an</th>
+                  <th scope="col">À la bande de référence</th>
+                  <th scope="col">Lecture</th>
+                </tr>
+              </thead>
+              <tbody id="protReadout"></tbody>
+            </table>
+          </div>
+          <p class="sim-hint" id="protVerdict" style="margin-top:12px"></p>
+        </div>
+      </div>
+    </details>
+
     <!-- ════════════ SOURCES ════════════ -->
     <aside class="sources">
       <h2>Sources &amp; avertissement</h2>
       <ul>
-        <li>Aliment ponte 238 F/kg, poussin ponte 580 F : grille de prix <b>Sedima (Sénégal)</b>.</li>
-        <li>110–120 g/j, 250–300 œufs/an, plateau de 30 œufs à 2 000–2 300 F : <b>guide d'élevage pondeuses Afrique 2025</b> et <b>fiche technico-économique RECA Niger</b>.</li>
-        <li>Tension haussière sur les œufs et les intrants en Côte d'Ivoire (2026) : <b>presse locale</b>.</li>
-        <li>655,957 FCFA/EUR : <b>parité fixe du franc CFA</b>.</li>
-        <li><b>Dérivés</b> (calculés, non relevés) : prix de la poulette, œufs par poule.</li>
-        <li><b>Hypothèses de travail à valider</b> — ce ne sont pas des données de marché : charges de structure annuelles, clé de répartition 45/40/15, coût de collecte, mortalité, probabilité et sévérité de sinistre, ainsi que tous les paramètres du module de stress.</li>
+        <li><b>Paramètres techniques</b> — poulette ~5 000 F, mortalité 6–8 %, 300–370 œufs, 55–60 kg d'aliment, aliment 250–260 F/kg, sanitaire et autres charges 500–1 000 F, cycle 18 mois (poulettes) ou 22 mois (poussins d'un jour) : <b>hypothèses de marché ADIL FARMS SARL (Bénin), Adeyemi Ogoundele, DG</b>, communiquées à titre indicatif et à affiner. Ce sont les données de référence du modèle.</li>
+        <li><b>Prix de vente de l'œuf</b> : ⚠ <b>non fourni par ADIL — hypothèse</b>. C'est le principal driver de revenu, à sourcer auprès des débouchés réels avant toute décision.</li>
+        <li><b>Revente de la poule réformée</b> : hypothèse.</li>
+        <li>655,957 FCFA/EUR : <b>parité fixe du franc CFA</b> — pas de risque de change pour un investisseur en euros.</li>
+        <li><b>Benchmarks d'attractivité</b> : Livret A 1,7 % et LEP 2,5 % (au 1<sup>er</sup> août 2026) pour la diaspora ; bons du Trésor UEMOA ~6 % pour l'épargnant local. Les primes d'illiquidité, de risque et l'escompte d'affinité sont des <b>préférences de l'investisseur</b>, pas des données de marché.</li>
+        <li><b>Hypothèses de travail à calibrer</b> — ce ne sont pas des données de marché : charges de structure annuelles, prix négociés et commissions Cika, clé de répartition, coût de collecte, et <b>tous les paramètres du module de stress</b> (volatilités, probabilités et sévérités de sinistre et de défaut, corrélation). Tant qu'ils ne sont pas calés sur un historique, traiter les probabilités de perte et la VaR comme des <b>ordres de grandeur</b>.</li>
       </ul>
-      <p class="warn">Chiffres de cadrage issus de sources publiques, destinés à tester la viabilité du modèle — pas un business plan validé.</p>
+      <p class="warn">Paramètres techniques d'après hypothèses de marché ADIL FARMS (Bénin) ; prix de l'œuf, structure Cika et paramètres de risque = hypothèses de cadrage. Outil destiné à tester la viabilité du modèle — pas un business plan validé.</p>
     </aside>
 
   </main>
@@ -395,45 +516,61 @@
      ============================================================== */
 
   var SRC = {
-    derive:   "Dérivé (calculé, non relevé). Cadrage à partir des grilles de prix Sedima (Sénégal) — poussin ponte 580 F, élevé jusqu'au stade prête-à-pondre.",
+    adil:     "Hypothèse de marché ADIL FARMS SARL (Bénin), Adeyemi Ogoundele, DG — communiquée à titre indicatif, à affiner. Donnée de référence du modèle.",
+    adilPoul: "ADIL FARMS (Bénin) : poulette prête à pondre à 12 semaines, ~5 000 F, tendance haussière. Fourchette 4 000–6 000 F.",
+    adilMort: "ADIL FARMS (Bénin) : 6–8 % de mortalité sur le cycle en route poulettes. Jusqu'à 20 % en route poussins d'un jour.",
+    adilOeuf: "ADIL FARMS (Bénin) : 300–370 œufs vendables par poule sur le cycle de ponte.",
+    adilAlim: "ADIL FARMS (Bénin) : 55–60 kg d'aliment par poule sur le cycle, aliment ponte à 250–260 F/kg.",
+    adilChg:  "ADIL FARMS (Bénin) : 500–1 000 F/tête/cycle pour le sanitaire comme pour les autres charges directes.",
+    adilCyc:  "ADIL FARMS (Bénin) : 18 mois si l'on installe des poulettes prêtes à pondre, 22 mois si l'on part de poussins d'un jour.",
+    oeufHypo: "⚠ NON fourni par ADIL FARMS. C'est la principale hypothèse de revenu non sourcée du modèle — à caler sur les débouchés réels avant toute décision.",
     hypo:     "Hypothèse de travail à valider — ce n'est pas une donnée de marché.",
-    sedima:   "Grille de prix Sedima (Sénégal) : aliment ponte 238 F/kg. Valeur de base relevée à la hausse pour le cadrage régional (tension 2026).",
-    guide:    "Guide d'élevage pondeuses Afrique 2025 et fiche technico-économique RECA Niger : 250–300 œufs/an, 110–120 g d'aliment/jour.",
-    marche:   "Prix de marché de l'œuf. Repère : plateau de 30 œufs à 2 000–2 300 F (guide 2025, RECA Niger). Tension haussière en Côte d'Ivoire en 2026 (presse locale).",
-    parite:   "Parité fixe du franc CFA : 1 EUR = 655,957 FCFA.",
+    parite:   "Parité fixe du franc CFA : 1 EUR = 655,957 FCFA. Pas de risque de change pour un investisseur en euros.",
     struct:   "Paramètre de structure du montage Cika — choix commercial, pas une donnée observée.",
-    stress:   "Paramètre du module de stress : hypothèse de travail, à calibrer sur historique quand les données seront disponibles."
+    interm:   "Paramètre du modèle coordinateur : Cika ne prend ni stock ni titre, elle négocie pour le compte du programme et facture l'intermédiation. Choix de pricing à arbitrer.",
+    stress:   "Paramètre du module de stress : hypothèse de travail à calibrer. Tant qu'elle n'est pas calée sur un historique, traiter les probabilités de perte et la VaR comme des ordres de grandeur.",
+    hurdle:   "Coût d'opportunité de l'investisseur : ce que rapporte son alternative sans risque. Diaspora EUR — Livret A 1,7 % au 1er août 2026 (LEP 2,5 %). Épargnant local UEMOA — bons du Trésor ~6 %.",
+    prime:    "Prime de rendement exigée en plus du taux sans risque. Paramètre de préférence de l'investisseur, pas une donnée de marché."
   };
 
   // key, label, unit, min, max, step, default, source, group, [decimals]
   var PARAMS = [
-    // Technique
-    ["prixPoulette","Prix d'une poulette prête à pondre","FCFA/tête",1000,10000,50,4000,SRC.derive,"technique",0],
-    ["mortalite","Taux de mortalité sur le cycle","part",0,0.4,0.005,0.08,SRC.guide,"technique",3],
-    ["oeufsParPoule","Œufs vendables par poule","œufs/cycle",100,340,1,260,SRC.guide,"technique",0],
-    ["consoAliment","Aliment consommé","kg/poule/cycle",20,60,0.5,42,SRC.guide,"technique",1],
-    ["prixAliment","Prix de l'aliment ponte","FCFA/kg",150,400,5,260,SRC.sedima,"technique",0],
-    ["sante","Frais sanitaires / vétérinaire","FCFA/tête",0,2000,25,500,SRC.hypo,"technique",0],
-    ["autres","Autres charges directes","FCFA/tête",0,3000,25,600,SRC.hypo,"technique",0],
-    ["valeurReforme","Revente d'une poule réformée","FCFA/tête",0,6000,50,2500,SRC.guide,"technique",0],
-    // Prix
-    ["prixOeuf","Prix de vente de l'œuf","FCFA/œuf",40,120,1,70,SRC.marche,"prix",0],
-    // Répartition & marges
-    ["coutCollectePct","Coût de collecte / commercialisation","part de la recette œufs",0,0.25,0.005,0.06,SRC.hypo,"repartition",3],
-    ["margeAliment","Marge Cika sur l'aliment","FCFA/kg",0,60,1,0,SRC.struct,"repartition",0],
-    ["margeOeuf","Marge Cika sur l'œuf commercialisé","FCFA/œuf",0,20,0.5,0,SRC.struct,"repartition",1],
-    ["partCika","Part Cika du bénéfice net distribuable","part",0,1,0.01,0.15,SRC.hypo,"repartition",2],
-    ["partProducteur","Part producteur","part",0,1,0.01,0.40,SRC.hypo,"repartition",2],
-    // Société & bande
+    // ── Technique (hypothèses ADIL FARMS)
+    // Borne basse à 1 400 F pour couvrir l'option « poussins d'un jour » (~1 600 F) ;
+    // la fourchette ADIL pour la poulette prête à pondre reste 4 000–6 000 F.
+    ["prixPoulette","Poulette prête à pondre (12 sem.)","FCFA/tête",1400,6000,50,5000,SRC.adilPoul,"technique",0],
+    ["mortalite","Taux de mortalité sur le cycle","part",0.04,0.20,0.005,0.07,SRC.adilMort,"technique",3],
+    ["oeufsParPoule","Œufs vendables par poule","œufs/cycle",260,380,1,330,SRC.adilOeuf,"technique",0],
+    ["consoAliment","Aliment consommé","kg/poule/cycle",40,65,0.5,57,SRC.adilAlim,"technique",1],
+    ["sante","Frais sanitaires / vétérinaires","FCFA/tête/cycle",300,1200,25,750,SRC.adilChg,"technique",0],
+    ["autres","Autres charges directes","FCFA/tête/cycle",300,1200,25,750,SRC.adilChg,"technique",0],
+    ["valeurReforme","Revente d'une poule réformée","FCFA/tête",1500,4000,50,2500,SRC.hypo,"technique",0],
+
+    // ── Prix de référence (ce que l'éleveur obtiendrait SEUL)
+    ["prixAlimentMarche","Aliment payé par l'éleveur seul","FCFA/kg",200,340,5,255,SRC.adilAlim,"prix",0],
+    ["prixOeuf","Prix de l'œuf obtenu par l'éleveur seul","FCFA/œuf",50,95,1,70,SRC.oeufHypo,"prix",0],
+
+    // ── Intermédiation Cika (modèle coordinateur)
+    ["prixAlimentNegocie","Aliment — prix de gros négocié par Cika","FCFA/kg",180,340,5,240,SRC.interm,"interm",0],
+    ["commAliment","Commission Cika sur l'aliment","FCFA/kg",0,40,1,8,SRC.interm,"interm",0],
+    ["prixOeufDebouche","Œuf — prix du débouché décroché par Cika","FCFA/œuf",50,100,1,75,SRC.interm,"interm",0],
+    ["commOeuf","Commission Cika sur l'œuf","FCFA/œuf",0,15,0.5,3,SRC.interm,"interm",1],
+    ["coutCollectePct","Coût logistique de collecte","part de la recette œufs",0,0.25,0.005,0.06,SRC.hypo,"interm",3],
+    ["partCika","Commission d'alignement Cika sur le BND","part",0,1,0.01,0.10,SRC.hypo,"interm",2],
+    ["partProducteur","Part producteur du BND","part",0,1,0.01,0.45,SRC.hypo,"interm",2],
+
+    // ── Société & bande
     ["nbPoules","Taille de bande de référence","poules",100,20000,100,1000,SRC.struct,"societe",0],
-    ["cycleMois","Durée du cycle de participation","mois",6,24,1,12,SRC.struct,"societe",0],
+    ["cycleMois","Durée du cycle","mois",12,24,1,18,SRC.adilCyc,"societe",0],
     ["opexAnnuel","Charges annuelles de structure Cika","FCFA/an",0,300000000,1000000,60000000,SRC.hypo,"societe",0],
     ["fx","Taux de change","FCFA/EUR",655.957,655.957,0.001,655.957,SRC.parite,"societe",3],
-    // Capital & risque
+
+    // ── Capital immobilisé & risque
     ["partPrefin","Part des intrants réellement préfinancée","part",0.05,1,0.01,1.00,SRC.struct,"risque",2],
-    ["probaSinistre","Probabilité d'un sinistre majeur / cycle","part",0,0.5,0.005,0.05,SRC.hypo,"risque",3],
-    ["perteSinistre","Perte en cas de sinistre","part du capital",0,1,0.01,0.70,SRC.hypo,"risque",2],
-    // Stress
+    ["probaSinistre","Probabilité d'un sinistre majeur / cycle","part",0,0.5,0.005,0.05,SRC.stress,"risque",3],
+    ["perteSinistre","Perte en cas de sinistre","part du capital",0,1,0.01,0.70,SRC.stress,"risque",2],
+
+    // ── Stress
     ["volPrixOeuf","Volatilité du prix de l'œuf (systémique)","écart-type, FCFA",0,25,0.5,6,SRC.stress,"stress",1],
     ["volPrixAliment","Volatilité du prix de l'aliment (systémique)","écart-type, FCFA/kg",0,80,1,20,SRC.stress,"stress",0],
     ["volMortalite","Volatilité de la mortalité (ferme)","écart-type",0,0.15,0.005,0.03,SRC.stress,"stress",3],
@@ -442,11 +579,36 @@
     ["perteDefaut","Part du capital perdue si défaut","part",0,1,0.01,0.50,SRC.stress,"stress",2],
     ["correlation","Corrélation des chocs entre fermes","0 = diversifiable, 1 = systémique",0,1,0.01,0.30,SRC.stress,"stress",2],
     ["nbBandesParticipant","Nombre de bandes détenues","bandes",1,50,1,1,SRC.struct,"stress",0],
-    ["reservePct","Fonds de réserve (absorbe en premier)","part du capital",0,0.5,0.01,0.0,SRC.struct,"stress",2],
-    ["cikaBackstop","Backstop Cika après la réserve","FCFA/poule",0,10000,100,0,SRC.struct,"stress",0],
-    ["protectionCapital","Capital participant garanti","part",0,1,0.01,0.0,SRC.struct,"stress",2],
-    ["nbSimulations","Nombre de tirages Monte-Carlo","tirages",500,20000,500,5000,SRC.stress,"stress",0]
+    ["nbSimulations","Nombre de tirages Monte-Carlo","tirages",500,20000,500,5000,SRC.stress,"stress",0],
+
+    // ── Protection (tarifée : voir le module dédié)
+    ["reservePct","Fonds de réserve (absorbe en premier)","part du capital",0,0.5,0.01,0.0,SRC.struct,"protection",2],
+    ["cikaBackstop","Backstop Cika après la réserve","FCFA/poule",0,10000,100,0,SRC.struct,"protection",0],
+    ["protectionCapital","Capital participant garanti","part",0,1,0.01,0.0,SRC.struct,"protection",2],
+    ["fraisAdminReserve","Frais d'administration de la réserve","part de la réserve",0,0.2,0.005,0.02,SRC.interm,"protection",3],
+    ["coutCapitalBackstop","Coût du capital immobilisé en backstop","part du montant garanti",0,0.3,0.005,0.10,SRC.interm,"protection",3],
+
+    // ── Attractivité / coût d'opportunité
+    ["tauxOpportunite","Rendement de l'alternative sans risque","%/an",0,0.10,0.001,0.017,SRC.hurdle,"attract",3],
+    ["primeIlliquidite","Prime exigée pour le blocage","%/an",0,0.05,0.001,0.02,SRC.prime,"attract",3],
+    ["primeRisque","Prime exigée pour le risque de perte","%/an",0,0.08,0.001,0.03,SRC.prime,"attract",3],
+    ["escompteAffinite","Escompte d'affinité (impact, attachement)","%/an",0,0.04,0.001,0.0,SRC.prime,"attract",3]
   ];
+
+  // Profils d'investisseur : règlent le benchmark sans risque.
+  var PROFILS = {
+    diaspora: { label: "Diaspora EUR",          taux: 0.017, note: "Livret A 1,7 % (1er août 2026) · LEP 2,5 % · parité fixe, pas de risque de change" },
+    local:    { label: "Épargnant local UEMOA", taux: 0.060, note: "Bons du Trésor UEMOA ~6 %/an" },
+    perso:    { label: "Personnalisé",          taux: null,  note: "Benchmark saisi à la main" }
+  };
+
+  // Options d'installation (ADIL) : règlent poulette, mortalité de départ et durée de cycle.
+  var INSTALLATIONS = {
+    poulettes: { label: "Poulettes prêtes à pondre", prixPoulette: 5000, mortalite: 0.07, cycleMois: 18,
+                 note: "Installation à 12 semaines · cycle 18 mois · mortalité 6–8 %" },
+    poussins:  { label: "Poussins d'un jour",        prixPoulette: 1600, mortalite: 0.20, cycleMois: 22,
+                 note: "Élevage depuis le 1er jour · cycle 22 mois · mortalité initiale jusqu'à 20 %" }
+  };
 
   var DEFAULTS = {}, META = {};
   PARAMS.forEach(function (p) {
@@ -461,6 +623,9 @@
   var showEUR = false;
   var hmView  = "A";
   var lastStress = null;
+  var profil = "diaspora";
+  var installation = "poulettes";
+  var reserveSource = "mutualisee";           // « mutualisée » ou « bilan Cika »
 
   /* ==============================================================
      2. FORMATAGE
@@ -508,28 +673,42 @@
     var p = o || S;
     var g = function (k) { return (p[k] === undefined) ? S[k] : p[k]; };
 
-    var oeufsParPoule = g("oeufsParPoule"), prixOeuf = g("prixOeuf"), margeOeuf = g("margeOeuf");
-    var valeurReforme = g("valeurReforme"), mortalite = g("mortalite");
+    var oeufsParPoule = g("oeufsParPoule"), valeurReforme = g("valeurReforme"), mortalite = g("mortalite");
     var prixPoulette = g("prixPoulette"), consoAliment = g("consoAliment");
-    var prixAliment = g("prixAliment"), margeAliment = g("margeAliment");
     var sante = g("sante"), autres = g("autres"), coutCollectePct = g("coutCollectePct");
     var partCika = g("partCika"), partProducteur = g("partProducteur");
     var cycleMois = g("cycleMois") || 12;
     var partPrefin = g("partPrefin"), probaSinistre = g("probaSinistre"), perteSinistre = g("perteSinistre");
     var nbPoules = g("nbPoules"), opexAnnuel = g("opexAnnuel");
+    // Prix de référence (l'éleveur seul) et prix de l'intermédiation Cika
+    var prixAlimentMarche = g("prixAlimentMarche"), prixOeufSolo = g("prixOeuf");
+    var prixAlimentNegocie = g("prixAlimentNegocie"), commAliment = g("commAliment");
+    var prixOeufDebouche = g("prixOeufDebouche"), commOeuf = g("commOeuf");
 
     var partParticipant = 1 - partCika - partProducteur;
     var annualise = 12 / cycleMois;
 
-    var recetteOeufsPool = oeufsParPoule * (prixOeuf - margeOeuf);
+    // ── Prix vus par le POOL : c'est eux qui entrent dans le modèle.
+    var prixAlimentPool = prixAlimentNegocie + commAliment;
+    var prixOeufPool    = prixOeufDebouche - commOeuf;
+
+    // ── Test de valeur créée : l'intermédiation n'est légitime que si le pool
+    //    paie l'aliment moins cher et encaisse l'œuf plus cher qu'en direct.
+    var ecartAliment = prixAlimentMarche - prixAlimentPool;   // > 0 = gain pour le pool
+    var ecartOeuf    = prixOeufPool - prixOeufSolo;           // > 0 = gain pour le pool
+    var valeurCreee  = (ecartAliment >= 0) && (ecartOeuf >= 0);
+    var gainAgregationParPoule = ecartAliment * consoAliment + ecartOeuf * oeufsParPoule;
+
+    var recetteOeufsPool = oeufsParPoule * prixOeufPool;
     var recetteReforme   = valeurReforme * (1 - mortalite);
     var produitsBruts    = recetteOeufsPool + recetteReforme;
 
-    var capitalIntrants  = prixPoulette + consoAliment * (prixAliment + margeAliment) + sante + autres;
-    var coutCollecte     = coutCollectePct * oeufsParPoule * prixOeuf;
+    var capitalIntrants  = prixPoulette + consoAliment * prixAlimentPool + sante + autres;
+    var coutCollecte     = coutCollectePct * oeufsParPoule * prixOeufPool;
 
     var BND         = produitsBruts - capitalIntrants - coutCollecte;
-    var partCikaBND = BND * partCika;
+    // La commission d'alignement n'est JAMAIS prélevée sur un BND négatif.
+    var partCikaBND = Math.max(BND, 0) * partCika;
     var partProdBND = BND * partProducteur;
     var partPartBND = BND * partParticipant;
 
@@ -543,13 +722,22 @@
                    - probaSinistre * perteSinistre * capitalImmobilise;
     var roiEspere  = safeDiv(gainEspere, capitalImmobilise) * annualise;
 
-    var revenuCikaParPoule   = partCikaBND + margeAliment * consoAliment + margeOeuf * oeufsParPoule;
+    // ── Cika coordinateur : commissions d'intermédiation + alignement
+    var commissionAliment    = commAliment * consoAliment;
+    var commissionOeuf       = commOeuf * oeufsParPoule;
+    var commissionBND        = partCikaBND;
+    var revenuCikaParPoule   = commissionAliment + commissionOeuf + commissionBND;
     var revenuCikaParPouleAn = revenuCikaParPoule * annualise;
     var seuilPoules          = revenuCikaParPouleAn > 0 ? opexAnnuel / revenuCikaParPouleAn : null;
     var resultatCikaBande    = nbPoules * revenuCikaParPouleAn - opexAnnuel;
 
     return {
       partParticipant: partParticipant, annualise: annualise,
+      prixAlimentPool: prixAlimentPool, prixOeufPool: prixOeufPool,
+      prixAlimentMarche: prixAlimentMarche, prixOeufSolo: prixOeufSolo,
+      ecartAliment: ecartAliment, ecartOeuf: ecartOeuf, valeurCreee: valeurCreee,
+      gainAgregationParPoule: gainAgregationParPoule,
+      commissionAliment: commissionAliment, commissionOeuf: commissionOeuf, commissionBND: commissionBND,
       recetteOeufsPool: recetteOeufsPool, recetteReforme: recetteReforme, produitsBruts: produitsBruts,
       capitalIntrants: capitalIntrants, coutCollecte: coutCollecte,
       BND: BND, partCikaBND: partCikaBND, partProdBND: partProdBND, partPartBND: partPartBND,
@@ -571,11 +759,12 @@
     var g = function (k) { return (p[k] === undefined) ? S[k] : p[k]; };
 
     var nbPoules = g("nbPoules");
-    var cikaMarges = g("margeAliment") * g("consoAliment") * nbPoules
-                   + g("margeOeuf") * g("oeufsParPoule") * nbPoules;
+    // Les commissions d'intermédiation sont encaissées quel que soit le signe du cycle :
+    // c'est ce qui rend un revenu de flux plus résilient qu'un revenu de commission sur résultat.
+    var cikaMarges = (g("commAliment") * g("consoAliment") + g("commOeuf") * g("oeufsParPoule")) * nbPoules;
 
     var cikaFee, producer, participantNet, perteCapitalPart, perteResiduelleCika = 0;
-    var absorbReserve = 0, absorbCika = 0;
+    var absorbReserve = 0, absorbCika = 0, perteEvitee = 0;
 
     if (grossResult >= 0) {
       cikaFee          = grossResult * g("partCika");
@@ -596,13 +785,17 @@
       cikaFee        = -(absorbCika + perteResiduelleCika);
       producer       = 0;
       participantNet = -perteCapitalPart;
+      // Ce que le participant aurait perdu SANS aucun dispositif : min(L, capital).
+      // L'écart avec sa perte réelle est la valeur que la protection lui apporte.
+      perteEvitee = Math.min(L, capital) - perteCapitalPart;
     }
 
     return {
       cikaFee: cikaFee, cikaMarges: cikaMarges, cikaTotal: cikaFee + cikaMarges,
       producer: producer, participantNet: participantNet,
       perteCapitalPart: perteCapitalPart, absorbReserve: absorbReserve,
-      absorbCika: absorbCika, perteResiduelleCika: perteResiduelleCika
+      absorbCika: absorbCika, perteResiduelleCika: perteResiduelleCika,
+      perteEvitee: perteEvitee
     };
   }
 
@@ -662,6 +855,9 @@
            (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
   }
 
+  // Taille du pool servant à juger la solidité de la réserve mutualisée.
+  var POOL_FERMES = 30;
+
   function runMonteCarlo(seeded) {
     var n        = Math.max(100, Math.round(S.nbSimulations));
     var nBandes  = Math.max(1, Math.round(S.nbBandesParticipant));
@@ -673,19 +869,27 @@
 
     var partRet = new Float64Array(n);      // rendement annualisé du participant
     var cikaRes = new Float64Array(n);      // résultat annuel Cika à la bande de référence
+    var perteBrute = new Float64Array(n);   // perte agrégée avant protection (pour tarifer la réserve)
+    var nReserveKO = 0;                     // tirages où la réserve ne suffit pas
+    var sommeDeficit = 0, sommePertePool = 0;   // sévérité du débordement
+    var sommeAbsorbReserve = 0, sommeAbsorbCika = 0, sommeProtPart = 0;
 
     // Éléments invariants au tirage
     var base = model(S);
     var capitalParPoule = base.capitalIntrants;   // recalculé par tirage (dépend du prix aliment)
+    // Dotation de la réserve du programme, fixée sur le capital nominal.
+    var reserveDotation = S.reservePct * base.capitalIntrants * S.partPrefin * nbPoules * POOL_FERMES;
 
     for (var i = 0; i < n; i++) {
-      // ── Chocs systémiques de PRIX
-      var prixOeufSim    = Math.max(20, S.prixOeuf    + S.volPrixOeuf    * N());
-      var prixAlimentSim = Math.max(50, S.prixAliment + S.volPrixAliment * N());
+      // ── Chocs systémiques de PRIX : ils frappent le prix du débouché et le prix négocié,
+      //    donc se répercutent sur les prix vus par le pool.
+      var prixOeufSim    = Math.max(20, S.prixOeufDebouche   + S.volPrixOeuf    * N());
+      var prixAlimentSim = Math.max(50, S.prixAlimentNegocie + S.volPrixAliment * N());
       // ── Facteurs systémiques : production, sinistralité, défaut
       var M = N(), Msin = N(), Mdef = N();
 
       var sumPartNet = 0, sumCapital = 0, sumCikaTotal = 0;
+      var sumPerteBrute = 0;
 
       for (var b = 0; b < nBandes; b++) {
         var e = N();
@@ -695,7 +899,7 @@
         var oeufs_b     = Math.max(0, S.oeufsParPoule - S.volOeufs * a);
 
         var over = {
-          prixOeuf: prixOeufSim, prixAliment: prixAlimentSim,
+          prixOeufDebouche: prixOeufSim, prixAlimentNegocie: prixAlimentSim,
           mortalite: mortalite_b, oeufsParPoule: oeufs_b
         };
         var m = model(over);
@@ -723,14 +927,61 @@
         sumPartNet   += w.participantNet;
         sumCapital   += capitalBande;
         sumCikaTotal += w.cikaTotal;
+        sumPerteBrute += Math.max(0, -gross);
+        sommeAbsorbReserve += w.absorbReserve;
+        sommeAbsorbCika    += w.absorbCika + w.perteResiduelleCika;
+        sommeProtPart      += w.perteEvitee;
       }
 
       partRet[i] = sumCapital > 0 ? (sumPartNet / sumCapital) * annualise : 0;
       // Cika : résultat annuel à la taille de référence (une bande), hors diversification
       cikaRes[i] = (sumCikaTotal / nBandes) * annualise - S.opexAnnuel;
+      perteBrute[i] = sumPerteBrute;
+
+      // ── Crédibilité de la réserve MUTUALISÉE.
+      // La réserve couvre tout le programme, pas les seules bandes du participant :
+      // sa fragilité vient de ce que les fermes sombrent ENSEMBLE. On simule donc un
+      // pool large (POOL_FERMES fermes) sur le même facteur systémique M — à
+      // corrélation nulle les pertes se compensent, à corrélation 1 elles s'additionnent.
+      var pertePool = 0;
+      for (var f = 0; f < POOL_FERMES; f++) {
+        var af = rho * M + Math.sqrt(1 - rho * rho) * N();
+        var mf = model({
+          prixOeufDebouche: prixOeufSim, prixAlimentNegocie: prixAlimentSim,
+          mortalite: clamp(S.mortalite + S.volMortalite * af, 0, 0.95),
+          oeufsParPoule: Math.max(0, S.oeufsParPoule - S.volOeufs * af)
+        });
+        var capF = mf.capitalIntrants * S.partPrefin * nbPoules;
+        var grossF = mf.BND * nbPoules;
+        var aSinF = rho * Msin + Math.sqrt(1 - rho * rho) * N();
+        if (aSinF > invNorm(1 - clamp(S.probaSinistre * (1 + Math.max(0, M)), 0, 1))) {
+          grossF -= S.perteSinistre * capF;
+        }
+        pertePool += Math.max(0, -grossF);
+      }
+      // La réserve est dotée une fois pour toutes sur le capital NOMINAL du programme :
+      // c'est une somme mise de côté à l'avance, elle ne grossit pas quand les pertes arrivent.
+      // On retient la part de la perte qu'elle NE couvre PAS. La fréquence de débordement
+      // seule est trompeuse : à corrélation faible la réserve saute souvent mais de peu
+      // (quelques fermes isolées), à corrélation forte elle saute rarement mais est
+      // pulvérisée — c'est ce second cas qui rend la garantie non crédible.
+      if (pertePool > reserveDotation + 1e-9) nReserveKO++;
+      sommeDeficit += Math.max(0, pertePool - reserveDotation);
+      sommePertePool += pertePool;
     }
 
-    return { part: partRet, cika: cikaRes, n: n, capitalParPoule: capitalParPoule };
+    return {
+      part: partRet, cika: cikaRes, n: n, capitalParPoule: capitalParPoule,
+      perteBrute: perteBrute,
+      pReserveInsuffisante: nReserveKO / n,
+      // Part de la perte du programme que la réserve ne couvre pas : c'est la mesure
+      // qui monte réellement avec la corrélation, donc celle qui pilote la crédibilité.
+      partNonCouverte: sommePertePool > 0 ? sommeDeficit / sommePertePool : 1,
+      // Primes annualisées par poule : perte attendue absorbée par chaque dispositif
+      primeReserveParPouleAn: (sommeAbsorbReserve / n) / nBandes / nbPoules * annualise,
+      primeCikaParPouleAn:    (sommeAbsorbCika    / n) / nBandes / nbPoules * annualise,
+      gainProtParPouleAn:     (sommeProtPart      / n) / nBandes / nbPoules * annualise
+    };
   }
 
   function stats(arr) {
@@ -761,6 +1012,124 @@
   }
 
   /* ==============================================================
+     5b. PRICING DE LA PROTECTION
+     La protection n'est pas qu'un paramètre de risque : elle change ce que
+     Cika peut facturer, dans les deux sens. Coût d'un côté, valeur de l'autre.
+     ============================================================== */
+
+  function pricingProtection(r, mc) {
+    var annualise = r.annualise;
+    var capital = r.capitalImmobilise;
+
+    // ── Coût : perte attendue absorbée par chaque dispositif, par poule et par an.
+    // Si le Monte-Carlo a tourné, on le lit dessus ; sinon approximation fermée.
+    var primeReserve, primeCika, primeProtection, pReserveKO;
+    if (mc) {
+      primeReserve    = mc.primeReserveParPouleAn;
+      primeCika       = mc.primeCikaParPouleAn;
+      primeProtection = mc.gainProtParPouleAn;
+      pReserveKO      = mc.partNonCouverte;
+    } else {
+      var perteAttendue = S.probaSinistre * S.perteSinistre * capital * annualise;
+      primeReserve    = Math.min(perteAttendue, S.reservePct * capital * annualise);
+      primeCika       = Math.min(Math.max(0, perteAttendue - primeReserve), S.cikaBackstop * annualise);
+      primeProtection = perteAttendue * S.protectionCapital;
+      pReserveKO      = S.reservePct > 0 ? clamp(1 - S.reservePct / Math.max(1e-9, S.probaSinistre * S.perteSinistre), 0, 1) : 1;
+    }
+    var primeTotale = primeReserve + primeCika + primeProtection;
+
+    // ── Valeur pour le participant : ce n'est PAS la perte absorbée (ce serait circulaire,
+    // on retrouverait la prime à l'identique). C'est la baisse du taux qu'il exige, parce
+    // qu'une garantie crédible écrase sa prime de risque. Un point de taux exigé en moins,
+    // c'est un point de rendement que Cika n'a pas besoin de servir pour rester vendable.
+    var protectionCredible = S.protectionCapital * (1 - pReserveKO);
+    var baisseTauxExige = S.primeRisque * protectionCredible;
+    var gainRendement = baisseTauxExige;
+    var valeurParPoule = baisseTauxExige * capital;
+    var roiProtege = r.roiEspere + safeDiv(primeProtection + primeReserve + primeCika, capital);
+
+    // ── Effet sur Cika. Selon qui finance la prime.
+    var fraisAdmin = 0, chargeCika = 0;
+    if (reserveSource === "mutualisee") {
+      // Cika administre la réserve mais ne porte pas le risque : elle encaisse des frais.
+      fraisAdmin = S.fraisAdminReserve * S.reservePct * capital * annualise;
+      chargeCika = primeCika;                       // seul le backstop reste à sa charge
+    } else {
+      // Cika porte le risque sur son bilan : perte attendue + coût du capital immobilisé.
+      chargeCika = primeCika + primeProtection
+                 + S.coutCapitalBackstop * (S.cikaBackstop + S.protectionCapital * capital) * annualise;
+    }
+    var margeNette = r.revenuCikaParPouleAn + fraisAdmin - chargeCika;
+
+    return {
+      primeReserve: primeReserve, primeCika: primeCika, primeProtection: primeProtection,
+      primeTotale: primeTotale, roiProtege: roiProtege, gainRendement: gainRendement,
+      valeurParPoule: valeurParPoule,
+      fraisAdmin: fraisAdmin, chargeCika: chargeCika, margeNette: margeNette,
+      pReserveInsuffisante: pReserveKO,
+      protectionCredible: protectionCredible
+    };
+  }
+
+  /* ==============================================================
+     5c. ATTRACTIVITÉ — coût d'opportunité de l'investisseur
+     Un rendement n'est attractif que relativement à son alternative.
+     ============================================================== */
+
+  function attractivite(r, mc, over) {
+    var o = over || {};
+    var tauxOpportunite = (o.tauxOpportunite === undefined) ? S.tauxOpportunite : o.tauxOpportunite;
+    // Une garantie n'écrase la prime de risque que si elle est crédible. Ce qui la mine,
+    // ce n'est pas la fréquence des débordements mais leur SÉVÉRITÉ : à corrélation élevée
+    // la réserve est pulvérisée au moment précis où elle devrait jouer.
+    var partNonCouverte = mc ? mc.partNonCouverte : 1;
+    var protectionCredible = S.protectionCapital * (1 - partNonCouverte);
+    var primeRisqueEff = S.primeRisque * (1 - protectionCredible);
+    var tauxExige = tauxOpportunite + S.primeIlliquidite + primeRisqueEff - S.escompteAffinite;
+    var alpha = r.roiEspere - tauxExige;
+
+    var verdict, cls;
+    if (alpha >= 0)            { verdict = "Attractif";      cls = "pos"; }
+    else if (alpha >= -0.01)   { verdict = "Marginal";       cls = "warn"; }
+    else                       { verdict = "Non attractif";  cls = "neg"; }
+
+    return {
+      tauxOpportunite: tauxOpportunite, primeIlliquidite: S.primeIlliquidite,
+      primeRisque: S.primeRisque, primeRisqueEff: primeRisqueEff,
+      escompteAffinite: S.escompteAffinite, protectionCredible: protectionCredible,
+      tauxExige: tauxExige, alpha: alpha, verdict: verdict, cls: cls
+    };
+  }
+
+  // Point mort : plus petit prixOeufDebouche rendant alpha >= 0 (recherche dichotomique).
+  function pointMortOeuf(mc) {
+    var lo = META.prixOeufDebouche.min, hi = META.prixOeufDebouche.max;
+    var f = function (p) {
+      var r = model(Object.assign({}, S, { prixOeufDebouche: p }));
+      return attractivite(r, mc).alpha;
+    };
+    if (f(hi) < 0) return null;                       // inatteignable dans les bornes
+    if (f(lo) >= 0) return lo;                        // déjà atteint au minimum
+    for (var i = 0; i < 60; i++) {
+      var mid = (lo + hi) / 2;
+      if (f(mid) >= 0) hi = mid; else lo = mid;
+    }
+    return hi;
+  }
+
+  // Point mort : plus petite protectionCapital rendant alpha >= 0.
+  function pointMortProtection(mc) {
+    var save = S.protectionCapital, res = null;
+    for (var p = 0; p <= 1.0001; p += 0.01) {
+      S.protectionCapital = p;
+      var a = attractivite(model(S), mc);
+      if (a.alpha >= 0) { res = p; break; }
+    }
+    S.protectionCapital = save;
+    return res;
+  }
+
+  /* ==============================================================
      6. CONSTRUCTION DU PANNEAU
      ============================================================== */
 
@@ -783,8 +1152,11 @@
   }
 
   function buildPanel() {
-    var groups = { technique:[], prix:[], repartition:[], societe:[], risque:[], stress:[] };
-    PARAMS.forEach(function (p) { groups[p[8]].push(fieldHTML(META[p[0]])); });
+    var groups = {};
+    PARAMS.forEach(function (p) {
+      var g = p[8];
+      (groups[g] = groups[g] || []).push(fieldHTML(META[p[0]]));
+    });
     Object.keys(groups).forEach(function (g) {
       var el = document.getElementById("grp-" + g);
       if (el) el.innerHTML = groups[g].join("");
@@ -883,17 +1255,50 @@
       '<span class="' + sgn(r.resultatCikaBande) + '">' + money(r.resultatCikaBande, 0) + "</span>";
     document.getElementById("kCikaSub").innerHTML =
       "à " + nf(S.nbPoules, 0) + " poules · revenu Cika <b>" + money(r.revenuCikaParPouleAn, 0)
-      + "</b>/poule/an, OPEX " + money(S.opexAnnuel, 0);
+      + "</b>/poule/an<br>aliment " + money(r.commissionAliment * r.annualise, 0)
+      + " · œuf " + money(r.commissionOeuf * r.annualise, 0)
+      + " · BND " + money(r.commissionBND * r.annualise, 0);
 
+    renderValeurCreee(r);
     renderVerdict(r);
+    renderAttractivite(r);
     renderWaterfall(r);
     renderTickets(r);
     renderHeatmap(r);
+    renderProtection(r);
 
     document.getElementById("nSimTxt").textContent = nf(S.nbSimulations, 0);
     document.getElementById("ccyNote").textContent = showEUR
       ? "Montants en EUR · 1 EUR = " + FX_LABEL + " FCFA"
       : "Montants en FCFA · 1 EUR = " + FX_LABEL + " FCFA";
+    document.getElementById("instNote").textContent = INSTALLATIONS[installation].note;
+    document.getElementById("profilNote").textContent = PROFILS[profil].note;
+    document.getElementById("resSrcNote").textContent = reserveSource === "mutualisee"
+      ? "La réserve est dotée par un prélèvement sur les cycles bénéficiaires et couvre les mauvais. Cika l'administre et facture des frais — elle ne porte pas le risque, elle reste asset-light."
+      : "Cika finance le backstop sur son bilan. Elle cesse d'être asset-light : sa perte attendue et une charge en capital viennent grever son résultat.";
+  }
+
+  /* ── Test de valeur créée : l'intermédiation est-elle positive-somme ? ── */
+  function renderValeurCreee(r) {
+    var ok = r.valeurCreee;
+    var h = '<div class="vc' + (ok ? "" : " ko") + '">';
+    h += '<div class="vc-title">' + (ok
+      ? '✓ Valeur créée — l\'intermédiation profite au pool'
+      : '✗ Cika prélève sur le pool, pas sur de la valeur créée') + "</div>";
+    h += ok
+      ? "Le pool paie l'aliment moins cher et vend l'œuf plus cher qu'en direct : la commission se prend sur un gain qui n'existerait pas sans Cika."
+      : "À ces réglages, l'éleveur et l'investisseur seraient <b>mieux sans Cika</b>. La commission ne rémunère plus une agrégation, elle ponctionne le résultat.";
+    h += '<div class="vc-legs">';
+    h += "<span>Aliment : pool <b>" + nf(r.prixAlimentPool, 0) + " F/kg</b> vs seul "
+       + nf(r.prixAlimentMarche, 0) + " F/kg → <b class=\"" + (r.ecartAliment >= 0 ? "pos" : "neg") + "\">"
+       + (r.ecartAliment >= 0 ? "−" : "+") + nf(Math.abs(r.ecartAliment), 0) + " F/kg</b></span>";
+    h += "<span>Œuf : pool <b>" + nf(r.prixOeufPool, 1) + " F</b> vs seul "
+       + nf(r.prixOeufSolo, 0) + " F → <b class=\"" + (r.ecartOeuf >= 0 ? "pos" : "neg") + "\">"
+       + (r.ecartOeuf >= 0 ? "+" : "") + nf(r.ecartOeuf, 1) + " F</b></span>";
+    h += "<span>Gain d'agrégation : <b class=\"" + sgn(r.gainAgregationParPoule) + "\">"
+       + money(r.gainAgregationParPoule, 0) + "</b>/poule/cycle</span>";
+    h += "</div></div>";
+    document.getElementById("valeurCreee").innerHTML = h;
   }
 
   function renderVerdict(r) {
@@ -930,6 +1335,177 @@
     }
 
     document.getElementById("verdict").innerHTML = html;
+  }
+
+  /* ==============================================================
+     7b. ATTRACTIVITÉ — barre décomposée, deux profils, points morts
+     ============================================================== */
+
+  function renderAttractivite(r) {
+    var mc = lastStress ? lastStress.mc : null;
+    var a = attractivite(r, mc);
+
+    // ── Barre décomposée du taux exigé, avec le rendement espéré superposé.
+    var W = 640, H = 118, padL = 8, padR = 8, barY = 30, barH = 30;
+    var segs = [
+      { l: "Taux sans risque", v: a.tauxOpportunite,  c: "#8C8C88" },
+      { l: "Prime illiquidité", v: a.primeIlliquidite, c: "#69C0FF" },
+      { l: "Prime de risque",   v: a.primeRisqueEff,   c: "#FFA39E" }
+    ];
+    var totalPos = segs.reduce(function (s, x) { return s + Math.max(0, x.v); }, 0);
+    var echelle = Math.max(totalPos, r.roiEspere, 0.02) * 1.18;
+    var pw = W - padL - padR;
+    var x = function (v) { return padL + pw * clamp(v / echelle, 0, 1); };
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-width:' + W + 'px;height:auto" role="img" aria-label="Décomposition du taux exigé face au rendement espéré">';
+    var cum = 0;
+    segs.forEach(function (s) {
+      if (s.v <= 0) return;
+      var x0 = x(cum), x1 = x(cum + s.v);
+      svg += '<rect x="' + x0.toFixed(1) + '" y="' + barY + '" width="' + Math.max(0, x1 - x0).toFixed(1) + '" height="' + barH + '" fill="' + s.c + '"/>';
+      if (x1 - x0 > 42) {
+        svg += '<text x="' + ((x0 + x1) / 2).toFixed(1) + '" y="' + (barY + 19) + '" text-anchor="middle" font-size="10.5" fill="#1a1a1a">' + nf(s.v * 100, 1) + "%</text>";
+      }
+      cum += s.v;
+    });
+    // Escompte d'affinité : ce que l'investisseur accepte de céder (barre en creux)
+    if (a.escompteAffinite > 0) {
+      var xe0 = x(Math.max(0, cum - a.escompteAffinite)), xe1 = x(cum);
+      svg += '<rect x="' + xe0.toFixed(1) + '" y="' + barY + '" width="' + Math.max(0, xe1 - xe0).toFixed(1) + '" height="' + barH + '" fill="#D9F7BE" stroke="#95DE64" stroke-dasharray="3 2"/>';
+    }
+    var xExige = x(a.tauxExige);
+    svg += '<line x1="' + xExige.toFixed(1) + '" y1="' + (barY - 8) + '" x2="' + xExige.toFixed(1) + '" y2="' + (barY + barH + 8) + '" stroke="#1a1a1a" stroke-width="2"/>';
+    svg += '<text x="' + xExige.toFixed(1) + '" y="' + (barY - 12) + '" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1a1a">taux exigé ' + nf(a.tauxExige * 100, 1) + "%</text>";
+
+    // Rendement espéré, superposé sous la barre
+    var xRoi = x(Math.max(0, r.roiEspere));
+    var roiY = barY + barH + 22;
+    svg += '<rect x="' + padL + '" y="' + roiY + '" width="' + Math.max(0, xRoi - padL).toFixed(1) + '" height="14" fill="' + (r.roiEspere >= a.tauxExige ? "#95DE64" : "#FFC069") + '"/>';
+    svg += '<text x="' + (xRoi + 6).toFixed(1) + '" y="' + (roiY + 11) + '" font-size="11" font-weight="600" fill="#1a1a1a">rendement espéré ' + nf(r.roiEspere * 100, 1) + "%</text>";
+    // Flèche d'écart
+    svg += '<text x="' + padL + '" y="' + (H - 6) + '" font-size="11.5" fill="#555">α = ' + nf(a.alpha * 100, 1) + " pt" + (Math.abs(a.alpha * 100) >= 2 ? "s" : "") + " · </text>";
+    svg += '</svg>';
+
+    var head = '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">'
+      + '<span class="verdict-pill ' + a.cls + '">' + a.verdict + "</span>"
+      + '<span style="font-size:13px;color:#555">α = <b class="' + sgn(a.alpha) + '">' + nf(a.alpha * 100, 1)
+      + " pts</b> — rendement espéré " + pct(r.roiEspere, 1) + " vs taux exigé " + pct(a.tauxExige, 1) + "</span></div>";
+
+    document.getElementById("attractBar").innerHTML = head + svg;
+
+    // ── Les deux profils côte à côte : le même produit change de verdict selon la cible.
+    var rows = ["diaspora", "local"].map(function (key) {
+      var p = PROFILS[key];
+      var ap = attractivite(r, mc, { tauxOpportunite: p.taux });
+      return "<tr" + (key === profil ? ' style="background:#FAFAF6"' : "") + ">"
+        + "<td>" + esc(p.label) + (key === profil ? " ·" : "") + "</td>"
+        + '<td class="num">' + pct(p.taux, 1) + "</td>"
+        + '<td class="num">' + pct(ap.tauxExige, 1) + "</td>"
+        + '<td class="num ' + sgn(ap.alpha) + '">' + nf(ap.alpha * 100, 1) + " pts</td>"
+        + '<td><span class="verdict-pill ' + ap.cls + '">' + ap.verdict + "</span></td></tr>";
+    });
+    document.getElementById("attractProfils").innerHTML =
+      '<h3 class="sim-h">Le même produit, deux segments</h3>'
+      + '<p class="sim-hint">L\'attractivité dépend de la cible, pas seulement du rendement.</p>'
+      + '<div class="sim-scroll"><table class="sim-table"><thead><tr>'
+      + '<th scope="col">Profil</th><th scope="col">Sans risque</th><th scope="col">Taux exigé</th>'
+      + '<th scope="col">α</th><th scope="col">Verdict</th></tr></thead><tbody>'
+      + rows.join("") + "</tbody></table></div>";
+
+    // ── Points morts : que faut-il pour que le produit devienne attractif ?
+    var pmOeuf = pointMortOeuf(mc);
+    var pmProt = pointMortProtection(mc);
+    var li = [];
+    li.push("<li><span class=\"k\">Prix du débouché œuf minimal</span><span class=\"v\">"
+      + (pmOeuf === null ? "hors bornes" : nf(pmOeuf, 1) + " F")
+      + "</span></li>");
+    li.push("<li><span class=\"k\">Protection du capital minimale</span><span class=\"v\">"
+      + (pmProt === null ? "insuffisant seul" : pct(pmProt, 0))
+      + "</span></li>");
+    li.push("<li><span class=\"k\">Écart à combler (α)</span><span class=\"v " + sgn(a.alpha) + "\">"
+      + nf(a.alpha * 100, 1) + " pts</span></li>");
+    if (!lastStress) {
+      li.push('<li><span class="k" style="color:#AD6800">Protection supposée non crédible</span>'
+        + '<span class="v" style="color:#AD6800">lancez le stress</span></li>');
+    } else {
+      li.push("<li><span class=\"k\">Protection crédible retenue</span><span class=\"v\">"
+        + pct(a.protectionCredible, 0) + " sur " + pct(S.protectionCapital, 0) + "</span></li>");
+    }
+    document.getElementById("attractPointMort").innerHTML =
+      '<h3 class="sim-h">Point mort d\'attractivité</h3>'
+      + '<p class="sim-hint">Ce qu\'il faudrait, au profil courant, pour que α atteigne 0.</p>'
+      + '<ul class="stat-list">' + li.join("") + "</ul>";
+  }
+
+  /* ==============================================================
+     7c. PROTECTION TARIFÉE — prime, valeur, marge
+     ============================================================== */
+
+  function renderProtection(r) {
+    var mc = lastStress ? lastStress.mc : null;
+    var p = pricingProtection(r, mc);
+    var nb = S.nbPoules;
+
+    var rows = [
+      ["Prime — réserve mutualisée", p.primeReserve, "perte attendue absorbée par la réserve"],
+      ["Prime — backstop / garantie Cika", p.primeCika, "perte attendue portée par Cika"],
+      ["Prime — garantie de capital", p.primeProtection, "perte attendue couverte par la garantie"],
+      ["Prime totale", p.primeTotale, "coût économique de la protection"],
+      ["Valeur pour le participant", p.valeurParPoule, "taux exigé abaissé de " + pct(p.gainRendement, 2)],
+      [reserveSource === "mutualisee" ? "Frais d'administration Cika" : "Charge portée par Cika",
+       reserveSource === "mutualisee" ? p.fraisAdmin : -p.chargeCika,
+       reserveSource === "mutualisee" ? "Cika administre sans porter le risque" : "perte attendue + coût du capital"],
+      ["Marge nette Cika", p.margeNette, "revenu de commissions net de la protection"]
+    ];
+
+    document.getElementById("protReadout").innerHTML = rows.map(function (x) {
+      var cls = (x[0].indexOf("Prime") === 0) ? "neg" : sgn(x[1]);
+      return "<tr><td>" + esc(x[0]) + "</td>"
+        + '<td class="num ' + cls + '">' + money(x[1], 0) + "</td>"
+        + '<td class="num ' + cls + '">' + money(x[1] * nb, 0) + "</td>"
+        + '<td style="text-align:left;color:#888;font-size:12px">' + esc(x[2]) + "</td></tr>";
+    }).join("");
+
+    // Verdict de pricing : la valeur dépasse-t-elle la prime ?
+    var v = p.valeurParPoule;
+    var pv;
+    if (p.primeTotale <= 0) {
+      pv = "Aucune protection activée — le participant porte l'intégralité du risque, et la prime de risque qu'il exige reste entière.";
+    } else if (v > p.primeTotale) {
+      pv = "✓ La protection <b>crée plus de valeur qu'elle ne coûte</b> : elle abaisse de "
+         + pct(p.gainRendement, 2) + " le taux que l'investisseur exige, soit " + money(v, 0)
+         + "/poule/an, pour une prime de " + money(p.primeTotale, 0)
+         + ". Le surplus de " + money(v - p.primeTotale, 0) + " peut revenir à Cika sans dégrader l'offre.";
+    } else {
+      pv = "✗ La protection <b>coûte plus qu'elle n'apporte</b> : prime de " + money(p.primeTotale, 0)
+         + "/poule/an contre " + money(v, 0) + " de valeur (taux exigé abaissé de " + pct(p.gainRendement, 2)
+         + "). À ce réglage elle comprime la marge sans rendre le produit sensiblement plus vendable"
+         + (p.protectionCredible < S.protectionCapital * 0.7
+            ? " — et la corrélation ronge déjà sa crédibilité." : ".");
+    }
+    document.getElementById("protVerdict").innerHTML = pv;
+
+    // ── Plafond de crédibilité par la corrélation.
+    var al = "";
+    if (!lastStress) {
+      al = '<div class="prot-alert">Lancez le stress test pour mesurer la probabilité que la réserve soit débordée. '
+         + "Tant qu'elle n'est pas mesurée, la garantie est supposée <b>non crédible</b> et n'écrase pas la prime de risque.</div>";
+    } else {
+      var nonCouv = lastStress.mc.partNonCouverte;
+      var freq = lastStress.mc.pReserveInsuffisante;
+      var grave = nonCouv > 0.4;
+      al = '<div class="prot-alert' + (grave ? " bad" : "") + '">'
+         + "Réserve débordée sur <b>" + pct(freq, 1) + "</b> des tirages, et sur ces mauvais scénarios "
+         + "elle laisse <b>" + pct(nonCouv, 1) + "</b> de la perte du programme non couverte "
+         + "(corrélation " + nf(S.correlation, 2) + "). ";
+      al += grave
+        ? "À ce niveau de corrélation, la réserve mutualisée est pulvérisée au moment précis où elle devrait jouer — toutes les fermes sont touchées ensemble, il n'y a plus personne pour mutualiser. La valeur tarifable de la protection s'effondre : elle ne retient que "
+          + pct(p.protectionCredible, 0) + " des " + pct(S.protectionCapital, 0) + " affichés."
+        : "La mutualisation tient à ce niveau de corrélation : la protection reste crédible à hauteur de "
+          + pct(p.protectionCredible, 0) + " des " + pct(S.protectionCapital, 0) + " affichés.";
+      al += "</div>";
+    }
+    document.getElementById("protAlert").innerHTML = al;
   }
 
   /* ==============================================================
@@ -1050,7 +1626,7 @@
     for (i = 0; i < HM_OEUF.length; i++) {
       vals.push([]);
       for (j = 0; j < HM_ALIM.length; j++) {
-        var m = model({ prixOeuf: HM_OEUF[i], prixAliment: HM_ALIM[j] });
+        var m = model({ prixOeufDebouche: HM_OEUF[i], prixAlimentNegocie: HM_ALIM[j] });
         vals[i].push(hmView === "A" ? m.roiEspere : m.seuilPoules);
       }
     }
@@ -1070,7 +1646,7 @@
       arr.forEach(function (a, k) { var d = Math.abs(a - x); if (d < bd) { bd = d; bi = k; } });
       return bd <= (arr[1] - arr[0]) / 2 ? bi : -1;
     };
-    var ci = nearest(HM_OEUF, S.prixOeuf), cj = nearest(HM_ALIM, S.prixAliment);
+    var ci = nearest(HM_OEUF, S.prixOeufDebouche), cj = nearest(HM_ALIM, S.prixAlimentNegocie);
 
     var h = '<table class="hm-table"><thead><tr><th class="hm-corner">Œuf \\ Aliment</th>';
     HM_ALIM.forEach(function (a) { h += "<th scope=\"col\">" + a + "</th>"; });
@@ -1095,7 +1671,7 @@
     document.getElementById("heatmap").innerHTML = h;
 
     document.getElementById("hmHint").textContent = hmView === "A"
-      ? "ROI annuel espéré du participant (ajusté du risque), en %. Lignes : prix de l'œuf. Colonnes : prix de l'aliment. Tous les autres paramètres restent inchangés."
+      ? "ROI annuel espéré du participant (ajusté du risque), en %. Lignes : prix du débouché œuf décroché par Cika. Colonnes : prix de gros négocié de l'aliment. Les commissions et tous les autres paramètres restent inchangés."
       : "Nombre de poules à financer en permanence pour équilibrer les charges de structure de Cika. Plus clair = seuil plus bas = plus atteignable.";
 
     var lg;
@@ -1103,7 +1679,7 @@
       lg = '<span class="hm-swatch" style="background:' + divColor(-scale, scale) + '"></span> perte'
          + '<span class="hm-swatch" style="background:' + divColor(0, scale) + '"></span> 0 %'
          + '<span class="hm-swatch" style="background:' + divColor(scale, scale) + '"></span> ' + nf(scale * 100, 0) + " %"
-         + ' · cadre noir = couple courant (' + nf(S.prixOeuf, 0) + " F / " + nf(S.prixAliment, 0) + " F/kg)";
+         + ' · cadre noir = couple courant (' + nf(S.prixOeufDebouche, 0) + " F / " + nf(S.prixAlimentNegocie, 0) + " F/kg)";
     } else {
       lg = '<span class="hm-swatch" style="background:' + seqColor(0) + '"></span> seuil bas'
          + '<span class="hm-swatch" style="background:' + seqColor(1) + '"></span> ' + nf(maxSeuil, 0) + " poules"
@@ -1167,8 +1743,8 @@
 
   function buildTornado(base) {
     var shocks = [
-      { l: "Prix de l'œuf −10 F",         o: { prixOeuf: Math.max(20, S.prixOeuf - 10) } },
-      { l: "Prix de l'aliment +40 F/kg",  o: { prixAliment: S.prixAliment + 40 } },
+      { l: "Prix du débouché œuf −10 F",  o: { prixOeufDebouche: Math.max(20, S.prixOeufDebouche - 10) } },
+      { l: "Prix de l'aliment +40 F/kg",  o: { prixAlimentNegocie: S.prixAlimentNegocie + 40 } },
       { l: "Mortalité ×2",                o: { mortalite: clamp(S.mortalite * 2, 0, 0.95) } },
       { l: "Œufs/poule −1 écart-type ("+ nf(S.volOeufs,0) +")", o: { oeufsParPoule: Math.max(0, S.oeufsParPoule - S.volOeufs) } },
       { l: "Probabilité de sinistre ×2",  o: { probaSinistre: clamp(S.probaSinistre * 2, 0, 1) } }
@@ -1205,7 +1781,9 @@
       var mc = runMonteCarlo(document.getElementById("chkSeed").checked);
       var sp = stats(mc.part), sc = stats(mc.cika);
       var base = model(S);
-      lastStress = { sp: sp, sc: sc, n: mc.n };
+      // On conserve l'objet Monte-Carlo : les modules protection et attractivité
+      // en tirent la probabilité de réserve insuffisante et les primes.
+      lastStress = { sp: sp, sc: sc, n: mc.n, mc: mc };
 
       document.getElementById("statPart").innerHTML = [
         ["Moyenne",                  pct(sp.mean, 1),  sgn(sp.mean)],
@@ -1247,6 +1825,10 @@
       buildTornado(base);
       document.getElementById("stressOut").hidden = false;
       renderVerdict(base);
+      // La crédibilité de la garantie vient d'être mesurée : elle change le taux
+      // exigé et le pricing de la protection, il faut les recalculer.
+      renderAttractivite(base);
+      renderProtection(base);
 
       var t1 = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
       st.textContent = nf(mc.n, 0) + " tirages · " + nf(Math.max(0, t1 - t0), 0) + " ms"
@@ -1281,6 +1863,14 @@
   document.getElementById("btnReset").addEventListener("click", function () {
     Object.keys(DEFAULTS).forEach(function (k) { S[k] = DEFAULTS[k]; });
     lastStress = null;
+    // Les trois sélecteurs reviennent aussi à leur état de base.
+    installation = "poulettes"; profil = "diaspora"; reserveSource = "mutualisee";
+    [["inst","poulettes"],["profil","diaspora"],["ressrc","mutualisee"]].forEach(function (pair) {
+      var btns = document.querySelectorAll("[data-" + pair[0] + "]");
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-" + pair[0]) === pair[1] ? "true" : "false");
+      }
+    });
     document.getElementById("stressOut").hidden = true;
     document.getElementById("runStatus").textContent = "";
     syncInputs();
@@ -1310,11 +1900,50 @@
 
   document.getElementById("btnRun").addEventListener("click", runStress);
 
+  // ── Sélecteurs segmentés : installation, profil d'investisseur, financement.
+  function wireSeg(attr, onPick) {
+    var btns = document.querySelectorAll("[data-" + attr + "]");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function () {
+        var val = this.getAttribute("data-" + attr);
+        for (var j = 0; j < btns.length; j++) {
+          btns[j].setAttribute("aria-pressed", btns[j] === this ? "true" : "false");
+        }
+        onPick(val);
+        syncInputs();
+        render();
+      });
+    }
+  }
+
+  wireSeg("inst", function (val) {
+    installation = val;
+    var cfg = INSTALLATIONS[val];
+    // Le toggle règle le prix d'entrée, la mortalité de départ et la durée du cycle.
+    S.prixPoulette = clamp(cfg.prixPoulette, META.prixPoulette.min, META.prixPoulette.max);
+    S.mortalite    = clamp(cfg.mortalite,    META.mortalite.min,    META.mortalite.max);
+    S.cycleMois    = clamp(cfg.cycleMois,    META.cycleMois.min,    META.cycleMois.max);
+  });
+
+  wireSeg("profil", function (val) {
+    profil = val;
+    if (PROFILS[val].taux !== null) S.tauxOpportunite = PROFILS[val].taux;
+  });
+
+  wireSeg("ressrc", function (val) { reserveSource = val; });
+
   syncInputs();
   render();
 
   // Exposé pour vérification manuelle en console (tests de non-régression).
-  window.CIKA = { model: model, waterfall: waterfall, state: S, defaults: DEFAULTS, mc: runMonteCarlo, stats: stats };
+  window.CIKA = {
+    model: model, waterfall: waterfall, state: S, defaults: DEFAULTS,
+    mc: runMonteCarlo, stats: stats,
+    attract: attractivite, pricing: pricingProtection,
+    pointMortOeuf: pointMortOeuf, pointMortProtection: pointMortProtection,
+    setProfil: function (p) { profil = p; if (PROFILS[p].taux !== null) S.tauxOpportunite = PROFILS[p].taux; },
+    setReserveSource: function (v) { reserveSource = v; }
+  };
 })();
 </script>
 
