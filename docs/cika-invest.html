@@ -43,7 +43,29 @@
   .sim-btn[disabled] { opacity: .5; cursor: progress; }
   .sim-status { font-size: 12px; color: #888; }
 
-  /* ── Grille deux colonnes ─────────────────────────────────── */
+  /* ── Blocs séquentiels : hypothèses → risque → résultats ──────
+     Le flux est vertical : on pose les hypothèses, on règle le risque,
+     on simule, on lit. Les colonnes obligeaient à faire des allers-retours
+     entre un panneau étroit à gauche et des résultats à droite. ─────── */
+  .bloc {
+    border: 1px solid #e8e8e2; border-radius: 8px; background: #fff;
+    padding: 22px 26px 26px; margin-bottom: 26px;
+  }
+  .bloc-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 20px; }
+  .bloc-n {
+    flex: 0 0 30px; height: 30px; border-radius: 50%; background: #1a1a1a; color: #fff;
+    font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  }
+  .bloc-t { font-size: 1.25rem; letter-spacing: -.01em; line-height: 1.2; margin-bottom: 2px; }
+  .bloc-s { font-size: 13px; color: #777; line-height: 1.5; max-width: 720px; }
+
+  /* Le panneau de saisie occupe toute la largeur, en colonnes de champs. */
+  .panel-large fieldset { margin-bottom: 26px; }
+  .panel-large legend { margin-bottom: 14px; }
+  .panel-large [id^="grp-"] {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 0 24px;
+  }
+
   .sim-grid { display: grid; grid-template-columns: 320px 1fr; gap: 34px; align-items: start; }
 
   /* ── Panneau de saisie ────────────────────────────────────── */
@@ -256,7 +278,9 @@
   details.stress > summary::before { content: "▸ "; color: #999; }
   details.stress[open] > summary::before { content: "▾ "; }
   details.stress > summary:focus-visible { outline: 2px solid #1D39C4; outline-offset: -2px; }
-  .stress-body { padding: 4px 17px 20px; border-top: 1px solid #f0f0f0; }
+  /* Le bloc risque n'est plus un <details> : il vit dans un .bloc, qui porte
+     déjà son cadre et son padding. */
+  .stress-body { padding: 0; border-top: none; }
   .stress-params { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0 22px; margin: 16px 0 4px; }
   .stress-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 26px; margin-top: 20px; }
   .chk { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #333; }
@@ -293,7 +317,7 @@
 
   @media print {
     /* On masque toute l'application et on ne laisse que le rapport. */
-    .sim-header, .sim-lede, .sim-toolbar, .sim-grid, details.stress,
+    .sim-header, .sim-lede, .sim-toolbar, .sim-grid, details.stress, .bloc,
     .sources, .site-footer, .page-title, .fld-prov { display: none !important; }
     .report { display: block !important; }
 
@@ -411,6 +435,8 @@
 
   @media (max-width: 900px) {
     .sim-grid { grid-template-columns: 1fr; gap: 26px; }
+    .bloc { padding: 18px 16px 20px; }
+    .panel-large [id^="grp-"] { grid-template-columns: 1fr; }
     .sim-panel { border-bottom: 1px solid #e5e5e5; padding-bottom: 10px; }
   }
   @media (max-width: 600px) {
@@ -453,10 +479,20 @@
       <span class="sim-status" id="scenarioNote">aucun scénario mémorisé — ils seront comparés dans le rapport</span>
     </div>
 
-    <div class="sim-grid">
+    <!-- ═══════════ ÉTAPE A — LES HYPOTHÈSES ═══════════
+         Tout le paramétrage économique en premier, sur toute la largeur.
+         Le lecteur pose ses hypothèses, PUIS le risque, PUIS il simule. ═══ -->
+    <section class="bloc" id="blocHypotheses">
+      <header class="bloc-head">
+        <span class="bloc-n">A</span>
+        <div>
+          <h2 class="bloc-t">Hypothèses</h2>
+          <p class="bloc-s">Le paramétrage économique du cycle : technique, prix, intermédiation,
+            structure. Tout se recalcule en direct.</p>
+        </div>
+      </header>
 
-      <!-- ════════════ PANNEAU DE SAISIE ════════════ -->
-      <form class="sim-panel" id="panel" autocomplete="off" onsubmit="return false;">
+      <form class="sim-panel panel-large" id="panel" autocomplete="off" onsubmit="return false;">
 
         <fieldset>
           <legend>Technique — par poule / cycle</legend>
@@ -503,96 +539,24 @@
         </fieldset>
 
       </form>
+    </section>
 
-      <!-- ════════════ RÉSULTATS ════════════ -->
-      <section class="sim-results" aria-live="polite">
-
-        <!-- Test de valeur créée : l'intermédiation est-elle positive-somme ? -->
-        <div id="valeurCreee"></div>
-
-        <div class="kpi-grid">
-          <div class="kpi">
-            <div class="kpi-label">BND par poule</div>
-            <div class="kpi-value" id="kBnd">—</div>
-            <div class="kpi-sub" id="kBndSub"></div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Rendement participant</div>
-            <div class="kpi-value" id="kRoi">—</div>
-            <div class="kpi-sub" id="kRoiSub"></div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Seuil Cika</div>
-            <div class="kpi-value" id="kSeuil">—</div>
-            <div class="kpi-sub" id="kSeuilSub"></div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Résultat Cika à la bande</div>
-            <div class="kpi-value" id="kCika">—</div>
-            <div class="kpi-sub" id="kCikaSub"></div>
-          </div>
+    <!-- ═══════════ ÉTAPE B — RISQUE, PROTECTION, SIMULATION ═══════════ -->
+    <section class="bloc" id="blocRisque">
+      <header class="bloc-head">
+        <span class="bloc-n">B</span>
+        <div>
+          <h2 class="bloc-t">Risque, protection &amp; simulation</h2>
+          <p class="bloc-s">Les hypothèses ci-dessus donnent le cas central. Ici on règle
+            le risque et la couverture, puis on lance la simulation.</p>
         </div>
-
-        <div class="verdict" id="verdict"></div>
-
-        <!-- ════════ ATTRACTIVITÉ — le juge de paix ════════ -->
-        <div class="sim-block">
-          <h2 class="sim-h">Attractivité — le rendement face à l'alternative de l'investisseur</h2>
-          <p class="sim-hint">
-            Un rendement ne vaut que comparé à ce que l'investisseur obtiendrait ailleurs.
-            L'écart <b>α</b> = rendement espéré − taux exigé est le verdict.
-          </p>
-          <div id="attractBar"></div>
-          <div class="attract-grid">
-            <div id="attractProfils"></div>
-            <div id="attractPointMort"></div>
-          </div>
-        </div>
-
-        <div class="sim-block">
-          <h2 class="sim-h">Cascade — des produits au partage du BND</h2>
-          <div class="sim-scroll"><div id="waterfall"></div></div>
-        </div>
-
-        <div class="sim-block">
-          <h2 class="sim-h">Tickets participant</h2>
-          <div class="sim-scroll">
-            <table class="sim-table">
-              <thead>
-                <tr>
-                  <th scope="col">Ticket</th>
-                  <th scope="col">Capital avancé</th>
-                  <th scope="col">Capital immobilisé</th>
-                  <th scope="col">Gain net annualisé</th>
-                  <th scope="col">Gain espéré (risque)</th>
-                </tr>
-              </thead>
-              <tbody id="tickets"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="sim-block">
-          <h2 class="sim-h">Grille de sensibilité — prix de l'œuf × prix de l'aliment</h2>
-          <div class="hm-tabs">
-            <button type="button" class="sim-btn" id="hmA" aria-pressed="true">A — ROI espéré participant</button>
-            <button type="button" class="sim-btn" id="hmB" aria-pressed="false">B — Seuil Cika (poules)</button>
-          </div>
-          <p class="sim-hint" id="hmHint"></p>
-          <div class="sim-scroll"><div id="heatmap"></div></div>
-          <div class="hm-legend" id="hmLegend"></div>
-        </div>
-
-      </section>
-    </div>
+      </header>
 
     <!-- ════════════ RISQUE & PROTECTION ════════════
          Un seul bloc : on paramètre le risque, puis la protection, PUIS on lance
          le calcul. La protection a besoin de la distribution des pertes pour être
          tarifée — la lancer avant de l'avoir paramétrée n'aurait pas de sens. ═══ -->
-    <details class="stress" id="stressBox">
-      <summary>Risque &amp; protection — paramétrer, puis simuler</summary>
-      <div class="stress-body">
+      <div class="stress-body" id="stressBox">
 
         <!-- ── Étape 1 : les paramètres de risque ── -->
         <div class="etape">
@@ -708,7 +672,101 @@
         </div><!-- /prot-results -->
         </div><!-- /stressOut -->
       </div>
-    </details>
+    </section>
+
+
+    <!-- ═══════════ ÉTAPE C — LES RÉSULTATS ═══════════
+         Placés APRÈS le bloc risque & simulation (étape B, plus bas dans le
+         document mais remonté par l'ordre du DOM ci-dessous). ═══════════ -->
+    <section class="bloc" id="blocResultats">
+      <header class="bloc-head">
+        <span class="bloc-n">C</span>
+        <div>
+          <h2 class="bloc-t">Résultats</h2>
+          <p class="bloc-s">Ce que le paramétrage produit pour les trois parties.</p>
+        </div>
+      </header>
+
+      <section class="sim-results" aria-live="polite">
+
+        <!-- Test de valeur créée : l'intermédiation est-elle positive-somme ? -->
+        <div id="valeurCreee"></div>
+
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-label">BND par poule</div>
+            <div class="kpi-value" id="kBnd">—</div>
+            <div class="kpi-sub" id="kBndSub"></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Rendement participant</div>
+            <div class="kpi-value" id="kRoi">—</div>
+            <div class="kpi-sub" id="kRoiSub"></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Seuil Cika</div>
+            <div class="kpi-value" id="kSeuil">—</div>
+            <div class="kpi-sub" id="kSeuilSub"></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Résultat Cika à la bande</div>
+            <div class="kpi-value" id="kCika">—</div>
+            <div class="kpi-sub" id="kCikaSub"></div>
+          </div>
+        </div>
+
+        <div class="verdict" id="verdict"></div>
+
+        <!-- ════════ ATTRACTIVITÉ — le juge de paix ════════ -->
+        <div class="sim-block">
+          <h2 class="sim-h">Attractivité — le rendement face à l'alternative de l'investisseur</h2>
+          <p class="sim-hint">
+            Un rendement ne vaut que comparé à ce que l'investisseur obtiendrait ailleurs.
+            L'écart <b>α</b> = rendement espéré − taux exigé est le verdict.
+          </p>
+          <div id="attractBar"></div>
+          <div class="attract-grid">
+            <div id="attractProfils"></div>
+            <div id="attractPointMort"></div>
+          </div>
+        </div>
+
+        <div class="sim-block">
+          <h2 class="sim-h">Cascade — des produits au partage du BND</h2>
+          <div class="sim-scroll"><div id="waterfall"></div></div>
+        </div>
+
+        <div class="sim-block">
+          <h2 class="sim-h">Tickets participant</h2>
+          <div class="sim-scroll">
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th scope="col">Ticket</th>
+                  <th scope="col">Capital avancé</th>
+                  <th scope="col">Capital immobilisé</th>
+                  <th scope="col">Gain net annualisé</th>
+                  <th scope="col">Gain espéré (risque)</th>
+                </tr>
+              </thead>
+              <tbody id="tickets"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sim-block">
+          <h2 class="sim-h">Grille de sensibilité — prix de l'œuf × prix de l'aliment</h2>
+          <div class="hm-tabs">
+            <button type="button" class="sim-btn" id="hmA" aria-pressed="true">A — ROI espéré participant</button>
+            <button type="button" class="sim-btn" id="hmB" aria-pressed="false">B — Seuil Cika (poules)</button>
+          </div>
+          <p class="sim-hint" id="hmHint"></p>
+          <div class="sim-scroll"><div id="heatmap"></div></div>
+          <div class="hm-legend" id="hmLegend"></div>
+        </div>
+
+      </section>
+    </section>
 
     <!-- ════════════ RAPPORT IMPRIMABLE ════════════
          Construit à la demande depuis l'état courant, masqué à l'écran, seul
@@ -1021,13 +1079,17 @@
     var ecartAliment = prixAlimentMarche - prixAlimentPool;   // > 0 = gain pour le pool
     var ecartOeuf    = prixOeufPool - prixOeufSolo;           // > 0 = gain pour le pool
     var valeurCreee  = (ecartAliment >= 0) && (ecartOeuf >= 0);
-    var gainAgregationParPoule = ecartAliment * (consoAlimentElevage + consoAliment)
-                               + ecartOeuf * oeufsVendablesEffectifs;
 
     // ── Les œufs sont nets de mortalité : une bête morte ne pond plus.
     // Sans cela, une voie à forte mortalité (poussins) paraîtrait artificiellement
     // rentable — la mortalité ne coûterait que la revente de la réformée.
     var oeufsVendablesEffectifs = oeufsParPoule * (1 - mortalite * facteurPertePonte);
+
+    // Le gain d'agrégation se mesure sur les volumes RÉELLEMENT échangés : l'aliment
+    // des deux phases et les œufs effectivement vendables. Doit venir après le calcul
+    // des œufs effectifs, sinon la valeur est NaN.
+    var gainAgregationParPoule = ecartAliment * (consoAlimentElevage + consoAliment)
+                               + ecartOeuf * oeufsVendablesEffectifs;
 
     var recetteOeufsPool = oeufsVendablesEffectifs * prixOeufPool;
     var recetteReforme   = valeurReforme * (1 - mortalite);
