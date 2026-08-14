@@ -87,7 +87,13 @@
   .split-ok { color: #237804; }
   .split-bad { color: #A8071A; }
 
-  .fld-plage { font-size: 10px; color: #b0b0aa; margin-top: 1px; font-variant-numeric: tabular-nums; }
+  /* Fourchette sous chaque champ. Le gris clair d'origine (#b0b0aa) donnait un
+     contraste d'environ 2:1 sur fond blanc : illisible à cette taille. */
+  .fld-plage {
+    font-size: 10.5px; color: #6a6a64; margin-top: 3px; font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+  }
+  .fld-plage b { font-weight: 600; color: #1a1a1a; }
 
   .fld-help { font-size: 11.5px; color: #999; line-height: 1.5; margin: -6px 0 12px; }
 
@@ -1691,8 +1697,8 @@
       '</div>' +
       // Plage lisible sous le curseur : on calibre plus vite en voyant la fourchette
       // et la valeur de base sans avoir à pousser le curseur jusqu'aux bornes.
-      '<div class="fld-plage">' + fmtBorne(m, m.min) + " – " + fmtBorne(m, m.max) +
-        ' · base ' + fmtBorne(m, m.def) + '</div>' +
+      '<div class="fld-plage">plage ' + fmtBorne(m, m.min) + " – " + fmtBorne(m, m.max) +
+        ' · base <b>' + fmtBorne(m, m.def) + '</b></div>' +
     '</div>';
   }
 
