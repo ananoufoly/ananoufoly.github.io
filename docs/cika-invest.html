@@ -87,7 +87,24 @@
   .split-ok { color: #237804; }
   .split-bad { color: #A8071A; }
 
+  .fld-plage { font-size: 10px; color: #b0b0aa; margin-top: 1px; font-variant-numeric: tabular-nums; }
+
   .fld-help { font-size: 11.5px; color: #999; line-height: 1.5; margin: -6px 0 12px; }
+
+  /* Pastille de provenance (Réel / Saisi / Estimation) */
+  .fld-prov { margin: 1px 0 3px; }
+  .prov {
+    display: inline-block; font-family: inherit; font-size: 9.5px; font-weight: 700;
+    letter-spacing: .03em; text-transform: uppercase; padding: 1px 6px; border-radius: 3px;
+    border: 1px solid transparent; line-height: 1.55;
+  }
+  button.prov { cursor: pointer; }
+  button.prov:hover { filter: brightness(.94); }
+  button.prov:focus-visible { outline: 2px solid #1D39C4; outline-offset: 1px; }
+  .prov-reel  { background: #D9F7BE; color: #135200; border-color: #B7EB8F; }
+  .prov-saisi { background: #E6F4FF; color: #003A8C; border-color: #91CAFF; }
+  .prov-estimation { background: #FFF1B8; color: #7C4A00; border-color: #FFE58F; }
+  .prov-fixe { opacity: .85; }
 
   /* Sélecteurs segmentés (installation, profil, financement) */
   .seg { display: inline-flex; border: 1px solid #ddd; border-radius: 5px; overflow: hidden; margin-bottom: 8px; }
@@ -127,6 +144,48 @@
     padding: 11px 14px; font-size: 13px; color: #7C4A00; line-height: 1.6; margin-top: 14px;
   }
   .prot-alert.bad { border-color: #FFA39E; background: #FFF1F0; color: #820014; }
+
+  /* Étapes numérotées : paramétrer → protéger → simuler */
+  .etape { display: flex; gap: 13px; align-items: flex-start; margin-bottom: 22px; }
+  .etape-n {
+    flex: 0 0 24px; height: 24px; border-radius: 50%; background: #1a1a1a; color: #fff;
+    font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .etape-c { flex: 1 1 auto; min-width: 0; }
+  .etape + .etape { border-top: 1px solid #f0f0f0; padding-top: 18px; }
+
+  /* Séparation visuelle des résultats de protection */
+  .prot-results { margin-top: 34px; padding-top: 6px; border-top: 2px solid #e5e5e5; }
+
+  /* Feu tricolore du verdict de commission */
+  .feu {
+    display: flex; align-items: flex-start; gap: 11px;
+    border: 1px solid #e8e8e2; border-left: 4px solid #8C8C88; border-radius: 6px;
+    padding: 12px 15px; background: #fff; font-size: 13.5px; line-height: 1.6;
+  }
+  .feu-p { font-size: 1.3rem; line-height: 1.1; flex: 0 0 auto; }
+  .feu-vert   { border-left-color: #237804; background: #F6FFED; }
+  .feu-vert .feu-p   { color: #237804; }
+  .feu-orange { border-left-color: #AD6800; background: #FFFBE6; }
+  .feu-orange .feu-p { color: #D48806; }
+  .feu-rouge  { border-left-color: #A8071A; background: #FFF1F0; }
+  .feu-rouge .feu-p  { color: #A8071A; }
+  .feu-gris .feu-p   { color: #bbb; }
+
+  /* Test positif-somme : prime payée vs baisse du hurdle achetée */
+  .ps-row {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    border: 1px solid #e8e8e2; border-left: 4px solid #8C8C88; border-radius: 6px;
+    padding: 13px 16px; background: #fff;
+  }
+  .ps-row.ok { border-left-color: #237804; background: #F6FFED; }
+  .ps-row.ko { border-left-color: #A8071A; background: #FFF1F0; }
+  .ps-cell { flex: 1 1 150px; min-width: 0; }
+  .ps-l { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #888; }
+  .ps-v { font-size: 1.35rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.2; margin: 2px 0; }
+  .ps-s { font-size: 11.5px; color: #777; }
+  .ps-op { font-size: 1.1rem; color: #aaa; font-weight: 600; flex: 0 0 auto; }
 
   /* ── Cartes KPI ───────────────────────────────────────────── */
   .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 26px; }
@@ -218,6 +277,132 @@
 
   svg text { font-family: 'Carlito', 'Calibri', -apple-system, sans-serif; }
 
+  .scenarios { border-bottom: none; padding-bottom: 0; margin-top: -14px; margin-bottom: 26px; }
+  .scenarios .sim-btn[aria-pressed="true"] { background: #237804; border-color: #237804; color: #fff; }
+
+  /* ══════════════════════════════════════════════════════════════
+     RAPPORT — masqué à l'écran, seul contenu visible à l'impression
+     ══════════════════════════════════════════════════════════════ */
+  .report { display: none; }
+
+  @media print {
+    /* On masque toute l'application et on ne laisse que le rapport. */
+    .sim-header, .sim-lede, .sim-toolbar, .sim-grid, details.stress,
+    .sources, .site-footer, .page-title, .fld-prov { display: none !important; }
+    .report { display: block !important; }
+
+    @page { size: A4; margin: 14mm 13mm; }
+    html, body { background: #fff !important; }
+    body { font-size: 9.4pt; line-height: 1.45; color: #1a1a1a; }
+    .site-container, .sim-container { max-width: none; padding: 0; margin: 0; }
+
+    /* En-tête : sur-titre, titre, filet orange, ligne meta */
+    .rep-head { padding-bottom: 6px; margin-bottom: 13px; border-bottom: .8pt solid #d9d9d9; }
+    .rep-sur {
+      font-size: 7.4pt; text-transform: uppercase; letter-spacing: .12em;
+      color: #C25E00; font-weight: 700; margin-bottom: 2px;
+    }
+    .rep-title { font-size: 17pt; letter-spacing: -.02em; line-height: 1.1; font-weight: 600; }
+    .rep-rule { height: 2.4pt; width: 46mm; background: #E8710A; margin: 5px 0 6px; }
+    .rep-meta { font-size: 8pt; color: #555; display: flex; gap: 11px; flex-wrap: wrap; }
+    .rep-meta b { font-weight: 600; color: #1a1a1a; }
+
+    .rep-callout-t {
+      font-size: 8.4pt; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+      margin-bottom: 4px;
+    }
+    ul.rep-ul { margin: 0; padding-left: 13px; }
+    ul.rep-ul li { margin-bottom: 4px; }
+    ul.rep-ul li:last-child { margin-bottom: 0; }
+
+    .rep-table td.lft, .rep-table th.lft { text-align: left; }
+    .rep-table tr.rep-grp td {
+      padding-top: 7px; font-weight: 700; font-size: 7.6pt; text-transform: uppercase;
+      letter-spacing: .05em; color: #555; border-bottom: .8pt solid #999; text-align: left;
+    }
+
+    .rep-h2 {
+      font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      color: #1a1a1a; margin: 15px 0 7px; padding-bottom: 3px; border-bottom: 1px solid #1a1a1a;
+    }
+    .rep-p { font-size: 9pt; color: #333; margin-bottom: 7px; max-width: 175mm; }
+    .rep-note { font-size: 7.8pt; color: #666; font-style: italic; margin-top: 4px; }
+
+    /* Encadré de synthèse, coloré par statut */
+    .rep-callout {
+      border: 1px solid #d9d9d9; border-left: 3.5pt solid #8C8C88;
+      padding: 8px 11px; margin-bottom: 11px; font-size: 9pt; line-height: 1.5;
+      background: #FAFAF8; break-inside: avoid;
+    }
+    .rep-callout.ok   { border-left-color: #237804; background: #F6FFED; }
+    .rep-callout.warn { border-left-color: #AD6800; background: #FFFBE6; }
+    .rep-callout.bad  { border-left-color: #A8071A; background: #FFF1F0; }
+    .rep-callout b { font-weight: 600; }
+
+    /* Bandeau de 4 KPI */
+    .rep-kpis { display: flex; gap: 7px; margin-bottom: 12px; break-inside: avoid; }
+    .rep-kpi {
+      flex: 1 1 0; border: 1px solid #d9d9d9; border-top: 2.5pt solid #1a1a1a;
+      padding: 6px 8px; background: #fff;
+    }
+    .rep-kpi-l { font-size: 6.9pt; text-transform: uppercase; letter-spacing: .05em; color: #777; margin-bottom: 2px; }
+    .rep-kpi-v { font-size: 14pt; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+    .rep-kpi-s { font-size: 7.2pt; color: #666; margin-top: 1px; }
+
+    /* Tableaux à filets fins */
+    .rep-table { width: 100%; border-collapse: collapse; font-size: 8.3pt; margin-bottom: 9px; }
+    .rep-table th, .rep-table td { padding: 3.2px 5px; text-align: right; border-bottom: .5pt solid #e0e0e0; }
+    .rep-table th {
+      font-size: 7.2pt; text-transform: uppercase; letter-spacing: .05em; color: #555;
+      border-bottom: .8pt solid #999; font-weight: 700;
+    }
+    .rep-table th:first-child, .rep-table td:first-child { text-align: left; }
+    .rep-table tr.total td { border-top: .8pt solid #999; font-weight: 700; border-bottom: none; }
+    /* Tableaux à colonne de commentaire : on borne la largeur pour éviter le débordement. */
+    .rep-table.rep-tight { table-layout: fixed; font-size: 7.9pt; }
+    .rep-table.rep-tight th, .rep-table.rep-tight td { padding: 3px 4px; overflow-wrap: anywhere; }
+    .rep-table.rep-wide td:last-child, .rep-table.rep-wide th:last-child { width: 34%; }
+    .rep-table.rep-narrow td:last-child, .rep-table.rep-narrow th:last-child { width: 13%; }
+    .rep-table .num { font-variant-numeric: tabular-nums; }
+
+    /* Étiquette réel / hypothèse — la crédibilité du rapport en dépend */
+    .tag-src {
+      display: inline-block; font-size: 6.6pt; font-weight: 700; padding: .5px 4px;
+      border-radius: 2px; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
+    }
+    .tag-reel  { background: #D9F7BE; color: #135200; }
+    .tag-saisi { background: #E6F4FF; color: #003A8C; }
+    .tag-hypo  { background: #FFF1B8; color: #7C4A00; }
+    .tag-alerte { background: #FFCCC7; color: #820014; }
+
+    .rep-cols { display: flex; gap: 13px; align-items: flex-start; }
+    .rep-cols > * { flex: 1 1 0; min-width: 0; }
+    /* En colonnes, les tableaux se resserrent pour ne pas déborder de la demi-largeur. */
+    .rep-cols .rep-table { font-size: 7.7pt; table-layout: fixed; }
+    .rep-cols .rep-table th, .rep-cols .rep-table td { padding: 2.8px 3px; }
+    .rep-cols .rep-table td:first-child, .rep-cols .rep-table th:first-child {
+      overflow-wrap: anywhere;
+    }
+
+    .rep-fig { margin: 4px 0 10px; break-inside: avoid; }
+    .rep-fig svg { width: 100%; height: auto; max-width: none; }
+    .rep-fig-cap { font-size: 7.4pt; color: #777; margin-top: 2px; }
+
+    .rep-page-break { break-before: page; }
+    .rep-avoid { break-inside: avoid; }
+
+    .rep-foot {
+      margin-top: 14px; padding-top: 6px; border-top: .8pt solid #999;
+      font-size: 7.4pt; color: #777; display: flex; justify-content: space-between; gap: 12px;
+    }
+
+    .pos { color: #135200 !important; }
+    .neg { color: #820014 !important; }
+    .warn { color: #7C4A00 !important; }
+
+    a[href]::after { content: "" !important; }
+  }
+
   @media (max-width: 900px) {
     .sim-grid { grid-template-columns: 1fr; gap: 26px; }
     .sim-panel { border-bottom: 1px solid #e5e5e5; padding-bottom: 10px; }
@@ -249,7 +434,17 @@
     <div class="sim-toolbar">
       <button type="button" class="sim-btn" id="btnReset">Réinitialiser aux valeurs de base</button>
       <button type="button" class="sim-btn" id="btnCcy" aria-pressed="false">Afficher en EUR</button>
+      <button type="button" class="sim-btn primary" id="btnExport">Exporter le rapport (PDF)</button>
       <span class="sim-status" id="ccyNote">Montants en FCFA · 1 EUR = 655,957 FCFA</span>
+    </div>
+
+    <!-- Scénarios mémorisés (en mémoire uniquement, pas de localStorage) -->
+    <div class="sim-toolbar scenarios" id="scenarioBar">
+      <span class="fld-unit" style="font-size:12.5px">Scénarios&nbsp;:</span>
+      <button type="button" class="sim-btn" data-scen="pessimiste">Mémoriser « pessimiste »</button>
+      <button type="button" class="sim-btn" data-scen="central">« central »</button>
+      <button type="button" class="sim-btn" data-scen="favorable">« favorable »</button>
+      <span class="sim-status" id="scenarioNote">aucun scénario mémorisé — ils seront comparés dans le rapport</span>
     </div>
 
     <div class="sim-grid">
@@ -385,24 +580,56 @@
       </section>
     </div>
 
-    <!-- ════════════ STRESS ════════════ -->
+    <!-- ════════════ RISQUE & PROTECTION ════════════
+         Un seul bloc : on paramètre le risque, puis la protection, PUIS on lance
+         le calcul. La protection a besoin de la distribution des pertes pour être
+         tarifée — la lancer avant de l'avoir paramétrée n'aurait pas de sens. ═══ -->
     <details class="stress" id="stressBox">
-      <summary>Stress test — distribution, corrélation et cascade de pertes</summary>
+      <summary>Risque &amp; protection — paramétrer, puis simuler</summary>
       <div class="stress-body">
-        <p class="sim-hint" style="max-width:760px">
-          Le cas central ci-dessus suppose que tout se passe comme prévu. Ici, on tire
-          <span id="nSimTxt">5 000</span> scénarios : chocs de prix communs à toutes les fermes
-          (systémiques), chocs de production propres à chaque bande, sinistres et défauts d'éleveur.
-          Les pertes passent par une <b>cascade</b> : réserve, puis backstop Cika, puis capital du
-          participant (plafonné par la protection), puis Cika en dernier ressort.
-        </p>
 
-        <div class="stress-params" id="grp-stress"></div>
+        <!-- ── Étape 1 : les paramètres de risque ── -->
+        <div class="etape">
+          <div class="etape-n">1</div>
+          <div class="etape-c">
+            <h3 class="sim-h" style="margin-top:0">Paramètres de risque</h3>
+            <p class="sim-hint" style="max-width:760px">
+              Le cas central suppose que tout se passe comme prévu. Le stress tire
+              <span id="nSimTxt">5 000</span> scénarios : chocs de prix communs à toutes les fermes
+              (systémiques), chocs de production propres à chaque bande, sinistres et défauts d'éleveur.
+            </p>
+            <div class="stress-params" id="grp-stress"></div>
+          </div>
+        </div>
 
-        <div class="sim-toolbar" style="border:none; padding-bottom:0; margin-bottom:0; margin-top:14px">
-          <button type="button" class="sim-btn primary" id="btnRun">Lancer le stress test</button>
-          <label class="chk"><input type="checkbox" id="chkSeed" checked> Figer l'aléa (reproductible)</label>
-          <span class="sim-status" id="runStatus"></span>
+        <!-- ── Étape 2 : la protection, paramétrée AVANT de simuler ── -->
+        <div class="etape">
+          <div class="etape-n">2</div>
+          <div class="etape-c">
+            <h3 class="sim-h" style="margin-top:0">Protection — trois rangs</h3>
+            <p class="sim-hint" style="max-width:800px">
+              Les pertes traversent une cascade à trois rangs : la <b>réserve mutuelle</b> cotisée
+              par les participants, puis le <b>backstop Cika</b> plafonné, puis le <b>résiduel</b>
+              qui reste au participant ou part en réassurance. Réglez-les ici : le calcul qui suit
+              en tire les primes et le plafond.
+            </p>
+            <div class="stress-params" id="grp-protection"></div>
+            <p class="seg-note" id="resSrcNote"></p>
+            <div id="protTranches" style="margin-top:14px"></div>
+            <div id="protAlert"></div>
+          </div>
+        </div>
+
+        <!-- ── Étape 3 : le calcul ── -->
+        <div class="etape">
+          <div class="etape-n">3</div>
+          <div class="etape-c">
+            <div class="sim-toolbar" style="border:none; padding-bottom:0; margin-bottom:0; margin-top:2px">
+              <button type="button" class="sim-btn primary" id="btnRun">Lancer la simulation</button>
+              <label class="chk"><input type="checkbox" id="chkSeed" checked> Figer l'aléa (reproductible)</label>
+              <span class="sim-status" id="runStatus"></span>
+            </div>
+          </div>
         </div>
 
         <div id="stressOut" hidden>
@@ -437,53 +664,50 @@
               </table>
             </div>
           </div>
-        </div>
-      </div>
-    </details>
 
-    <!-- ════════════ PROTECTION TARIFÉE ════════════ -->
-    <details class="stress" id="protBox">
-      <summary>Protection — une fonctionnalité tarifée, pas un curseur gratuit</summary>
-      <div class="stress-body">
-        <p class="sim-hint" style="max-width:800px">
-          Réserve, backstop et garantie de capital font deux choses à la fois : ils <b>élèvent le
-          rendement espéré</b> du participant (donc rendent le produit vendable, donc élargissent
-          l'assiette de Cika), et ils ont une <b>prime</b> — la perte attendue qu'ils absorbent —
-          qui se dispute le même pool. Le pricing juste est là où la valeur dépasse la prime.
-        </p>
-
-        <div class="stress-params" id="grp-protection"></div>
-
-        <div class="sim-toolbar" style="border:none; padding-bottom:0; margin-bottom:6px; margin-top:14px">
-          <span class="fld-unit" style="font-size:12.5px">Qui finance la prime&nbsp;:</span>
-          <div class="seg" role="radiogroup" aria-label="Source de financement de la protection">
-            <button type="button" class="seg-btn" data-ressrc="mutualisee" aria-pressed="true">Réserve mutualisée</button>
-            <button type="button" class="seg-btn" data-ressrc="bilan" aria-pressed="false">Bilan Cika</button>
-          </div>
-        </div>
-        <p class="seg-note" id="resSrcNote"></p>
-
-        <div id="protAlert"></div>
+        <!-- ── Résultats de la protection, tarifée sur la distribution ci-dessus ── -->
+        <div class="prot-results">
+          <h3 class="sim-h" style="font-size:12px;letter-spacing:.12em;border-bottom-width:2px">
+            Tarification de la protection — lue sur la distribution</h3>
 
         <div class="sim-block" style="margin-top:18px">
-          <h3 class="sim-h">Readout de pricing — prime, valeur, marge</h3>
-          <div class="sim-scroll">
-            <table class="sim-table">
-              <thead>
-                <tr>
-                  <th scope="col">Ligne</th>
-                  <th scope="col">Par poule / an</th>
-                  <th scope="col">À la bande de référence</th>
-                  <th scope="col">Lecture</th>
-                </tr>
-              </thead>
-              <tbody id="protReadout"></tbody>
-            </table>
-          </div>
+          <h3 class="sim-h">Faut-il revoir la commission&nbsp;?</h3>
+          <p class="sim-hint">Le prix est fixé au départ sur des estimations. Le stress dit ce que
+            le risque réel exige — d'abord en coût moyen, puis en mauvaise année.</p>
+          <div id="protRevision"></div>
+        </div>
+
+        <div class="sim-block" style="margin-top:18px">
+          <h3 class="sim-h">Les trois poches du prélèvement Cika</h3>
+          <div class="sim-scroll" id="protPoches"></div>
+        </div>
+
+        <div class="sim-block" style="margin-top:18px">
+          <h3 class="sim-h">Les quatre modes — protégé ou non, déterministe ou sous stress</h3>
+          <p class="sim-hint">C'est la comparaison qui montre que la protection ne « vaut »
+            quelque chose que lorsqu'on regarde les mauvais scénarios.</p>
+          <div class="sim-scroll" id="protModes"></div>
+        </div>
+
+        <div class="sim-block">
+          <h3 class="sim-h">Test positif-somme — la prime achète-t-elle plus qu'elle ne coûte&nbsp;?</h3>
+          <div id="protPositifSomme"></div>
+        </div>
+
+        <div class="sim-block" style="margin-top:18px">
+          <h3 class="sim-h">Décomposition de la prime <span id="protSource"></span></h3>
+          <div class="sim-scroll" id="protReadout"></div>
           <p class="sim-hint" id="protVerdict" style="margin-top:12px"></p>
         </div>
+        </div><!-- /prot-results -->
+        </div><!-- /stressOut -->
       </div>
     </details>
+
+    <!-- ════════════ RAPPORT IMPRIMABLE ════════════
+         Construit à la demande depuis l'état courant, masqué à l'écran, seul
+         élément visible à l'impression (voir @media print). ══════════════ -->
+    <div id="report" class="report" aria-hidden="true"></div>
 
     <!-- ════════════ SOURCES ════════════ -->
     <aside class="sources">
@@ -538,10 +762,16 @@
     // ── Technique (hypothèses ADIL FARMS)
     // Borne basse à 1 400 F pour couvrir l'option « poussins d'un jour » (~1 600 F) ;
     // la fourchette ADIL pour la poulette prête à pondre reste 4 000–6 000 F.
-    ["prixPoulette","Poulette prête à pondre (12 sem.)","FCFA/tête",1400,6000,50,5000,SRC.adilPoul,"technique",0],
-    ["mortalite","Taux de mortalité sur le cycle","part",0.04,0.20,0.005,0.07,SRC.adilMort,"technique",3],
-    ["oeufsParPoule","Œufs vendables par poule","œufs/cycle",260,380,1,330,SRC.adilOeuf,"technique",0],
-    ["consoAliment","Aliment consommé","kg/poule/cycle",40,65,0.5,57,SRC.adilAlim,"technique",1],
+    ["prixPoulette","Animal de départ (poulette ou poussin)","FCFA/tête",1400,6000,50,5000,SRC.adilPoul,"technique",0],
+    ["mortalite","Taux de mortalité sur le cycle","part",0.04,0.25,0.005,0.07,SRC.adilMort,"technique",3],
+    // Aliment d'élevage : n'existe QUE pour la voie poussins. Pour la voie poulettes,
+    // l'élevage jusqu'au point de ponte est déjà payé dans le prix de la poulette.
+    ["consoAlimentElevage","Aliment d'élevage (démarrage → ponte)","kg/poule",0,15,0.5,0,SRC.hypo,"technique",1],
+    // Une bête qui meurt en cours de cycle perd une part de sa ponte. La mortalité
+    // poussin étant surtout précoce, on retient 60 % de ponte perdue par défaut.
+    ["facteurPertePonte","Part de ponte perdue par bête morte","part",0,1,0.05,0.6,SRC.hypo,"technique",2],
+    ["oeufsParPoule","Potentiel de ponte (avant mortalité)","œufs/cycle",260,400,1,345,SRC.adilOeuf,"technique",0],
+    ["consoAliment","Aliment de ponte","kg/poule/cycle",40,70,0.5,57,SRC.adilAlim,"technique",1],
     ["sante","Frais sanitaires / vétérinaires","FCFA/tête/cycle",300,1200,25,750,SRC.adilChg,"technique",0],
     ["autres","Autres charges directes","FCFA/tête/cycle",300,1200,25,750,SRC.adilChg,"technique",0],
     ["valeurReforme","Revente d'une poule réformée","FCFA/tête",1500,4000,50,2500,SRC.hypo,"technique",0],
@@ -567,26 +797,30 @@
 
     // ── Capital immobilisé & risque
     ["partPrefin","Part des intrants réellement préfinancée","part",0.05,1,0.01,1.00,SRC.struct,"risque",2],
-    ["probaSinistre","Probabilité d'un sinistre majeur / cycle","part",0,0.5,0.005,0.05,SRC.stress,"risque",3],
-    ["perteSinistre","Perte en cas de sinistre","part du capital",0,1,0.01,0.70,SRC.stress,"risque",2],
+    ["probaSinistre","Probabilité d'un sinistre majeur / cycle","part",0,0.25,0.005,0.05,SRC.stress,"risque",3],
+    ["perteSinistre","Perte en cas de sinistre","part du capital",0.2,1,0.05,0.70,SRC.stress,"risque",2],
 
     // ── Stress
-    ["volPrixOeuf","Volatilité du prix de l'œuf (systémique)","écart-type, FCFA",0,25,0.5,6,SRC.stress,"stress",1],
-    ["volPrixAliment","Volatilité du prix de l'aliment (systémique)","écart-type, FCFA/kg",0,80,1,20,SRC.stress,"stress",0],
-    ["volMortalite","Volatilité de la mortalité (ferme)","écart-type",0,0.15,0.005,0.03,SRC.stress,"stress",3],
-    ["volOeufs","Volatilité des œufs/poule (ferme)","écart-type",0,80,1,20,SRC.stress,"stress",0],
-    ["probaDefaut","Probabilité de défaut / fraude de l'éleveur","part",0,0.3,0.005,0.03,SRC.stress,"stress",3],
-    ["perteDefaut","Part du capital perdue si défaut","part",0,1,0.01,0.50,SRC.stress,"stress",2],
+    ["volPrixOeuf","Volatilité du prix de l'œuf (systémique)","écart-type, FCFA",0,15,0.5,6,SRC.stress,"stress",1],
+    ["volPrixAliment","Volatilité du prix de l'aliment (systémique)","écart-type, FCFA/kg",0,50,1,20,SRC.stress,"stress",0],
+    ["volMortalite","Volatilité de la mortalité (ferme)","écart-type, points de %",0,0.10,0.005,0.03,SRC.stress,"stress",3],
+    ["volOeufs","Volatilité des œufs/poule (ferme)","écart-type",0,60,1,20,SRC.stress,"stress",0],
+    ["probaDefaut","Probabilité de défaut / fraude de l'éleveur","part",0,0.15,0.005,0.03,SRC.stress,"stress",3],
+    ["perteDefaut","Part du capital perdue si défaut","part",0.2,1,0.05,0.50,SRC.stress,"stress",2],
     ["correlation","Corrélation des chocs entre fermes","0 = diversifiable, 1 = systémique",0,1,0.01,0.30,SRC.stress,"stress",2],
     ["nbBandesParticipant","Nombre de bandes détenues","bandes",1,50,1,1,SRC.struct,"stress",0],
     ["nbSimulations","Nombre de tirages Monte-Carlo","tirages",500,20000,500,5000,SRC.stress,"stress",0],
 
     // ── Protection (tarifée : voir le module dédié)
-    ["reservePct","Fonds de réserve (absorbe en premier)","part du capital",0,0.5,0.01,0.0,SRC.struct,"protection",2],
-    ["cikaBackstop","Backstop Cika après la réserve","FCFA/poule",0,10000,100,0,SRC.struct,"protection",0],
-    ["protectionCapital","Capital participant garanti","part",0,1,0.01,0.0,SRC.struct,"protection",2],
-    ["fraisAdminReserve","Frais d'administration de la réserve","part de la réserve",0,0.2,0.005,0.02,SRC.interm,"protection",3],
-    ["coutCapitalBackstop","Coût du capital immobilisé en backstop","part du montant garanti",0,0.3,0.005,0.10,SRC.interm,"protection",3],
+    // ── RANG 1 : réserve mutuelle, cotisée par le PARTICIPANT (pas une poche Cika).
+    ["cotisationReserve","Cotisation participant à la réserve","part du capital / an",0,0.06,0.0025,0.02,SRC.interm,"protection",4],
+    // ── RANG 2 : backstop Cika, PLAFONNÉ. Le plafond s'exprime en percentile de la
+    // distribution de perte : au-delà, la queue part en réassurance, jamais chez Cika.
+    ["plafondBackstopPct","Plafond du backstop Cika (percentile de perte)","percentile",0.90,0.999,0.005,0.99,SRC.stress,"protection",3],
+    ["fraisAdminReserve","Frais d'administration de la réserve","part de la réserve",0,0.10,0.005,0.02,SRC.interm,"protection",3],
+    ["coutCapitalBackstop","Coût du capital immobilisé en backstop","part du montant garanti",0,0.20,0.01,0.10,SRC.interm,"protection",3],
+    // Qui finance la prime — trois porteurs, normalisés à 100 %. C'est ce partage qui
+    // fait exister la protection dans les comptes : sans lui, elle serait gratuite.
 
     // ── Attractivité / coût d'opportunité
     ["tauxOpportunite","Rendement de l'alternative sans risque","%/an",0,0.10,0.001,0.017,SRC.hurdle,"attract",3],
@@ -594,6 +828,69 @@
     ["primeRisque","Prime exigée pour le risque de perte","%/an",0,0.08,0.001,0.03,SRC.prime,"attract",3],
     ["escompteAffinite","Escompte d'affinité (impact, attachement)","%/an",0,0.04,0.001,0.0,SRC.prime,"attract",3]
   ];
+
+  /* ── PROVENANCE À TROIS ÉTATS ────────────────────────────────
+     Le rapport n'est pas une liste d'hypothèses : c'est un export de
+     simulation où chaque chiffre porte son origine. Trois états :
+
+       reel       — donnée de terrain ou contractualisée (ADIL, contrat signé)
+       saisi      — valeur que l'utilisateur a renseignée pour ce paramétrage
+       estimation — projection : ne peut PAS devenir « réel » par nature,
+                    car elle porte sur l'avenir ou sur une préférence
+
+     L'utilisateur peut promouvoir « saisi » → « réel » quand il contractualise.
+     Les paramètres de risque et les primes restent bloqués sur « estimation ».
+     ─────────────────────────────────────────────────────────── */
+
+  var PROV_LABEL = {
+    reel:       { cls: "tag-reel",   txt: "Réel / contractuel" },
+    saisi:      { cls: "tag-saisi",  txt: "Saisi" },
+    estimation: { cls: "tag-hypo",   txt: "Estimation" }
+  };
+
+  // Paramètres qui sont des projections par nature : jamais promouvables en « réel ».
+  var ESTIMATION_PURE = [
+    "probaSinistre", "perteSinistre", "probaDefaut", "perteDefaut", "correlation",
+    "volPrixOeuf", "volPrixAliment", "volMortalite", "volOeufs",
+    "primeRisque", "primeIlliquidite", "escompteAffinite", "tauxOpportunite",
+    // Le prix de marché de l'œuf est une projection sur l'avenir ; le prix du
+    // DÉBOUCHÉ, lui, se contractualise avec un acheteur — il reste promouvable.
+    "prixOeuf", "valeurReforme",
+    "fraisAdminReserve", "coutCapitalBackstop",
+    // Le plafond du backstop se lit sur une distribution projetée : c'est un choix
+    // de design sur une estimation, pas une valeur contractualisable en soi.
+    "plafondBackstopPct"
+  ];
+
+  // État de provenance par défaut : technique ADIL = réel ; leviers
+  // commerciaux = saisi ; risque, primes et prix futurs = estimation.
+  function provenanceDefaut(key) {
+    if (ESTIMATION_PURE.indexOf(key) >= 0) return "estimation";
+    var s = META[key].src;
+    if (s === SRC.adil || s === SRC.adilPoul || s === SRC.adilMort || s === SRC.adilOeuf
+        || s === SRC.adilAlim || s === SRC.adilChg || s === SRC.adilCyc || s === SRC.parite) {
+      return "reel";
+    }
+    return "saisi";
+  }
+
+  var PROV = {};        // { cle: "reel" | "saisi" | "estimation" }
+  function resetProvenance() {
+    PARAMS.forEach(function (p) { PROV[p[0]] = provenanceDefaut(p[0]); });
+  }
+
+  function estPromouvable(key) { return ESTIMATION_PURE.indexOf(key) < 0; }
+
+  function provenance(key) {
+    var etat = PROV[key] || provenanceDefaut(key);
+    return { etat: etat, cls: PROV_LABEL[etat].cls, txt: PROV_LABEL[etat].txt };
+  }
+
+  // Bascule saisi ⇄ réel pour les paramètres contractualisables.
+  function basculerProvenance(key) {
+    if (!estPromouvable(key)) return;
+    PROV[key] = (PROV[key] === "reel") ? "saisi" : "reel";
+  }
 
   // Profils d'investisseur : règlent le benchmark sans risque.
   var PROFILS = {
@@ -603,11 +900,32 @@
   };
 
   // Options d'installation (ADIL) : règlent poulette, mortalité de départ et durée de cycle.
+  // Le toggle règle TOUS les postes qui distinguent les deux voies — y compris les
+  // surcoûts de la voie poussins, qui doivent rester visibles et éditables.
   var INSTALLATIONS = {
-    poulettes: { label: "Poulettes prêtes à pondre", prixPoulette: 5000, mortalite: 0.07, cycleMois: 18,
-                 note: "Installation à 12 semaines · cycle 18 mois · mortalité 6–8 %" },
-    poussins:  { label: "Poussins d'un jour",        prixPoulette: 1600, mortalite: 0.20, cycleMois: 22,
-                 note: "Élevage depuis le 1er jour · cycle 22 mois · mortalité initiale jusqu'à 20 %" }
+    poulettes: {
+      label: "Poulettes prêtes à pondre",
+      prixPoulette: 5000, mortalite: 0.07, cycleMois: 18,
+      consoAlimentElevage: 0,      // déjà payé dans le prix de la poulette
+      consoAliment: 57,            // 18 mois de ponte
+      // La fourchette ADIL (300–370) est donnée pour un élevage conduit normalement,
+      // donc DÉJÀ nette de la mortalité courante. On règle le nominal à 345 pour que
+      // l'effectif retombe sur les 330 œufs de référence : 345 × (1 − 7 % × 0,6) = 330,5.
+      // L'écart de 0,5 œuf (+35 F de BND, 0,9 %) reste très en deçà de la précision
+      // des hypothèses ; on préfère un nominal entier à un facteur de perte tordu.
+      oeufsParPoule: 345,
+      note: "Installation à 12 semaines · cycle 18 mois · mortalité 6–8 % · "
+          + "l'élevage jusqu'au point de ponte est inclus dans le prix de la poulette"
+    },
+    poussins: {
+      label: "Poussins d'un jour",
+      prixPoulette: 1600, mortalite: 0.20, cycleMois: 22,
+      consoAlimentElevage: 6,      // démarrage + croissance, 0 → point de ponte
+      consoAliment: 63,            // 22 mois de ponte
+      oeufsParPoule: 330,          // même potentiel de ponte, mais amputé par la mortalité
+      note: "Élevage depuis le 1er jour · cycle 22 mois · mortalité jusqu'à 20 % · "
+          + "l'aliment d'élevage (6 kg) et la perte de ponte sont facturés au projet"
+    }
   };
 
   var DEFAULTS = {}, META = {};
@@ -625,7 +943,6 @@
   var lastStress = null;
   var profil = "diaspora";
   var installation = "poulettes";
-  var reserveSource = "mutualisee";           // « mutualisée » ou « bilan Cika »
 
   /* ==============================================================
      2. FORMATAGE
@@ -675,6 +992,7 @@
 
     var oeufsParPoule = g("oeufsParPoule"), valeurReforme = g("valeurReforme"), mortalite = g("mortalite");
     var prixPoulette = g("prixPoulette"), consoAliment = g("consoAliment");
+    var consoAlimentElevage = g("consoAlimentElevage"), facteurPertePonte = g("facteurPertePonte");
     var sante = g("sante"), autres = g("autres"), coutCollectePct = g("coutCollectePct");
     var partCika = g("partCika"), partProducteur = g("partProducteur");
     var cycleMois = g("cycleMois") || 12;
@@ -697,14 +1015,24 @@
     var ecartAliment = prixAlimentMarche - prixAlimentPool;   // > 0 = gain pour le pool
     var ecartOeuf    = prixOeufPool - prixOeufSolo;           // > 0 = gain pour le pool
     var valeurCreee  = (ecartAliment >= 0) && (ecartOeuf >= 0);
-    var gainAgregationParPoule = ecartAliment * consoAliment + ecartOeuf * oeufsParPoule;
+    var gainAgregationParPoule = ecartAliment * (consoAlimentElevage + consoAliment)
+                               + ecartOeuf * oeufsVendablesEffectifs;
 
-    var recetteOeufsPool = oeufsParPoule * prixOeufPool;
+    // ── Les œufs sont nets de mortalité : une bête morte ne pond plus.
+    // Sans cela, une voie à forte mortalité (poussins) paraîtrait artificiellement
+    // rentable — la mortalité ne coûterait que la revente de la réformée.
+    var oeufsVendablesEffectifs = oeufsParPoule * (1 - mortalite * facteurPertePonte);
+
+    var recetteOeufsPool = oeufsVendablesEffectifs * prixOeufPool;
     var recetteReforme   = valeurReforme * (1 - mortalite);
     var produitsBruts    = recetteOeufsPool + recetteReforme;
 
-    var capitalIntrants  = prixPoulette + consoAliment * prixAlimentPool + sante + autres;
-    var coutCollecte     = coutCollectePct * oeufsParPoule * prixOeufPool;
+    // L'aliment d'élevage ne pèse que sur la voie poussins : pour une poulette
+    // prête à pondre, cette phase est déjà payée dans son prix d'achat.
+    var capitalIntrants  = prixPoulette
+                         + (consoAlimentElevage + consoAliment) * prixAlimentPool
+                         + sante + autres;
+    var coutCollecte     = coutCollectePct * oeufsVendablesEffectifs * prixOeufPool;
 
     var BND         = produitsBruts - capitalIntrants - coutCollecte;
     // La commission d'alignement n'est JAMAIS prélevée sur un BND négatif.
@@ -723,8 +1051,8 @@
     var roiEspere  = safeDiv(gainEspere, capitalImmobilise) * annualise;
 
     // ── Cika coordinateur : commissions d'intermédiation + alignement
-    var commissionAliment    = commAliment * consoAliment;
-    var commissionOeuf       = commOeuf * oeufsParPoule;
+    var commissionAliment    = commAliment * (consoAlimentElevage + consoAliment);
+    var commissionOeuf       = commOeuf * oeufsVendablesEffectifs;
     var commissionBND        = partCikaBND;
     var revenuCikaParPoule   = commissionAliment + commissionOeuf + commissionBND;
     var revenuCikaParPouleAn = revenuCikaParPoule * annualise;
@@ -736,6 +1064,8 @@
       prixAlimentPool: prixAlimentPool, prixOeufPool: prixOeufPool,
       prixAlimentMarche: prixAlimentMarche, prixOeufSolo: prixOeufSolo,
       ecartAliment: ecartAliment, ecartOeuf: ecartOeuf, valeurCreee: valeurCreee,
+      oeufsVendablesEffectifs: oeufsVendablesEffectifs, oeufsNominal: oeufsParPoule,
+      consoAlimentElevage: consoAlimentElevage, consoAlimentPonte: consoAliment,
       gainAgregationParPoule: gainAgregationParPoule,
       commissionAliment: commissionAliment, commissionOeuf: commissionOeuf, commissionBND: commissionBND,
       recetteOeufsPool: recetteOeufsPool, recetteReforme: recetteReforme, produitsBruts: produitsBruts,
@@ -754,17 +1084,20 @@
      ============================================================== */
 
   // grossResult et capital sont exprimés AU NIVEAU DE LA BANDE (nbPoules poules).
-  function waterfall(grossResult, capital, o) {
+  // `ctx` porte l'état de la mutuelle : réserve disponible et plafond du backstop,
+  // tous deux en FCFA au niveau de la bande.
+  function waterfall(grossResult, capital, o, ctx) {
     var p = o || S;
     var g = function (k) { return (p[k] === undefined) ? S[k] : p[k]; };
+    var c = ctx || {};
 
     var nbPoules = g("nbPoules");
     // Les commissions d'intermédiation sont encaissées quel que soit le signe du cycle :
-    // c'est ce qui rend un revenu de flux plus résilient qu'un revenu de commission sur résultat.
+    // c'est ce qui rend un revenu de flux plus résilient qu'un revenu de commission.
     var cikaMarges = (g("commAliment") * g("consoAliment") + g("commOeuf") * g("oeufsParPoule")) * nbPoules;
 
-    var cikaFee, producer, participantNet, perteCapitalPart, perteResiduelleCika = 0;
-    var absorbReserve = 0, absorbCika = 0, perteEvitee = 0;
+    var cikaFee, producer, participantNet, perteCapitalPart;
+    var absorbReserve = 0, absorbCika = 0, residuel = 0, perteEvitee = 0;
 
     if (grossResult >= 0) {
       cikaFee          = grossResult * g("partCika");
@@ -772,30 +1105,31 @@
       participantNet   = grossResult * (1 - g("partCika") - g("partProducteur"));
       perteCapitalPart = 0;
     } else {
-      var L  = -grossResult;
-      var reserve = g("reservePct") * capital;
-      absorbReserve = Math.min(L, reserve);
+      var L = -grossResult;
+      // ── Rang 1 : la réserve mutuelle, dotée par les cotisations des participants.
+      var reserveDispo = (c.reserveDisponible === undefined)
+        ? g("cotisationReserve") * capital : c.reserveDisponible;
+      absorbReserve = Math.min(L, Math.max(0, reserveDispo));
       var L1 = L - absorbReserve;
-      absorbCika = Math.min(L1, g("cikaBackstop") * nbPoules);
+      // ── Rang 2 : le backstop Cika, borné par son plafond. Exposition connue d'avance.
+      var plafond = (c.plafondBackstop === undefined) ? 0 : Math.max(0, c.plafondBackstop);
+      absorbCika = Math.min(L1, plafond);
       var L2 = L1 - absorbCika;
-      var perteMaxPart = capital * (1 - g("protectionCapital"));
-      perteCapitalPart = Math.min(L2, perteMaxPart);
-      var L3 = L2 - perteCapitalPart;
-      perteResiduelleCika = L3;
-      cikaFee        = -(absorbCika + perteResiduelleCika);
+      // ── Rang 3 : le résiduel reste au participant (ou part en réassurance).
+      // Cika n'absorbe JAMAIS au-delà de son plafond : pas de garantie illimitée.
+      perteCapitalPart = L2;
+      residuel = L2;
+      cikaFee        = -absorbCika;
       producer       = 0;
       participantNet = -perteCapitalPart;
-      // Ce que le participant aurait perdu SANS aucun dispositif : min(L, capital).
-      // L'écart avec sa perte réelle est la valeur que la protection lui apporte.
-      perteEvitee = Math.min(L, capital) - perteCapitalPart;
+      perteEvitee    = absorbReserve + absorbCika;   // ce que les rangs 1 et 2 ont épargné au participant
     }
 
     return {
       cikaFee: cikaFee, cikaMarges: cikaMarges, cikaTotal: cikaFee + cikaMarges,
       producer: producer, participantNet: participantNet,
       perteCapitalPart: perteCapitalPart, absorbReserve: absorbReserve,
-      absorbCika: absorbCika, perteResiduelleCika: perteResiduelleCika,
-      perteEvitee: perteEvitee
+      absorbCika: absorbCika, residuel: residuel, perteEvitee: perteEvitee
     };
   }
 
@@ -864,123 +1198,160 @@
     var nbPoules = S.nbPoules;
     var annualise = 12 / (S.cycleMois || 12);
     var rho = Math.sqrt(clamp(S.correlation, 0, 1));
-    var rand = seeded ? mulberry32(20260807) : Math.random;
-    var N = makeNormal(rand);
+    var base = model(S);
+    var capitalBandeRef = base.capitalIntrants * S.partPrefin * nbPoules;
 
+    // ── PASSE 1 : distribution de la perte par bande, sans aucune protection.
+    // Elle sert à fixer le plafond du backstop au percentile demandé — on ne peut
+    // pas tarifer une tranche avant de connaître la loi de ce qu'elle absorbe.
+    var pertes = new Float64Array(n);
+    var tirage = function (rand) {
+      var N = makeNormal(rand);
+      return function () {
+        var prixOeufSim    = Math.max(20, S.prixOeufDebouche   + S.volPrixOeuf    * N());
+        var prixAlimentSim = Math.max(50, S.prixAlimentNegocie + S.volPrixAliment * N());
+        var M = N(), Msin = N(), Mdef = N();
+        return { po: prixOeufSim, pa: prixAlimentSim, M: M, Msin: Msin, Mdef: Mdef, N: N };
+      };
+    };
+    var randA = seeded ? mulberry32(20260807) : Math.random;
+    var nextA = tirage(randA);
+    var i, b;
+    for (i = 0; i < n; i++) {
+      var tA = nextA();
+      var aB = rho * tA.M + Math.sqrt(1 - rho * rho) * tA.N();
+      var mB = model({
+        prixOeufDebouche: tA.po, prixAlimentNegocie: tA.pa,
+        mortalite: clamp(S.mortalite + S.volMortalite * aB, 0, 0.95),
+        oeufsParPoule: Math.max(0, S.oeufsParPoule - S.volOeufs * aB)
+      });
+      var capB = mB.capitalIntrants * S.partPrefin * nbPoules;
+      var grossB = mB.BND * nbPoules;
+      var aSinB = rho * tA.Msin + Math.sqrt(1 - rho * rho) * tA.N();
+      var aDefB = rho * tA.Mdef + Math.sqrt(1 - rho * rho) * tA.N();
+      var pertB = 0;
+      if (aSinB > invNorm(1 - clamp(S.probaSinistre * (1 + Math.max(0, tA.M)), 0, 1)))
+        pertB = Math.max(pertB, S.perteSinistre * capB);
+      if (aDefB > invNorm(1 - S.probaDefaut))
+        pertB = Math.max(pertB, S.perteDefaut * capB);
+      pertes[i] = Math.max(0, -(grossB - Math.min(pertB, capB)));
+    }
+    // ── Dimensionnement de la mutuelle.
+    // La réserve est MUTUALISÉE : toutes les bandes cotisent, seules quelques-unes
+    // sinistrent. La caisse disponible pour une bande sinistrée n'est donc pas sa
+    // propre cotisation, mais la collecte de tout le portefeuille rapportée au
+    // nombre de bandes effectivement touchées — c'est le principe même de la mutuelle.
+    var triees = Array.prototype.slice.call(pertes).sort(function (x, y) { return x - y; });
+    var qIdx = clamp(Math.floor(S.plafondBackstopPct * n), 0, n - 1);
+    var perteAuPercentile = triees[qIdx];
+    var cotisationParBande = S.cotisationReserve * capitalBandeRef;
+    // Fréquence des bandes en perte, mesurée sur la passe 1.
+    var nEnPerte = 0;
+    for (i = 0; i < n; i++) if (pertes[i] > 0) nEnPerte++;
+    var freqPerte = Math.max(1 / n, nEnPerte / n);
+    // Capacité de la caisse par bande sinistrée : collecte totale / bandes touchées.
+    var reserveParBande = cotisationParBande / freqPerte;
+    var plafondBackstop = Math.max(0, perteAuPercentile - reserveParBande);
+
+    // ── PASSE 2 : la cascade à trois rangs, avec le plafond ainsi calibré.
     var partRet = new Float64Array(n);      // rendement annualisé du participant
     var cikaRes = new Float64Array(n);      // résultat annuel Cika à la bande de référence
-    var perteBrute = new Float64Array(n);   // perte agrégée avant protection (pour tarifer la réserve)
-    var nReserveKO = 0;                     // tirages où la réserve ne suffit pas
-    var sommeDeficit = 0, sommePertePool = 0;   // sévérité du débordement
-    var sommeAbsorbReserve = 0, sommeAbsorbCika = 0, sommeProtPart = 0;
+    var payoutReserve = new Float64Array(n);   // ce que la réserve débourse, par tirage
+    var payoutBackstop = new Float64Array(n);  // ce que le backstop débourse
+    var payoutResiduel = new Float64Array(n);  // ce qui reste au participant / réassurance
+    var nReserveKO = 0, sommeDeficit = 0, sommePertePool = 0;
+    var sommeAbsorbReserve = 0, sommeAbsorbCika = 0, sommeResiduel = 0, sommeProtPart = 0;
 
-    // Éléments invariants au tirage
-    var base = model(S);
-    var capitalParPoule = base.capitalIntrants;   // recalculé par tirage (dépend du prix aliment)
-    // Dotation de la réserve du programme, fixée sur le capital nominal.
-    var reserveDotation = S.reservePct * base.capitalIntrants * S.partPrefin * nbPoules * POOL_FERMES;
+    var randB = seeded ? mulberry32(20260807) : Math.random;
+    var nextB = tirage(randB);
+    var ctx = { reserveDisponible: reserveParBande, plafondBackstop: plafondBackstop };
 
-    for (var i = 0; i < n; i++) {
-      // ── Chocs systémiques de PRIX : ils frappent le prix du débouché et le prix négocié,
-      //    donc se répercutent sur les prix vus par le pool.
-      var prixOeufSim    = Math.max(20, S.prixOeufDebouche   + S.volPrixOeuf    * N());
-      var prixAlimentSim = Math.max(50, S.prixAlimentNegocie + S.volPrixAliment * N());
-      // ── Facteurs systémiques : production, sinistralité, défaut
-      var M = N(), Msin = N(), Mdef = N();
-
+    for (i = 0; i < n; i++) {
+      var t = nextB();
       var sumPartNet = 0, sumCapital = 0, sumCikaTotal = 0;
-      var sumPerteBrute = 0;
+      var pR = 0, pB = 0, pX = 0;
 
-      for (var b = 0; b < nBandes; b++) {
-        var e = N();
-        var a = rho * M + Math.sqrt(1 - rho * rho) * e;      // adversité de la bande
-
-        var mortalite_b = clamp(S.mortalite + S.volMortalite * a, 0, 0.95);
-        var oeufs_b     = Math.max(0, S.oeufsParPoule - S.volOeufs * a);
-
-        var over = {
-          prixOeufDebouche: prixOeufSim, prixAlimentNegocie: prixAlimentSim,
-          mortalite: mortalite_b, oeufsParPoule: oeufs_b
-        };
-        var m = model(over);
-
+      for (b = 0; b < nBandes; b++) {
+        var a = rho * t.M + Math.sqrt(1 - rho * rho) * t.N();
+        var m = model({
+          prixOeufDebouche: t.po, prixAlimentNegocie: t.pa,
+          mortalite: clamp(S.mortalite + S.volMortalite * a, 0, 0.95),
+          oeufsParPoule: Math.max(0, S.oeufsParPoule - S.volOeufs * a)
+        });
         var capitalBande = m.capitalIntrants * S.partPrefin * nbPoules;
-        var gross        = m.BND * nbPoules;
+        var gross = m.BND * nbPoules;
 
-        // ── Évènements binaires, corrélés par la même copule à un facteur.
-        // On tire une variable latente aL = rho*ML + sqrt(1-rho²)*eL et on déclenche
-        // l'évènement quand elle dépasse le seuil correspondant à sa probabilité :
-        // à correlation = 1, toutes les bandes sinistrent ensemble (non diversifiable) ;
-        // à correlation = 0, les sinistres sont indépendants (diversifiables).
-        var pSin = clamp(S.probaSinistre * (1 + Math.max(0, M)), 0, 1);
-        var aSin = rho * Msin + Math.sqrt(1 - rho * rho) * N();
-        var aDef = rho * Mdef + Math.sqrt(1 - rho * rho) * N();
-        var sinistre = aSin > invNorm(1 - pSin);
-        var defaut   = aDef > invNorm(1 - S.probaDefaut);
+        var aSin = rho * t.Msin + Math.sqrt(1 - rho * rho) * t.N();
+        var aDef = rho * t.Mdef + Math.sqrt(1 - rho * rho) * t.N();
         var perteEvt = 0;
-        if (sinistre) perteEvt = Math.max(perteEvt, S.perteSinistre * capitalBande);
-        if (defaut)   perteEvt = Math.max(perteEvt, S.perteDefaut   * capitalBande);
-        perteEvt = Math.min(perteEvt, capitalBande);
-        gross -= perteEvt;
+        if (aSin > invNorm(1 - clamp(S.probaSinistre * (1 + Math.max(0, t.M)), 0, 1)))
+          perteEvt = Math.max(perteEvt, S.perteSinistre * capitalBande);
+        if (aDef > invNorm(1 - S.probaDefaut))
+          perteEvt = Math.max(perteEvt, S.perteDefaut * capitalBande);
+        gross -= Math.min(perteEvt, capitalBande);
 
-        var w = waterfall(gross, capitalBande, S);
+        var w = waterfall(gross, capitalBande, S, ctx);
         sumPartNet   += w.participantNet;
         sumCapital   += capitalBande;
         sumCikaTotal += w.cikaTotal;
-        sumPerteBrute += Math.max(0, -gross);
+        pR += w.absorbReserve; pB += w.absorbCika; pX += w.residuel;
         sommeAbsorbReserve += w.absorbReserve;
-        sommeAbsorbCika    += w.absorbCika + w.perteResiduelleCika;
+        sommeAbsorbCika    += w.absorbCika;
+        sommeResiduel      += w.residuel;
         sommeProtPart      += w.perteEvitee;
       }
 
-      partRet[i] = sumCapital > 0 ? (sumPartNet / sumCapital) * annualise : 0;
-      // Cika : résultat annuel à la taille de référence (une bande), hors diversification
+      // Le participant cotise à la mutuelle : sa cotisation ampute son rendement.
+      var cotisation = S.cotisationReserve * sumCapital;
+      partRet[i] = sumCapital > 0 ? ((sumPartNet - cotisation) / sumCapital) * annualise : 0;
       cikaRes[i] = (sumCikaTotal / nBandes) * annualise - S.opexAnnuel;
-      perteBrute[i] = sumPerteBrute;
+      payoutReserve[i]  = (pR / nBandes) / nbPoules * annualise;
+      payoutBackstop[i] = (pB / nBandes) / nbPoules * annualise;
+      payoutResiduel[i] = (pX / nBandes) / nbPoules * annualise;
 
-      // ── Crédibilité de la réserve MUTUALISÉE.
-      // La réserve couvre tout le programme, pas les seules bandes du participant :
-      // sa fragilité vient de ce que les fermes sombrent ENSEMBLE. On simule donc un
-      // pool large (POOL_FERMES fermes) sur le même facteur systémique M — à
-      // corrélation nulle les pertes se compensent, à corrélation 1 elles s'additionnent.
+      // ── Solidité de la mutuelle au niveau PORTEFEUILLE (chocs corrélés).
       var pertePool = 0;
       for (var f = 0; f < POOL_FERMES; f++) {
-        var af = rho * M + Math.sqrt(1 - rho * rho) * N();
+        var af = rho * t.M + Math.sqrt(1 - rho * rho) * t.N();
         var mf = model({
-          prixOeufDebouche: prixOeufSim, prixAlimentNegocie: prixAlimentSim,
+          prixOeufDebouche: t.po, prixAlimentNegocie: t.pa,
           mortalite: clamp(S.mortalite + S.volMortalite * af, 0, 0.95),
           oeufsParPoule: Math.max(0, S.oeufsParPoule - S.volOeufs * af)
         });
         var capF = mf.capitalIntrants * S.partPrefin * nbPoules;
         var grossF = mf.BND * nbPoules;
-        var aSinF = rho * Msin + Math.sqrt(1 - rho * rho) * N();
-        if (aSinF > invNorm(1 - clamp(S.probaSinistre * (1 + Math.max(0, M)), 0, 1))) {
+        var aSinF = rho * t.Msin + Math.sqrt(1 - rho * rho) * t.N();
+        if (aSinF > invNorm(1 - clamp(S.probaSinistre * (1 + Math.max(0, t.M)), 0, 1)))
           grossF -= S.perteSinistre * capF;
-        }
         pertePool += Math.max(0, -grossF);
       }
-      // La réserve est dotée une fois pour toutes sur le capital NOMINAL du programme :
-      // c'est une somme mise de côté à l'avance, elle ne grossit pas quand les pertes arrivent.
-      // On retient la part de la perte qu'elle NE couvre PAS. La fréquence de débordement
-      // seule est trompeuse : à corrélation faible la réserve saute souvent mais de peu
-      // (quelques fermes isolées), à corrélation forte elle saute rarement mais est
-      // pulvérisée — c'est ce second cas qui rend la garantie non crédible.
-      if (pertePool > reserveDotation + 1e-9) nReserveKO++;
-      sommeDeficit += Math.max(0, pertePool - reserveDotation);
+      var reservePool = reserveParBande * POOL_FERMES;
+      if (pertePool > reservePool + 1e-9) nReserveKO++;
+      sommeDeficit   += Math.max(0, pertePool - reservePool);
       sommePertePool += pertePool;
     }
 
+    var moy = function (arr) { var t = 0; for (var k = 0; k < arr.length; k++) t += arr[k]; return t / arr.length; };
+    var perteAttendueParPouleAn = (sommeAbsorbReserve + sommeAbsorbCika + sommeResiduel)
+                                  / n / nBandes / nbPoules * annualise;
+
     return {
-      part: partRet, cika: cikaRes, n: n, capitalParPoule: capitalParPoule,
-      perteBrute: perteBrute,
+      part: partRet, cika: cikaRes, n: n,
+      // Distribution des paiements par tranche (FCFA/poule/an)
+      payoutReserve: payoutReserve, payoutBackstop: payoutBackstop, payoutResiduel: payoutResiduel,
+      primeReserveParPouleAn: moy(payoutReserve),
+      primeCikaParPouleAn:    moy(payoutBackstop),
+      primeResiduelParPouleAn: moy(payoutResiduel),
+      perteAttendueParPouleAn: perteAttendueParPouleAn,
+      gainProtParPouleAn: (sommeProtPart / n) / nBandes / nbPoules * annualise,
+      // Calibrage de la tranche Cika
+      plafondBackstop: plafondBackstop, plafondBackstopParPoule: plafondBackstop / nbPoules,
+      perteAuPercentile: perteAuPercentile, reserveParBande: reserveParBande,
+      reserveParPoule: reserveParBande / nbPoules,
+      freqPerte: freqPerte, cotisationParBande: cotisationParBande,
+      // Solidité de la mutuelle
       pReserveInsuffisante: nReserveKO / n,
-      // Part de la perte du programme que la réserve ne couvre pas : c'est la mesure
-      // qui monte réellement avec la corrélation, donc celle qui pilote la crédibilité.
-      partNonCouverte: sommePertePool > 0 ? sommeDeficit / sommePertePool : 1,
-      // Primes annualisées par poule : perte attendue absorbée par chaque dispositif
-      primeReserveParPouleAn: (sommeAbsorbReserve / n) / nBandes / nbPoules * annualise,
-      primeCikaParPouleAn:    (sommeAbsorbCika    / n) / nBandes / nbPoules * annualise,
-      gainProtParPouleAn:     (sommeProtPart      / n) / nBandes / nbPoules * annualise
+      partNonCouverte: sommePertePool > 0 ? sommeDeficit / sommePertePool : 1
     };
   }
 
@@ -1017,57 +1388,183 @@
      Cika peut facturer, dans les deux sens. Coût d'un côté, valeur de l'autre.
      ============================================================== */
 
+  // Contrefactuel : aucune protection (ni cotisation, ni backstop).
+  function etatSansProtection() {
+    return Object.assign({}, S, { cotisationReserve: 0, plafondBackstopPct: 0 });
+  }
+
   function pricingProtection(r, mc) {
     var annualise = r.annualise;
     var capital = r.capitalImmobilise;
+    var active = (S.cotisationReserve > 0);
 
-    // ── Coût : perte attendue absorbée par chaque dispositif, par poule et par an.
-    // Si le Monte-Carlo a tourné, on le lit dessus ; sinon approximation fermée.
-    var primeReserve, primeCika, primeProtection, pReserveKO;
+    // ── PRIMES : lues sur la distribution si le stress a tourné, sinon estimées.
+    var payoutReserve, payoutBackstop, payoutResiduel, perteAttendue, partNonCouverte, source;
+    var plafondParPoule, reserveParPoule;
     if (mc) {
-      primeReserve    = mc.primeReserveParPouleAn;
-      primeCika       = mc.primeCikaParPouleAn;
-      primeProtection = mc.gainProtParPouleAn;
-      pReserveKO      = mc.partNonCouverte;
+      payoutReserve  = mc.primeReserveParPouleAn;
+      payoutBackstop = mc.primeCikaParPouleAn;
+      payoutResiduel = mc.primeResiduelParPouleAn;
+      perteAttendue  = mc.perteAttendueParPouleAn;
+      partNonCouverte = mc.partNonCouverte;
+      plafondParPoule = mc.plafondBackstopParPoule;
+      reserveParPoule = mc.reserveParPoule;
+      source = "monte-carlo";
     } else {
-      var perteAttendue = S.probaSinistre * S.perteSinistre * capital * annualise;
-      primeReserve    = Math.min(perteAttendue, S.reservePct * capital * annualise);
-      primeCika       = Math.min(Math.max(0, perteAttendue - primeReserve), S.cikaBackstop * annualise);
-      primeProtection = perteAttendue * S.protectionCapital;
-      pReserveKO      = S.reservePct > 0 ? clamp(1 - S.reservePct / Math.max(1e-9, S.probaSinistre * S.perteSinistre), 0, 1) : 1;
+      perteAttendue  = S.probaSinistre * S.perteSinistre * capital * annualise;
+      reserveParPoule = S.cotisationReserve * capital;
+      payoutReserve  = Math.min(perteAttendue, reserveParPoule * annualise);
+      plafondParPoule = Math.max(0, perteAttendue * 2 - reserveParPoule);
+      payoutBackstop = Math.min(Math.max(0, perteAttendue - payoutReserve), plafondParPoule * annualise);
+      payoutResiduel = Math.max(0, perteAttendue - payoutReserve - payoutBackstop);
+      partNonCouverte = clamp(1 - S.cotisationReserve / Math.max(1e-9, S.probaSinistre * S.perteSinistre), 0, 1);
+      source = "approximation";
     }
-    var primeTotale = primeReserve + primeCika + primeProtection;
 
-    // ── Valeur pour le participant : ce n'est PAS la perte absorbée (ce serait circulaire,
-    // on retrouverait la prime à l'identique). C'est la baisse du taux qu'il exige, parce
-    // qu'une garantie crédible écrase sa prime de risque. Un point de taux exigé en moins,
-    // c'est un point de rendement que Cika n'a pas besoin de servir pour rester vendable.
-    var protectionCredible = S.protectionCapital * (1 - pReserveKO);
-    var baisseTauxExige = S.primeRisque * protectionCredible;
-    var gainRendement = baisseTauxExige;
-    var valeurParPoule = baisseTauxExige * capital;
-    var roiProtege = r.roiEspere + safeDiv(primeProtection + primeReserve + primeCika, capital);
+    // ── Ce que chaque partie paie réellement.
+    var cotisationPart = S.cotisationReserve * capital * annualise;   // rang 1, participant
+    var chargementBackstop = payoutBackstop;                          // rang 2, prixé par Cika
+    var fractionCouverte = perteAttendue > 0
+      ? clamp((payoutReserve + payoutBackstop) / perteAttendue, 0, 1) : 0;
 
-    // ── Effet sur Cika. Selon qui finance la prime.
-    var fraisAdmin = 0, chargeCika = 0;
-    if (reserveSource === "mutualisee") {
-      // Cika administre la réserve mais ne porte pas le risque : elle encaisse des frais.
-      fraisAdmin = S.fraisAdminReserve * S.reservePct * capital * annualise;
-      chargeCika = primeCika;                       // seul le backstop reste à sa charge
-    } else {
-      // Cika porte le risque sur son bilan : perte attendue + coût du capital immobilisé.
-      chargeCika = primeCika + primeProtection
-                 + S.coutCapitalBackstop * (S.cikaBackstop + S.protectionCapital * capital) * annualise;
-    }
-    var margeNette = r.revenuCikaParPouleAn + fraisAdmin - chargeCika;
+    // ── Les trois poches du prélèvement Cika.
+    var pocheAlignement  = r.commissionBND * annualise;
+    var pocheCoordination = (r.commissionAliment + r.commissionOeuf) * annualise - chargementBackstop;
+    var prelevementTotal = r.revenuCikaParPouleAn;
+
+    // ── Couverture crédible : ce que la mutualisation tient vraiment.
+    var couvertureCredible = fractionCouverte * (1 - partNonCouverte);
+
+    // ── LES QUATRE MODES.
+    var rSans = model(etatSansProtection());
+    var modes = {
+      sansDet:    attractiviteBrute(rSans, 0, 0),
+      sansStress: attractiviteBrute(rSans, 0, 0),
+      avecDet:    attractiviteBrute(r, fractionCouverte, 0),
+      avecStress: attractiviteBrute(r, fractionCouverte, partNonCouverte)
+    };
+    var roiSansNet = rSans.roiEspere;
+    var roiAvecNet = r.roiEspere - safeDiv(cotisationPart, capital);
+    modes.sansDet.roi = roiSansNet;   modes.sansStress.roi = roiSansNet;
+    modes.avecDet.roi = roiAvecNet;   modes.avecStress.roi = roiAvecNet;
+    Object.keys(modes).forEach(function (k) { modes[k].alpha = modes[k].roi - modes[k].tauxExige; });
+
+    // ── Test positif-somme.
+    var baisseHurdle  = modes.sansStress.tauxExige - modes.avecStress.tauxExige;
+    var primeEnPoints = safeDiv(cotisationPart, capital);
+    var gainNetPoints = baisseHurdle - primeEnPoints;
+
+    // ── Marge de Cika, nette du chargement backstop et de l'OPEX attribuable.
+    var echelleRef = (r.seuilPoules && isFinite(r.seuilPoules))
+      ? Math.max(S.nbPoules, r.seuilPoules) : Math.max(S.nbPoules, 1);
+    var opexParPoule = safeDiv(S.opexAnnuel, echelleRef);
+    var margeCoordNette = prelevementTotal - opexParPoule - chargementBackstop;
+    var financable = margeCoordNette > 0;
 
     return {
-      primeReserve: primeReserve, primeCika: primeCika, primeProtection: primeProtection,
-      primeTotale: primeTotale, roiProtege: roiProtege, gainRendement: gainRendement,
-      valeurParPoule: valeurParPoule,
-      fraisAdmin: fraisAdmin, chargeCika: chargeCika, margeNette: margeNette,
-      pReserveInsuffisante: pReserveKO,
-      protectionCredible: protectionCredible
+      active: active, source: source,
+      payoutReserve: payoutReserve, payoutBackstop: payoutBackstop, payoutResiduel: payoutResiduel,
+      perteAttendue: perteAttendue, fractionCouverte: fractionCouverte,
+      cotisationPart: cotisationPart, chargementBackstop: chargementBackstop,
+      pocheCoordination: pocheCoordination, pocheAlignement: pocheAlignement,
+      prelevementTotal: prelevementTotal,
+      plafondParPoule: plafondParPoule, reserveParPoule: reserveParPoule,
+      couvertureCredible: couvertureCredible, partNonCouverte: partNonCouverte,
+      modes: modes,
+      baisseHurdle: baisseHurdle, primeEnPoints: primeEnPoints,
+      gainNetPoints: gainNetPoints, bienPrice: gainNetPoints > 0,
+      roiSans: roiSansNet, roiAvec: roiAvecNet,
+      opexParPoule: opexParPoule, margeCoordNette: margeCoordNette, financable: financable,
+      // compat rendu
+      gainRendement: baisseHurdle, valeurParPoule: baisseHurdle * capital,
+      coutPourPool: cotisationPart, valeurNette: gainNetPoints * capital,
+      primeTotale: payoutReserve + payoutBackstop + payoutResiduel,
+      tauxExigeSans: modes.sansStress.tauxExige, tauxExigeAvec: modes.avecStress.tauxExige,
+      alphaSans: modes.sansStress.alpha, alphaAvec: modes.avecStress.alpha,
+      deltaAlpha: modes.avecStress.alpha - modes.sansStress.alpha,
+      pReserveInsuffisante: partNonCouverte, protectionCredible: couvertureCredible,
+      margeNette: margeCoordNette, margeNetteSans: rSans.revenuCikaParPouleAn - opexParPoule,
+      deltaMargeCika: margeCoordNette - (rSans.revenuCikaParPouleAn - opexParPoule)
+    };
+  }
+
+  /* ── FAUT-IL REVOIR LA COMMISSION ? ──────────────────────────
+     Le prix est fixé au départ sur des estimations. Une fois le stress lancé,
+     on le confronte à ce que le risque réel exige : coût moyen d'abord
+     (soutenabilité), puis mauvaise année (solvabilité), puis effet sur alpha.
+     ─────────────────────────────────────────────────────────── */
+
+  function revisionCommission(r, mc) {
+    if (!mc) return { dispo: false };
+    var p = pricingProtection(r, mc);
+    var sr = stats(mc.payoutReserve), sb = stats(mc.payoutBackstop);
+
+    // 1. Coût moyen : le pricé couvre-t-il l'attendu ?
+    var reserveOk  = p.cotisationPart >= sr.mean;
+    var backstopOk = p.chargementBackstop >= sb.mean;
+    var manqueReserve  = Math.max(0, sr.mean - p.cotisationPart);
+    var manqueBackstop = Math.max(0, sb.mean - p.chargementBackstop);
+
+    // 2. Solvabilité : que coûte une mauvaise année, face à ce qui est provisionné ?
+    var q = function (arr, pr) {
+      var a = Array.prototype.slice.call(arr).sort(function (x, y) { return x - y; });
+      return a[clamp(Math.floor(pr * a.length), 0, a.length - 1)];
+    };
+    var backstopP95 = q(mc.payoutBackstop, 0.95), backstopP99 = q(mc.payoutBackstop, 0.99);
+    var reserveP95  = q(mc.payoutReserve, 0.95),  reserveP99  = q(mc.payoutReserve, 0.99);
+    var bufferReserve  = Math.max(0, p.cotisationPart - sr.mean);       // ce qui s'accumule par an
+    var deficitBackstop = Math.max(0, backstopP99 - p.chargementBackstop);
+    var deficitReserve  = Math.max(0, reserveP99 - p.cotisationPart - bufferReserve);
+    var solvabiliteOk = (deficitBackstop <= 0) && (deficitReserve <= 0);
+
+    // 3. Retour sur l'attractivité si l'on relève la commission pour combler.
+    // Le déficit est le coût d'UNE mauvaise année ; il se provisionne sur plusieurs
+    // exercices, pas d'un coup. On amortit sur l'horizon implicite de la queue
+    // (1/(1−percentile) : un P99 revient une année sur cent).
+    var provisionTotale = deficitBackstop + deficitReserve;            // FCFA/poule, en une fois
+    var horizonAns = Math.max(1, Math.round(1 / Math.max(1e-6, 1 - S.plafondBackstopPct)));
+    var hausseRequise = provisionTotale / horizonAns;                  // FCFA/poule/an
+    var alphaApres = p.modes.avecStress.alpha - safeDiv(hausseRequise, r.capitalImmobilise);
+
+    var feu, message;
+    if (!reserveOk || !backstopOk) {
+      feu = "rouge";
+      var m = manqueReserve + manqueBackstop;
+      message = "Commission sous-tarifée : relever de <b>+" + money(m, 0) + "/poule/an</b> ("
+        + (manqueReserve > 0 ? "cotisation réserve +" + money(manqueReserve, 0) : "")
+        + (manqueReserve > 0 && manqueBackstop > 0 ? " · " : "")
+        + (manqueBackstop > 0 ? "chargement backstop +" + money(manqueBackstop, 0) : "")
+        + ") — soit environ +" + nf(safeDiv(m / r.annualise, S.consoAliment), 1)
+        + " F/kg d'aliment ou +" + nf(safeDiv(m / r.annualise, Math.max(1, r.BND)) * 100, 1)
+        + " pt de commission BND. Sinon la réserve et le backstop débordent dès le coût moyen.";
+    } else if (!solvabiliteOk) {
+      feu = "orange";
+      message = "Coût moyen couvert, mais <b>solvabilité à financer</b> : une année P99 coûte "
+        + money(backstopP99, 0) + "/poule au backstop contre " + money(p.chargementBackstop, 0)
+        + " chargés. Trois issues — (a) provisionner <b>" + money(provisionTotale, 0)
+        + "/poule</b>, soit " + money(hausseRequise, 0) + "/an sur " + nf(horizonAns, 0)
+        + " ans de commission relevée (α passerait de " + nf(p.modes.avecStress.alpha * 100, 1)
+        + " à " + nf(alphaApres * 100, 1) + " pts) ; (b) abaisser le plafond du backstop, "
+        + "Cika portant une tranche plus petite ; (c) réassurer la tranche au-delà de "
+        + money(p.plafondParPoule, 0) + "/poule — la prime de réassurance devient le nouveau chargement.";
+    } else {
+      feu = "vert";
+      message = "Commission suffisante — coût moyen couvert (réserve " + money(p.cotisationPart, 0)
+        + " vs " + money(sr.mean, 0) + " ; backstop " + money(p.chargementBackstop, 0)
+        + " vs " + money(sb.mean, 0) + ") et solvabilité provisionnée.";
+    }
+
+    return {
+      dispo: true, feu: feu, message: message,
+      reserveOk: reserveOk, backstopOk: backstopOk,
+      payoutMoyenReserve: sr.mean, payoutMoyenBackstop: sb.mean,
+      reserveP95: reserveP95, reserveP99: reserveP99,
+      backstopP95: backstopP95, backstopP99: backstopP99,
+      bufferReserve: bufferReserve, deficitBackstop: deficitBackstop, deficitReserve: deficitReserve,
+      hausseRequise: hausseRequise, provisionTotale: provisionTotale, horizonAns: horizonAns,
+      alphaAvant: p.modes.avecStress.alpha, alphaApres: alphaApres,
+      ratioQueue: sb.mean > 0 ? backstopP99 / sb.mean : null,
+      pricing: p
     };
   }
 
@@ -1076,6 +1573,22 @@
      Un rendement n'est attractif que relativement à son alternative.
      ============================================================== */
 
+  // Version paramétrée : le niveau de garantie et sa crédibilité sont passés en argument
+  // plutôt que lus dans l'état global. Indispensable pour comparer « avec » et « sans »
+  // protection sans que le contrefactuel hérite des réglages courants.
+  function attractiviteBrute(r, fractionCouverte, partNonCouverte, tauxOpportunite) {
+    var tx = (tauxOpportunite === undefined) ? S.tauxOpportunite : tauxOpportunite;
+    // La couverture crédible = fraction de la perte attendue couverte par les rangs 1 et 2,
+    // escomptée de l'insuffisance systémique. C'est elle qui écrase la prime de risque.
+    var protectionCredible = fractionCouverte * (1 - partNonCouverte);
+    var primeRisqueEff = S.primeRisque * (1 - protectionCredible);
+    var tauxExige = tx + S.primeIlliquidite + primeRisqueEff - S.escompteAffinite;
+    return {
+      protectionCredible: protectionCredible, primeRisqueEff: primeRisqueEff,
+      tauxExige: tauxExige, alpha: r.roiEspere - tauxExige
+    };
+  }
+
   function attractivite(r, mc, over) {
     var o = over || {};
     var tauxOpportunite = (o.tauxOpportunite === undefined) ? S.tauxOpportunite : o.tauxOpportunite;
@@ -1083,7 +1596,10 @@
     // ce n'est pas la fréquence des débordements mais leur SÉVÉRITÉ : à corrélation élevée
     // la réserve est pulvérisée au moment précis où elle devrait jouer.
     var partNonCouverte = mc ? mc.partNonCouverte : 1;
-    var protectionCredible = S.protectionCapital * (1 - partNonCouverte);
+    var fractionCouverte = mc && mc.perteAttendueParPouleAn > 0
+      ? clamp((mc.primeReserveParPouleAn + mc.primeCikaParPouleAn) / mc.perteAttendueParPouleAn, 0, 1)
+      : 0;
+    var protectionCredible = fractionCouverte * (1 - partNonCouverte);
     var primeRisqueEff = S.primeRisque * (1 - protectionCredible);
     var tauxExige = tauxOpportunite + S.primeIlliquidite + primeRisqueEff - S.escompteAffinite;
     var alpha = r.roiEspere - tauxExige;
@@ -1117,15 +1633,17 @@
     return hi;
   }
 
-  // Point mort : plus petite protectionCapital rendant alpha >= 0.
+  // Point mort : plus petite cotisation à la réserve rendant alpha >= 0.
+  // La cotisation coûte au participant mais achète de la couverture, donc baisse
+  // son taux exigé : l'optimum n'est pas monotone, on balaie.
   function pointMortProtection(mc) {
-    var save = S.protectionCapital, res = null;
-    for (var p = 0; p <= 1.0001; p += 0.01) {
-      S.protectionCapital = p;
-      var a = attractivite(model(S), mc);
-      if (a.alpha >= 0) { res = p; break; }
+    var save = S.cotisationReserve, res = null;
+    for (var c = 0; c <= 0.08001; c += 0.0025) {
+      S.cotisationReserve = c;
+      var pp = pricingProtection(model(S), mc);
+      if (pp.modes.avecStress.alpha >= 0) { res = c; break; }
     }
-    S.protectionCapital = save;
+    S.cotisationReserve = save;
     return res;
   }
 
@@ -1133,8 +1651,30 @@
      6. CONSTRUCTION DU PANNEAU
      ============================================================== */
 
+  // Formate une borne dans l'unité du paramètre (pourcentage, percentile ou nombre).
+  function fmtBorne(m, v) {
+    if (m.unit.indexOf("%/an") === 0) return nf(v * 100, 2) + " %";
+    if (m.unit === "percentile") return "P" + nf(v * 100, 1);
+    if (m.unit === "part" || m.unit.indexOf("part de") === 0 || m.unit.indexOf("part du") === 0) {
+      return nf(v * 100, v > 0 && v < 0.1 ? 2 : 0) + " %";
+    }
+    if (m.unit.indexOf("points de %") >= 0) return nf(v * 100, 1) + " pts";
+    return nf(v, m.dec);
+  }
+
   function fieldHTML(m) {
     var id = "f_" + m.key;
+    var pr = provenance(m.key);
+    var prom = estPromouvable(m.key);
+    // Pastille de provenance : cliquable quand le paramètre est contractualisable,
+    // simple étiquette quand c'est une projection par nature.
+    var pastille = prom
+      ? '<button type="button" class="prov prov-' + pr.etat + '" data-prov="' + m.key + '" '
+        + 'title="Provenance : ' + esc(pr.txt) + '. Cliquez pour basculer Saisi / Réel." '
+        + 'aria-label="Provenance de ' + esc(m.label) + ' : ' + esc(pr.txt) + '. Cliquez pour basculer.">'
+        + esc(pr.txt) + "</button>"
+      : '<span class="prov prov-' + pr.etat + ' prov-fixe" title="Projection par nature — ne peut pas être contractualisée.">'
+        + esc(pr.txt) + "</span>";
     return '<div class="fld">' +
       '<div class="fld-head">' +
         '<label for="' + id + '">' + esc(m.label) +
@@ -1142,12 +1682,17 @@
         '</label>' +
         '<span class="fld-unit">' + esc(m.unit) + '</span>' +
       '</div>' +
+      '<div class="fld-prov">' + pastille + '</div>' +
       '<div class="fld-row">' +
         '<input type="number" id="' + id + '" data-k="' + m.key + '" data-role="num" ' +
           'min="' + m.min + '" max="' + m.max + '" step="' + m.step + '" value="' + m.def + '">' +
         '<input type="range" data-k="' + m.key + '" data-role="rng" aria-labelledby="' + id + '" ' +
           'min="' + m.min + '" max="' + m.max + '" step="' + m.step + '" value="' + m.def + '">' +
       '</div>' +
+      // Plage lisible sous le curseur : on calibre plus vite en voyant la fourchette
+      // et la valeur de base sans avoir à pousser le curseur jusqu'aux bornes.
+      '<div class="fld-plage">' + fmtBorne(m, m.min) + " – " + fmtBorne(m, m.max) +
+        ' · base ' + fmtBorne(m, m.def) + '</div>' +
     '</div>';
   }
 
@@ -1273,9 +1818,16 @@
       : "Montants en FCFA · 1 EUR = " + FX_LABEL + " FCFA";
     document.getElementById("instNote").textContent = INSTALLATIONS[installation].note;
     document.getElementById("profilNote").textContent = PROFILS[profil].note;
-    document.getElementById("resSrcNote").textContent = reserveSource === "mutualisee"
-      ? "La réserve est dotée par un prélèvement sur les cycles bénéficiaires et couvre les mauvais. Cika l'administre et facture des frais — elle ne porte pas le risque, elle reste asset-light."
-      : "Cika finance le backstop sur son bilan. Elle cesse d'être asset-light : sa perte attendue et une charge en capital viennent grever son résultat.";
+    // Rappel de l'architecture à trois rangs, sous les curseurs de protection.
+    var _pp = pricingProtection(r, lastStress ? lastStress.mc : null);
+    document.getElementById("resSrcNote").innerHTML =
+      "<b>Rang 1</b> — réserve mutuelle, cotisée par le <b>participant</b> ("
+      + pct(S.cotisationReserve, 2) + " du capital, soit " + money(_pp.cotisationPart, 0)
+      + "/poule/an) : elle absorbe les pertes en premier. <b>Rang 2</b> — backstop <b>Cika</b>, "
+      + "plafonné à " + money(_pp.plafondParPoule, 0) + "/poule (perte au percentile "
+      + nf(S.plafondBackstopPct * 100, 1) + "), prixé " + money(_pp.chargementBackstop, 0)
+      + " dans la commission. <b>Rang 3</b> — le résiduel reste au participant ou part en "
+      + "réassurance : l'exposition de Cika est bornée, jamais illimitée.";
   }
 
   /* ── Test de valeur créée : l'intermédiation est-elle positive-somme ? ── */
@@ -1419,17 +1971,17 @@
     li.push("<li><span class=\"k\">Prix du débouché œuf minimal</span><span class=\"v\">"
       + (pmOeuf === null ? "hors bornes" : nf(pmOeuf, 1) + " F")
       + "</span></li>");
-    li.push("<li><span class=\"k\">Protection du capital minimale</span><span class=\"v\">"
-      + (pmProt === null ? "insuffisant seul" : pct(pmProt, 0))
+    li.push("<li><span class=\"k\">Cotisation réserve minimale</span><span class=\"v\">"
+      + (pmProt === null ? "hors plage" : pct(pmProt, 2))
       + "</span></li>");
     li.push("<li><span class=\"k\">Écart à combler (α)</span><span class=\"v " + sgn(a.alpha) + "\">"
       + nf(a.alpha * 100, 1) + " pts</span></li>");
     if (!lastStress) {
       li.push('<li><span class="k" style="color:#AD6800">Protection supposée non crédible</span>'
-        + '<span class="v" style="color:#AD6800">lancez le stress</span></li>');
+        + '<span class="v" style="color:#AD6800">lancez la simulation</span></li>');
     } else {
       li.push("<li><span class=\"k\">Protection crédible retenue</span><span class=\"v\">"
-        + pct(a.protectionCredible, 0) + " sur " + pct(S.protectionCapital, 0) + "</span></li>");
+        + pct(a.protectionCredible, 0) + " de la perte attendue</span></li>");
     }
     document.getElementById("attractPointMort").innerHTML =
       '<h3 class="sim-h">Point mort d\'attractivité</h3>'
@@ -1441,71 +1993,265 @@
      7c. PROTECTION TARIFÉE — prime, valeur, marge
      ============================================================== */
 
+  // Barre empilée de la perte-type, coloriée par QUI PAIE chaque tranche.
+  function figTranches(p) {
+    var tot = p.payoutReserve + p.payoutBackstop + p.payoutResiduel;
+    if (tot <= 0) return '<p class="sim-hint">Perte attendue nulle à ce paramétrage.</p>';
+    var W = 620, H = 92, padL = 4, barY = 22, barH = 30;
+    var segs = [
+      { l: "Réserve mutuelle", s: "cotisée par les participants", v: p.payoutReserve, c: "#69C0FF" },
+      { l: "Backstop Cika",    s: "plafonné, prixé en commission", v: p.payoutBackstop, c: "#D48806" },
+      { l: "Résiduel",         s: "participant ou réassurance",    v: p.payoutResiduel, c: "#FF7875" }
+    ];
+    var pw = W - padL * 2, x = padL;
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-width:' + W
+            + 'px;height:auto" role="img" aria-label="Partage de la perte attendue par tranche">';
+    segs.forEach(function (g) {
+      var w = pw * (g.v / tot);
+      if (w <= 0.4) { x += w; return; }
+      svg += '<rect x="' + x.toFixed(1) + '" y="' + barY + '" width="' + w.toFixed(1)
+          +  '" height="' + barH + '" fill="' + g.c + '"/>';
+      if (w > 54) {
+        svg += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (barY + 19)
+            +  '" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1a1a">'
+            +  nf(g.v / tot * 100, 0) + "%</text>";
+      }
+      x += w;
+    });
+    // Légende sous la barre
+    var lx = padL;
+    segs.forEach(function (g) {
+      var w = pw * (g.v / tot);
+      if (w > 92) {
+        svg += '<text x="' + lx.toFixed(1) + '" y="' + (barY + barH + 15) + '" font-size="10" fill="#333">'
+            +  esc(g.l) + "</text>";
+        svg += '<text x="' + lx.toFixed(1) + '" y="' + (barY + barH + 27) + '" font-size="9" fill="#999">'
+            +  money(g.v, 0) + " · " + esc(g.s) + "</text>";
+      }
+      lx += w;
+    });
+    svg += '<text x="' + padL + '" y="' + 13 + '" font-size="10" fill="#777">Perte attendue : '
+        +  money(tot, 0) + "/poule/an — qui paie quoi</text>";
+    return svg + "</svg>";
+  }
+
   function renderProtection(r) {
     var mc = lastStress ? lastStress.mc : null;
     var p = pricingProtection(r, mc);
     var nb = S.nbPoules;
 
-    var rows = [
-      ["Prime — réserve mutualisée", p.primeReserve, "perte attendue absorbée par la réserve"],
-      ["Prime — backstop / garantie Cika", p.primeCika, "perte attendue portée par Cika"],
-      ["Prime — garantie de capital", p.primeProtection, "perte attendue couverte par la garantie"],
-      ["Prime totale", p.primeTotale, "coût économique de la protection"],
-      ["Valeur pour le participant", p.valeurParPoule, "taux exigé abaissé de " + pct(p.gainRendement, 2)],
-      [reserveSource === "mutualisee" ? "Frais d'administration Cika" : "Charge portée par Cika",
-       reserveSource === "mutualisee" ? p.fraisAdmin : -p.chargeCika,
-       reserveSource === "mutualisee" ? "Cika administre sans porter le risque" : "perte attendue + coût du capital"],
-      ["Marge nette Cika", p.margeNette, "revenu de commissions net de la protection"]
+    // ── Provenance des chiffres.
+    document.getElementById("protSource").innerHTML = p.active
+      ? '<span class="prov prov-' + (p.source === "monte-carlo" ? "reel" : "estimation") + '">'
+        + (p.source === "monte-carlo"
+            ? "Primes actuarielles — lues sur " + nf(lastStress.n, 0) + " tirages"
+            : "Primes estimées — lancer la simulation")
+        + "</span>"
+      : "";
+
+    // ── Visuel : qui paie chaque tranche.
+    document.getElementById("protTranches").innerHTML = p.active
+      ? figTranches(p)
+        + '<p class="sim-hint">La <b>réserve</b> est une caisse commune : chaque participant y verse '
+        + money(p.cotisationPart, 0) + "/poule/an (" + pct(S.cotisationReserve, 2)
+        + " de son capital) et elle dédommage les bandes qui échouent — elle encaisse les coups durs "
+        + "répartis, mais se vide si tout le monde tombe ensemble. Le <b>backstop</b> est le filet de "
+        + "Cika au-dessus, plafonné à " + money(p.plafondParPoule, 0) + "/poule (perte au percentile "
+        + nf(S.plafondBackstopPct * 100, 1) + ") : Cika porte cette tranche et la facture "
+        + money(p.chargementBackstop, 0) + " dans sa commission. Au-delà, c'est le participant ou "
+        + "la réassurance — <b>jamais Cika</b>.</p>"
+      : '<p class="sim-hint">Aucune protection : montez la cotisation à la réserve pour voir le partage du risque.</p>';
+
+    // ── Les trois poches du prélèvement Cika.
+    var poches = [
+      ["Marge de coordination", p.pocheCoordination, "commissions de flux, couvre l'OPEX attribuable et le profit"],
+      ["Chargement backstop", p.chargementBackstop, "finance la tranche que Cika porte (rang 2)"],
+      ["Commission d'alignement", p.pocheAlignement, "part du BND, nulle si le cycle est en perte"]
     ];
-
-    document.getElementById("protReadout").innerHTML = rows.map(function (x) {
-      var cls = (x[0].indexOf("Prime") === 0) ? "neg" : sgn(x[1]);
-      return "<tr><td>" + esc(x[0]) + "</td>"
-        + '<td class="num ' + cls + '">' + money(x[1], 0) + "</td>"
-        + '<td class="num ' + cls + '">' + money(x[1] * nb, 0) + "</td>"
+    var hp = '<table class="sim-table"><thead><tr><th scope="col">Poche du prélèvement Cika</th>'
+      + '<th scope="col">Par poule / an</th><th scope="col">Part</th><th scope="col">Lecture</th></tr></thead><tbody>';
+    poches.forEach(function (x) {
+      hp += "<tr><td>" + esc(x[0]) + "</td>"
+        + '<td class="num ' + sgn(x[1]) + '">' + money(x[1], 0) + "</td>"
+        + '<td class="num">' + pct(safeDiv(x[1], p.prelevementTotal), 0) + "</td>"
         + '<td style="text-align:left;color:#888;font-size:12px">' + esc(x[2]) + "</td></tr>";
-    }).join("");
+    });
+    hp += '<tr style="font-weight:600"><td>Prélèvement total</td><td class="num">'
+      + money(p.prelevementTotal, 0) + '</td><td class="num">100 %</td>'
+      + '<td style="text-align:left;color:#888;font-size:12px">à comparer à l\'OPEX par poule : '
+      + money(p.opexParPoule, 0) + "</td></tr></tbody></table>";
+    document.getElementById("protPoches").innerHTML = hp;
 
-    // Verdict de pricing : la valeur dépasse-t-elle la prime ?
-    var v = p.valeurParPoule;
-    var pv;
-    if (p.primeTotale <= 0) {
-      pv = "Aucune protection activée — le participant porte l'intégralité du risque, et la prime de risque qu'il exige reste entière.";
-    } else if (v > p.primeTotale) {
-      pv = "✓ La protection <b>crée plus de valeur qu'elle ne coûte</b> : elle abaisse de "
-         + pct(p.gainRendement, 2) + " le taux que l'investisseur exige, soit " + money(v, 0)
-         + "/poule/an, pour une prime de " + money(p.primeTotale, 0)
-         + ". Le surplus de " + money(v - p.primeTotale, 0) + " peut revenir à Cika sans dégrader l'offre.";
+    // ── Les quatre modes.
+    var M = p.modes;
+    var cellules = [
+      ["Sans protection", "Déterministe", M.sansDet],
+      ["Sans protection", "Sous stress",  M.sansStress],
+      ["Avec protection", "Déterministe", M.avecDet],
+      ["Avec protection", "Sous stress",  M.avecStress]
+    ];
+    var h4 = '<table class="sim-table"><thead><tr><th scope="col">Mode</th><th scope="col">Lecture</th>'
+      + '<th scope="col">Rendement espéré</th><th scope="col">Taux exigé</th>'
+      + '<th scope="col">α</th><th scope="col">Verdict</th></tr></thead><tbody>';
+    cellules.forEach(function (c, i) {
+      var a = c[2];
+      var v = a.alpha >= 0 ? "Attractif" : (a.alpha >= -0.01 ? "Marginal" : "Non attractif");
+      var cl = a.alpha >= 0 ? "pos" : (a.alpha >= -0.01 ? "warn" : "neg");
+      h4 += "<tr" + (i === 3 ? ' style="background:#FAFAF6"' : "") + "><td>" + esc(c[0]) + "</td>"
+        + "<td>" + esc(c[1]) + "</td>"
+        + '<td class="num">' + pct(a.roi, 2) + "</td>"
+        + '<td class="num">' + pct(a.tauxExige, 2) + "</td>"
+        + '<td class="num ' + sgn(a.alpha) + '"><b>' + nf(a.alpha * 100, 1) + " pts</b></td>"
+        + '<td><span class="verdict-pill ' + cl + '">' + v + "</span></td></tr>";
+    });
+    h4 += "</tbody></table>";
+    h4 += '<p class="sim-hint">Le mode déterministe suppose la couverture pleinement crédible ; '
+      + "« sous stress » la corrige par la sévérité mesurée. L'écart entre les deux lignes "
+      + "« avec protection » est exactement ce que le stress révèle.</p>";
+    document.getElementById("protModes").innerHTML = h4;
+
+    // ── Test positif-somme.
+    var ts;
+    if (!p.active) {
+      ts = '<div class="prot-alert">Activez la cotisation pour comparer coût et baisse du taux exigé.</div>';
     } else {
-      pv = "✗ La protection <b>coûte plus qu'elle n'apporte</b> : prime de " + money(p.primeTotale, 0)
-         + "/poule/an contre " + money(v, 0) + " de valeur (taux exigé abaissé de " + pct(p.gainRendement, 2)
-         + "). À ce réglage elle comprime la marge sans rendre le produit sensiblement plus vendable"
-         + (p.protectionCredible < S.protectionCapital * 0.7
-            ? " — et la corrélation ronge déjà sa crédibilité." : ".");
+      ts = '<div class="ps-row ' + (p.bienPrice ? "ok" : "ko") + '">'
+        + '<div class="ps-cell"><div class="ps-l">Cotisation payée par le participant</div>'
+        + '<div class="ps-v neg">' + nf(p.primeEnPoints * 100, 2) + " pts</div>"
+        + '<div class="ps-s">' + money(p.cotisationPart, 0) + "/poule/an</div></div>"
+        + '<div class="ps-op">vs</div>'
+        + '<div class="ps-cell"><div class="ps-l">Baisse du taux exigé achetée</div>'
+        + '<div class="ps-v pos">' + nf(p.baisseHurdle * 100, 2) + " pts</div>"
+        + '<div class="ps-s">couverture crédible ' + pct(p.couvertureCredible, 0) + "</div></div>"
+        + '<div class="ps-op">=</div>'
+        + '<div class="ps-cell"><div class="ps-l">Gain net</div>'
+        + '<div class="ps-v ' + sgn(p.gainNetPoints) + '">' + (p.gainNetPoints >= 0 ? "+" : "")
+        + nf(p.gainNetPoints * 100, 2) + " pts</div>"
+        + '<div class="ps-s">' + (p.bienPrice ? "protection bien pricée" : "coûte plus qu'elle ne rapporte") + "</div></div>"
+        + "</div>";
     }
-    document.getElementById("protVerdict").innerHTML = pv;
+    document.getElementById("protPositifSomme").innerHTML = ts;
 
-    // ── Plafond de crédibilité par la corrélation.
-    var al = "";
-    if (!lastStress) {
-      al = '<div class="prot-alert">Lancez le stress test pour mesurer la probabilité que la réserve soit débordée. '
-         + "Tant qu'elle n'est pas mesurée, la garantie est supposée <b>non crédible</b> et n'écrase pas la prime de risque.</div>";
+    // ── Décomposition de la perte attendue par rang.
+    var rows = [
+      ["Perte attendue totale", p.perteAttendue, "avant toute protection"],
+      ["Rang 1 — absorbé par la réserve", p.payoutReserve,
+       pct(safeDiv(p.payoutReserve, p.perteAttendue), 0) + " de la perte · financé par le participant"],
+      ["Rang 2 — absorbé par le backstop Cika", p.payoutBackstop,
+       pct(safeDiv(p.payoutBackstop, p.perteAttendue), 0) + " · plafonné à " + money(p.plafondParPoule, 0) + "/poule"],
+      ["Rang 3 — résiduel", p.payoutResiduel,
+       pct(safeDiv(p.payoutResiduel, p.perteAttendue), 0) + " · participant ou réassurance"],
+      ["Cotisation réserve encaissée", p.cotisationPart, "ce que le participant verse effectivement"],
+      ["Chargement backstop facturé", p.chargementBackstop, "poche dédiée dans la commission Cika"]
+    ];
+    var h2 = '<table class="sim-table"><thead><tr><th scope="col">Poste</th>'
+      + '<th scope="col">Par poule / an</th><th scope="col">À la bande</th>'
+      + '<th scope="col">Lecture</th></tr></thead><tbody>';
+    rows.forEach(function (x, i) {
+      h2 += "<tr" + (i === 0 ? ' style="font-weight:600"' : "") + "><td"
+        + (i >= 1 && i <= 3 ? ' style="padding-left:18px;color:#555"' : "") + ">" + esc(x[0]) + "</td>"
+        + '<td class="num">' + money(x[1], 0) + "</td>"
+        + '<td class="num">' + money(x[1] * nb, 0) + "</td>"
+        + '<td style="text-align:left;color:#888;font-size:12px">' + esc(x[2]) + "</td></tr>";
+    });
+    h2 += "</tbody></table>";
+    document.getElementById("protReadout").innerHTML = h2;
+
+    // ── FAUT-IL REVOIR LA COMMISSION ?
+    var rev = revisionCommission(r, mc);
+    var hr;
+    if (!rev.dispo) {
+      hr = '<div class="feu feu-gris"><span class="feu-p">—</span>'
+         + "<div><b>Verdict indisponible</b> — lancez la simulation. "
+         + "Le prix se juge sur la distribution des pertes, pas sur le cas central.</div></div>";
     } else {
+      hr = '<div class="feu feu-' + rev.feu + '"><span class="feu-p">'
+         + (rev.feu === "vert" ? "●" : rev.feu === "orange" ? "●" : "●") + "</span><div>" + rev.message + "</div></div>";
+      hr += '<table class="sim-table" style="margin-top:14px"><thead><tr><th scope="col">Tranche</th>'
+         + '<th scope="col">Prixé</th><th scope="col">Coût moyen</th><th scope="col">Année P95</th>'
+         + '<th scope="col">Année P99</th><th scope="col">Verdict</th></tr></thead><tbody>';
+      hr += "<tr><td>Réserve (participant)</td>"
+         + '<td class="num">' + money(rev.pricing.cotisationPart, 0) + "</td>"
+         + '<td class="num">' + money(rev.payoutMoyenReserve, 0) + "</td>"
+         + '<td class="num">' + money(rev.reserveP95, 0) + "</td>"
+         + '<td class="num">' + money(rev.reserveP99, 0) + "</td>"
+         + '<td><span class="verdict-pill ' + (rev.reserveOk ? "pos" : "neg") + '">'
+         + (rev.reserveOk ? "couvert" : "sous-tarifé") + "</span></td></tr>";
+      hr += "<tr><td>Backstop (Cika)</td>"
+         + '<td class="num">' + money(rev.pricing.chargementBackstop, 0) + "</td>"
+         + '<td class="num">' + money(rev.payoutMoyenBackstop, 0) + "</td>"
+         + '<td class="num">' + money(rev.backstopP95, 0) + "</td>"
+         + '<td class="num">' + money(rev.backstopP99, 0) + "</td>"
+         + '<td><span class="verdict-pill ' + (rev.backstopOk ? "pos" : "neg") + '">'
+         + (rev.backstopOk ? "couvert" : "sous-tarifé") + "</span></td></tr>";
+      hr += "</tbody></table>";
+      if (rev.ratioQueue) {
+        hr += '<p class="sim-hint">Ratio queue/moyenne du backstop : <b>' + nf(rev.ratioQueue, 1)
+           + "×</b> — une année P99 coûte " + nf(rev.ratioQueue, 1)
+           + " fois le coût moyen. C'est la corrélation entre fermes qui crée cet écart : "
+           + "dimensionner sur la moyenne revient à ignorer précisément l'année qui fait tomber le dispositif.</p>";
+      }
+      if (rev.hausseRequise > 0) {
+        hr += '<p class="sim-hint">Provisionner ' + money(rev.provisionTotale, 0)
+           + "/poule sur " + nf(rev.horizonAns, 0) + " ans demande <b>" + money(rev.hausseRequise, 0)
+           + "/poule/an</b> de commission ; α passe alors de <b>" + nf(rev.alphaAvant * 100, 1)
+           + "</b> à <b>" + nf(rev.alphaApres * 100, 1) + " pts</b>"
+           + (rev.alphaApres < -0.01 && rev.alphaAvant >= -0.01
+               ? " — le produit bascule en non attractif. <b>C'est le signal</b> : à ce niveau de risque, "
+                 + "couvrir correctement coûte plus que ce que le produit peut servir. Externaliser la queue "
+                 + "en réassurance ou choisir un design moins risqué, plutôt que forcer la commission."
+               : ".")
+           + "</p>";
+      }
+    }
+    document.getElementById("protRevision").innerHTML = hr;
+
+    // ── Garde-fous.
+    var al = "";
+    if (p.active && p.source === "approximation") {
+      al += '<div class="prot-alert"><b>Primes estimées</b> — approximation fermée. '
+         + "<b>Lancez la simulation</b> pour les primes actuarielles : la sévérité des mauvais "
+         + "scénarios ne se déduit d'aucune formule, et c'est elle qui décide du plafond et du chargement.</div>";
+    }
+    if (p.active) {
+      // (a) réserve vide au départ
+      al += '<div class="prot-alert">La réserve se constitue par les cotisations : elle est <b>vide au '
+         + "démarrage</b>. Promettre la protection avant accumulation exige une capitalisation initiale "
+         + "(≈ " + money(p.payoutReserve, 0) + "/poule pour couvrir une première année moyenne) ou un "
+         + "backstop élargi sur la montée en charge.</div>";
+    }
+    if (p.active && lastStress) {
       var nonCouv = lastStress.mc.partNonCouverte;
-      var freq = lastStress.mc.pReserveInsuffisante;
       var grave = nonCouv > 0.4;
-      al = '<div class="prot-alert' + (grave ? " bad" : "") + '">'
-         + "Réserve débordée sur <b>" + pct(freq, 1) + "</b> des tirages, et sur ces mauvais scénarios "
-         + "elle laisse <b>" + pct(nonCouv, 1) + "</b> de la perte du programme non couverte "
-         + "(corrélation " + nf(S.correlation, 2) + "). ";
+      al += '<div class="prot-alert' + (grave ? " bad" : "") + '">'
+         + "Réserve débordée sur <b>" + pct(lastStress.mc.pReserveInsuffisante, 1) + "</b> des tirages ; "
+         + "sur ces mauvais scénarios elle laisse <b>" + pct(nonCouv, 1) + "</b> de la perte du programme "
+         + "non couverte (corrélation " + nf(S.correlation, 2) + "). ";
       al += grave
-        ? "À ce niveau de corrélation, la réserve mutualisée est pulvérisée au moment précis où elle devrait jouer — toutes les fermes sont touchées ensemble, il n'y a plus personne pour mutualiser. La valeur tarifable de la protection s'effondre : elle ne retient que "
-          + pct(p.protectionCredible, 0) + " des " + pct(S.protectionCapital, 0) + " affichés."
-        : "La mutualisation tient à ce niveau de corrélation : la protection reste crédible à hauteur de "
-          + pct(p.protectionCredible, 0) + " des " + pct(S.protectionCapital, 0) + " affichés.";
+        ? "Le tail systémique dépasse ce que la mutualisation peut porter : <b>réassurance requise</b> — "
+          + "augmenter la réserve ne résout rien, puisque toutes les fermes tombent ensemble. "
+          + "La couverture crédible retombe à " + pct(p.couvertureCredible, 0) + "."
+        : "La mutualisation tient : couverture crédible de " + pct(p.couvertureCredible, 0)
+          + " de la perte attendue.";
       al += "</div>";
     }
     document.getElementById("protAlert").innerHTML = al;
+
+    // ── Verdict de tarification (positif-somme).
+    var pv;
+    if (!p.active) {
+      pv = "Activez la cotisation à la réserve pour comparer.";
+    } else if (p.bienPrice) {
+      pv = '<b class="pos">✓ Protection bien pricée.</b> Elle achète ' + nf(p.baisseHurdle * 100, 2)
+         + " pts de baisse du taux exigé pour une cotisation de " + nf(p.primeEnPoints * 100, 2)
+         + " pt — gain net de <b>" + nf(p.gainNetPoints * 100, 2) + " pts</b>.";
+    } else {
+      pv = '<b class="neg">✗ La cotisation coûte plus qu\'elle n\'achète.</b> '
+         + nf(p.primeEnPoints * 100, 2) + " pts payés contre " + nf(p.baisseHurdle * 100, 2)
+         + " pts de baisse du hurdle. Ajustez la cotisation ou le plafond du backstop : "
+         + "une couverture partielle bien calibrée vaut mieux qu'une couverture large sur-payée.";
+    }
+    document.getElementById("protVerdict").innerHTML = pv;
   }
 
   /* ==============================================================
@@ -1513,6 +2259,13 @@
      ============================================================== */
 
   function renderWaterfall(r) {
+    document.getElementById("waterfall").innerHTML = svgWaterfall(r);
+  }
+
+  // Version pure : rend la cascade pour un modèle donné, sans toucher au DOM.
+  // Le rapport l'appelle avec SON modèle, pour que le graphique corresponde
+  // toujours à la voie et aux paramètres du document exporté.
+  function svgWaterfall(r) {
     var W = 640, H = 260, padL = 8, padB = 62, padT = 26;
     var steps = [
       { l: "Produits bruts",  v: r.produitsBruts,      type: "total" },
@@ -1574,7 +2327,7 @@
     svg += '<text x="' + (W - padL) + '" y="' + (H - 8) + '" text-anchor="end" font-size="10.5" fill="#999">FCFA par poule et par cycle · découpage du BND à droite du pointillé</text>';
     svg += '</svg>';
 
-    document.getElementById("waterfall").innerHTML = svg;
+    return svg;
   }
 
   /* ==============================================================
@@ -1839,6 +2592,828 @@
   }
 
   /* ==============================================================
+     13b. SCÉNARIOS MÉMORISÉS (en mémoire uniquement)
+     ============================================================== */
+
+  var scenarios = {};      // { nom: { params, resultats } }
+
+  function memoriserScenario(nom) {
+    var r = model(S);
+    var a = attractivite(r, lastStress ? lastStress.mc : null);
+    var snap = {};
+    Object.keys(S).forEach(function (k) { snap[k] = S[k]; });
+    scenarios[nom] = {
+      params: snap,
+      installation: installation, profil: profil,
+      BND: r.BND, roiAnnuel: r.roiAnnuel, roiEspere: r.roiEspere,
+      produitsBruts: r.produitsBruts, capitalIntrants: r.capitalIntrants,
+      revenuCikaAn: r.revenuCikaParPouleAn, seuilPoules: r.seuilPoules,
+      resultatCikaBande: r.resultatCikaBande, valeurCreee: r.valeurCreee,
+      tauxExige: a.tauxExige, alpha: a.alpha, verdict: a.verdict,
+      pLoss: lastStress ? lastStress.sp.pLoss : null,
+      var95: lastStress ? lastStress.sp.var95 : null
+    };
+    majBarreScenarios();
+  }
+
+  function majBarreScenarios() {
+    var noms = Object.keys(scenarios);
+    document.getElementById("scenarioNote").textContent = noms.length
+      ? noms.length + (noms.length > 1 ? " scénarios mémorisés : " : " scénario mémorisé : ") + noms.join(", ")
+        + " — inclus dans le rapport"
+      : "aucun scénario mémorisé — ils seront comparés dans le rapport";
+    var btns = document.querySelectorAll("[data-scen]");
+    for (var i = 0; i < btns.length; i++) {
+      var k = btns[i].getAttribute("data-scen");
+      btns[i].setAttribute("aria-pressed", scenarios[k] ? "true" : "false");
+      btns[i].textContent = scenarios[k] ? "↻ « " + k + " »" : "Mémoriser « " + k + " »";
+    }
+  }
+
+  /* ==============================================================
+     13c. RAPPORT IMPRIMABLE
+     Reconstruit le document depuis l'état courant, avec les mêmes
+     calculs et les mêmes graphiques que l'écran.
+     ============================================================== */
+
+  function dateFr() {
+    var d = new Date();
+    var mois = ["janvier","février","mars","avril","mai","juin","juillet",
+                "août","septembre","octobre","novembre","décembre"];
+    return d.getDate() + " " + mois[d.getMonth()] + " " + d.getFullYear();
+  }
+
+  // Modèle de l'autre voie d'installation, à paramètres commerciaux identiques.
+  // Sert à montrer l'écart réel entre poulettes et poussins une fois les surcoûts
+  // d'élevage et la perte de ponte intégrés.
+  function modeleVoie(nom) {
+    var cfg = INSTALLATIONS[nom], over = {};
+    ["prixPoulette", "mortalite", "cycleMois", "consoAlimentElevage", "consoAliment", "oeufsParPoule"]
+      .forEach(function (k) { if (cfg[k] !== undefined) over[k] = cfg[k]; });
+    return model(Object.assign({}, S, over));
+  }
+
+  function buildReport() {
+    var r = model(S);
+    var mc = lastStress ? lastStress.mc : null;
+    var a = attractivite(r, mc);
+    var p = pricingProtection(r, mc);
+    var rev = revisionCommission(r, mc);
+    var sp = lastStress ? lastStress.sp : null;
+    var nomParam = Object.keys(scenarios).length && scenarios["central"] ? "scénario central" : "paramétrage courant";
+    var h = "";
+
+    // Compte des provenances, pour la ligne meta
+    var nReel = 0, nSaisi = 0, nEstim = 0;
+    PARAMS.forEach(function (x) {
+      var e = provenance(x[0]).etat;
+      if (e === "reel") nReel++; else if (e === "saisi") nSaisi++; else nEstim++;
+    });
+
+    /* ══ 1. EN-TÊTE ══════════════════════════════════════════ */
+    h += '<div class="rep-head">'
+      +  '<div class="rep-sur">Export du simulateur — usage interne / conseil</div>'
+      +  '<div class="rep-title">Cika Poultry — Simulation économique &amp; pricing</div>'
+      +  '<div class="rep-rule"></div>'
+      +  '<div class="rep-meta">'
+      +    "<span><b>" + esc(nomParam) + "</b></span>"
+      +    "<span>" + nReel + " réel · " + nSaisi + " saisi · " + nEstim + " estimation</span>"
+      +    "<span>1 EUR = " + FX_LABEL + " FCFA (parité fixe)</span>"
+      +    "<span>Cycle " + nf(S.cycleMois, 0) + " mois · bande " + nf(S.nbPoules, 0) + " poules</span>"
+      +    "<span>" + dateFr() + "</span>"
+      +  "</div></div>";
+
+    /* ══ 1b. BANDEAU VOIE POUSSINS ═══════════════════════════ */
+    if (installation === "poussins") {
+      h += '<div class="rep-callout warn"><div class="rep-callout-t">'
+        +  "Voie poussins 1 jour (22 mois) — coûts d'élevage intégrés</div>"
+        +  "Aliment de démarrage (" + nf(S.consoAlimentElevage, 1) + " kg/poule), œufs nets de "
+        +  "mortalité (" + nf(r.oeufsVendablesEffectifs, 0) + " vendables sur "
+        +  nf(r.oeufsNominal, 0) + " de potentiel), aliment de ponte sur 22 mois ("
+        +  nf(S.consoAliment, 1) + " kg). Ces trois postes n'existent pas — ou pas au même "
+        +  "niveau — dans la voie poulettes.</div>";
+    }
+
+    /* ══ 2. SYNTHÈSE ═════════════════════════════════════════ */
+    var cls = a.alpha >= 0 ? "ok" : (a.alpha >= -0.01 ? "warn" : "bad");
+    h += '<div class="rep-callout ' + cls + '"><div class="rep-callout-t">Synthèse</div><ul class="rep-ul">';
+
+    h += "<li><b>La valeur vient de l'agrégation, pas de l'élevage.</b> "
+      +  "L'élevage lui-même dégage " + money(r.BND, 0) + " par poule de bénéfice distribuable, soit "
+      +  pct(safeDiv(r.BND, r.produitsBruts), 1) + " des produits — une marge mince. "
+      +  (r.gainAgregationParPoule > 0
+          ? "Ce qui change l'équation, c'est l'écart négocié : " + money(r.gainAgregationParPoule, 0)
+            + " par poule et par cycle que le pool ne capterait pas seul ("
+            + nf(Math.abs(r.ecartAliment), 0) + " F/kg sur l'aliment, " + nf(r.ecartOeuf, 1) + " F sur l'œuf)."
+          : "À ce paramétrage l'agrégation n'apporte aucun gain au pool — la structure ne se justifie pas.")
+      +  "</li>";
+
+    h += "<li><b>Rendement et risque à ce paramétrage.</b> "
+      +  "Le participant obtient " + pct(r.roiAnnuel, 1) + "/an en nominal, " + pct(r.roiEspere, 1)
+      +  " une fois les pertes attendues déduites"
+      +  (sp ? ", avec une probabilité de perte de " + pct(sp.pLoss, 1) + " et une VaR 95 % de " + pct(sp.var95, 1) : "")
+      +  ". Face à un taux exigé de " + pct(a.tauxExige, 1) + " au profil « " + esc(PROFILS[profil].label) + " », "
+      +  "l'écart est de <b>" + nf(a.alpha * 100, 1) + " pts</b> — " + esc(a.verdict.toLowerCase()) + ".</li>";
+
+    var pmOeuf = pointMortOeuf(mc), pmProt = pointMortProtection(mc);
+    h += "<li><b>Trois leviers commandent le basculement.</b> "
+      +  "Le prix du débouché œuf (" + nf(S.prixOeufDebouche, 0) + " F aujourd'hui"
+      +  (pmOeuf === null ? "" : ", " + nf(pmOeuf, 1) + " F pour équilibrer") + "), "
+      +  "l'écart négocié sur l'aliment (" + nf(Math.abs(r.ecartAliment), 0) + " F/kg), "
+      +  "et l'enveloppe de protection ("
+      +  (pmProt === null ? "insuffisante seule à ce paramétrage" : pct(pmProt, 0) + " de capital garanti suffirait")
+      +  "). L'échelle joue sur Cika, pas sur le rendement du participant.</li>";
+    if (installation === "poussins") {
+      h += "<li><b>Prudence sur la voie poussins.</b> Elle démarre moins cher — "
+        +  money(S.prixPoulette, 0) + "/tête contre " + money(INSTALLATIONS.poulettes.prixPoulette, 0)
+        +  " pour une poulette prête à pondre — mais supporte l'élevage jusqu'au point de ponte "
+        +  "et une mortalité plus élevée, qui ampute la ponte autant que la revente des réformées. "
+        +  "Son avantage apparent sur les pondeuses disparaît une fois ces coûts intégrés.</li>";
+    }
+    h += "</ul></div>";
+
+    /* Encart comparatif des deux voies */
+    var vPoul = modeleVoie("poulettes"), vPous = modeleVoie("poussins");
+    h += '<table class="rep-table rep-tight rep-wide"><thead><tr><th>Voie d\'installation</th>'
+      +  "<th>Animal</th><th>Aliment élevage</th><th>Œufs vendables</th><th>Capital</th>"
+      +  "<th>BND</th><th>Rendement</th></tr></thead><tbody>";
+    [["Poulettes prêtes à pondre (18 mois)", vPoul, "poulettes"],
+     ["Poussins d'un jour (22 mois)", vPous, "poussins"]
+    ].forEach(function (x) {
+      var v = x[1], actif = (installation === x[2]);
+      h += "<tr" + (actif ? ' style="font-weight:600;background:#FAFAF6"' : "") + "><td>"
+        +  esc(x[0]) + (actif ? " ·" : "") + "</td>"
+        +  '<td class="num">' + money(INSTALLATIONS[x[2]].prixPoulette, 0) + "</td>"
+        +  '<td class="num">' + nf(INSTALLATIONS[x[2]].consoAlimentElevage, 1) + " kg</td>"
+        +  '<td class="num">' + nf(v.oeufsVendablesEffectifs, 0)
+        +  ' <span style="color:#999">(' + nf(v.oeufsNominal, 0) + ")</span></td>"
+        +  '<td class="num">' + money(v.capitalIntrants, 0) + "</td>"
+        +  '<td class="num ' + sgn(v.BND) + '">' + money(v.BND, 0) + "</td>"
+        +  '<td class="num ' + sgn(v.roiAnnuel) + '">' + pct(v.roiAnnuel, 1) + "</td></tr>";
+    });
+    h += "</tbody></table>";
+    h += '<p class="rep-note">Comparaison à paramètres commerciaux identiques (prix négociés, '
+      +  "commissions, répartition). Les œufs vendables sont nets de mortalité ; le potentiel de "
+      +  "ponte figure entre parenthèses. L'écart de "
+      +  money(Math.abs(vPoul.BND - vPous.BND), 0) + "/poule de BND entre les deux voies vient "
+      +  "essentiellement de l'aliment d'élevage et de la ponte perdue.</p>";
+
+    /* Rangée de 4 KPI */
+    var kpis = [
+      ["Rendement nominal participant", pct(r.roiAnnuel, 1), "espéré " + pct(r.roiEspere, 1) + " net des pertes", sgn(r.roiAnnuel)],
+      ["Probabilité de perte", sp ? pct(sp.pLoss, 1) : "—", sp ? "VaR 95 % " + pct(sp.var95, 1) : "stress non lancé", sp && sp.pLoss > 0.1 ? "neg" : ""],
+      ["Revenu Cika", money(r.revenuCikaParPouleAn, 0), "par poule et par an", sgn(r.revenuCikaParPouleAn)],
+      ["Seuil de rentabilité", r.seuilPoules && isFinite(r.seuilPoules) ? nf(Math.ceil(r.seuilPoules), 0) : "n/a",
+       r.seuilPoules && isFinite(r.seuilPoules) ? "poules · " + nf(r.seuilPoules / 1000, 1) + " bandes" : "revenu par poule ≤ 0", ""]
+    ];
+    h += '<div class="rep-kpis">' + kpis.map(function (k) {
+      return '<div class="rep-kpi"><div class="rep-kpi-l">' + esc(k[0]) + "</div>"
+        + '<div class="rep-kpi-v ' + k[3] + '">' + k[1] + "</div>"
+        + '<div class="rep-kpi-s">' + k[2] + "</div></div>";
+    }).join("") + "</div>";
+
+    /* ══ 3. LE MODÈLE EN BREF + PARAMÈTRES ═══════════════════ */
+    h += '<h2 class="rep-h2">Le modèle en bref</h2>';
+    h += '<p class="rep-p">Cika ne détient ni stock ni titre. Elle agrège la demande d\'aliment du programme '
+      +  "pour négocier un prix de gros, décroche un débouché pour les œufs, et facture l'intermédiation sur "
+      +  "ces deux flux plus une commission d'alignement sur le résultat. Le participant préfinance les intrants "
+      +  "d'une bande et reçoit sa part du bénéfice net distribuable. Le tableau ci-dessous donne le paramétrage "
+      +  "retenu, chaque ligne portant l'origine de sa valeur.</p>";
+
+    if (!r.valeurCreee) {
+      h += '<div class="rep-callout bad"><div class="rep-callout-t">Le pool est perdant à ce paramétrage</div>'
+        +  "L'aliment revient au pool à " + nf(r.prixAlimentPool, 0) + " F/kg contre " + nf(r.prixAlimentMarche, 0)
+        +  " F en direct, et l'œuf lui est payé " + nf(r.prixOeufPool, 1) + " F contre " + nf(r.prixOeufSolo, 0)
+        +  " F en vente directe. L'éleveur et l'investisseur feraient mieux sans intermédiaire : la commission "
+        +  "ne se prélève plus sur un gain d'agrégation mais sur le résultat de l'exploitation.</div>";
+    }
+
+    var groupes = [
+      ["technique", "Technique — par poule et par cycle"],
+      ["prix", "Prix de référence — l'éleveur seul"],
+      ["interm", "Intermédiation Cika"],
+      ["societe", "Société &amp; bande"],
+      ["risque", "Capital immobilisé &amp; risque"],
+      ["protection", "Protection"],
+      ["attract", "Attractivité — coût d'opportunité"],
+      ["stress", "Stress &amp; corrélation"]
+    ];
+    h += '<table class="rep-table"><thead><tr><th>Paramètre</th><th>Valeur</th><th>Unité</th><th>Provenance</th></tr></thead><tbody>';
+    groupes.forEach(function (grp) {
+      var lignes = PARAMS.filter(function (x) { return x[8] === grp[0]; });
+      if (!lignes.length) return;
+      h += '<tr class="rep-grp"><td colspan="4">' + grp[1] + "</td></tr>";
+      lignes.forEach(function (x) {
+        var k = x[0], m = META[k], pr = provenance(k);
+        var val = (m.unit.indexOf("%/an") === 0) ? pct(S[k], 2)
+                : (m.unit === "part" || m.unit.indexOf("part de") === 0) ? pct(S[k], m.dec >= 3 ? 1 : 0)
+                : nf(S[k], m.dec);
+        // L'aliment d'élevage ne concerne que la voie poussins : on le masque sinon,
+        // pour ne pas faire figurer une ligne à zéro sans objet.
+        if (k === "consoAlimentElevage" && S[k] === 0) return;
+        var note = "";
+        if (k === "mortalite") {
+          note = ' <span style="color:#777">— s\'applique aussi aux œufs ('
+               + pct(S.facteurPertePonte, 0) + " de ponte perdue par bête morte)</span>";
+        }
+        h += "<tr><td>" + esc(m.label) + note + "</td>"
+          +  '<td class="num"><b>' + val + "</b></td>"
+          +  '<td class="lft" style="color:#777">' + esc(m.unit) + "</td>"
+          +  '<td class="lft"><span class="tag-src ' + pr.cls + '">' + esc(pr.txt) + "</span></td></tr>";
+        // Juste après le potentiel de ponte, on donne l'effectif réellement vendable.
+        if (k === "oeufsParPoule") {
+          h += '<tr><td style="padding-left:16px;color:#555">Œufs vendables effectifs</td>'
+            +  '<td class="num"><b>' + nf(r.oeufsVendablesEffectifs, 0)
+            +  '</b> <span style="color:#999">(nominal ' + nf(r.oeufsNominal, 0) + ")</span></td>"
+            +  '<td class="lft" style="color:#777">œufs/cycle</td>'
+            +  '<td class="lft" style="color:#777;font-size:7.2pt">dérivé : nominal × (1 − mortalité × facteur)</td></tr>';
+        }
+      });
+    });
+    h += "</tbody></table>";
+    h += '<p class="rep-note"><b>Réel / contractuel</b> — donnée de terrain ou engagement signé. '
+      +  "<b>Saisi</b> — valeur renseignée pour ce paramétrage, à confirmer par un devis, une cotation ou un contrat. "
+      +  "<b>Estimation</b> — projection sur l'avenir ou préférence d'investisseur : par nature, elle ne peut pas "
+      +  "être contractualisée, seulement affinée. Installation : " + esc(INSTALLATIONS[installation].label)
+      +  " · Profil investisseur : " + esc(PROFILS[profil].label) + ".</p>";
+
+    /* ══ 4. SCÉNARIOS ════════════════════════════════════════ */
+    var noms = Object.keys(scenarios);
+    if (noms.length) {
+      h += '<div class="rep-page-break"></div>';
+      h += '<h2 class="rep-h2">Scénarios comparés</h2>';
+      h += '<table class="rep-table"><thead><tr><th>Indicateur</th>'
+        +  noms.map(function (n) { return "<th>" + esc(n) + "</th>"; }).join("") + "</tr></thead><tbody>";
+      [["Prix débouché œuf (F/œuf)", function (s) { return nf(s.params.prixOeufDebouche, 0); }],
+       ["Aliment négocié (F/kg)", function (s) { return nf(s.params.prixAlimentNegocie, 0); }],
+       ["Produits bruts", function (s) { return money(s.produitsBruts, 0); }],
+       ["Capital intrants", function (s) { return money(s.capitalIntrants, 0); }],
+       ["BND par poule", function (s) { return money(s.BND, 0); }],
+       ["Rendement nominal", function (s) { return pct(s.roiAnnuel, 1); }],
+       ["Rendement espéré", function (s) { return pct(s.roiEspere, 1); }],
+       ["Taux exigé", function (s) { return pct(s.tauxExige, 1); }],
+       ["α (points)", function (s) { return nf(s.alpha * 100, 1); }],
+       ["Verdict", function (s) { return s.verdict; }],
+       ["P(perte)", function (s) { return s.pLoss === null ? "—" : pct(s.pLoss, 1); }],
+       ["Revenu Cika / poule / an", function (s) { return money(s.revenuCikaAn, 0); }],
+       ["Seuil (poules)", function (s) { return s.seuilPoules && isFinite(s.seuilPoules) ? nf(Math.ceil(s.seuilPoules), 0) : "n/a"; }]
+      ].forEach(function (L) {
+        h += "<tr><td>" + esc(L[0]) + "</td>"
+          +  noms.map(function (n) { return '<td class="num">' + L[1](scenarios[n]) + "</td>"; }).join("") + "</tr>";
+      });
+      h += "</tbody></table>";
+      h += '<div class="rep-fig">' + figScenarios()
+        +  '<div class="rep-fig-cap">Rendement par scénario : nominal et espéré, face au taux exigé (trait pointillé). '
+        +  "L'écart α figure sous chaque groupe.</div></div>";
+    }
+
+    /* ══ 5. OÙ VA LA VALEUR ══════════════════════════════════ */
+    h += '<h2 class="rep-h2">Où va la valeur</h2>';
+    h += tableCascade(r);
+    h += tableRepartition(r);
+    h += '<div class="rep-fig">' + svgWaterfall(r)
+      +  '<div class="rep-fig-cap">Des produits bruts au partage : intrants et collecte absorbent '
+      +  pct(safeDiv(r.capitalIntrants + r.coutCollecte, r.produitsBruts), 0)
+      +  " des produits. Le distribuable est mince — c'est pourquoi un écart de quelques francs sur l'œuf "
+      +  "ou l'aliment déplace tout le résultat.</div></div>";
+    h += '<p class="rep-p">Sur ' + money(r.produitsBruts, 0) + " de produits par poule, il reste "
+      +  money(r.BND, 0) + " à partager entre les trois parties, dont " + money(r.partPartBND, 0)
+      +  " pour le participant. Cika perçoit " + money(r.revenuCikaParPoule, 0) + " par cycle, dont "
+      +  money(r.commissionAliment + r.commissionOeuf, 0) + " de commissions de flux — acquises quel que soit "
+      +  "le résultat — et " + money(r.commissionBND, 0) + " d'alignement sur le bénéfice.</p>";
+
+    /* Tickets */
+    h += '<h2 class="rep-h2">Tickets de participation</h2>';
+    h += '<table class="rep-table"><thead><tr><th>Ticket</th><th>Capital avancé</th>'
+      +  "<th>Capital immobilisé</th><th>Gain net annualisé</th><th>Gain espéré (net du risque)</th></tr></thead><tbody>";
+    [50, 120, 250, 500].forEach(function (nb) {
+      var gain = r.partPartBND * nb * r.annualise, gainE = r.gainEspere * nb * r.annualise;
+      // Une seule devise par cellule : le double affichage FCFA·EUR déborde en A4.
+      h += "<tr><td>" + nb + " poules</td>"
+        +  '<td class="num">' + money(r.capitalIntrants * nb, 0) + "</td>"
+        +  '<td class="num">' + money(r.capitalImmobilise * nb, 0) + "</td>"
+        +  '<td class="num ' + sgn(gain) + '">' + money(gain, 0) + "</td>"
+        +  '<td class="num ' + sgn(gainE) + '">' + money(gainE, 0) + "</td></tr>";
+    });
+    h += "</tbody></table>";
+    h += '<p class="rep-note">Montants en ' + (showEUR ? "euros" : "francs CFA")
+      +  " · " + (showEUR ? nf(1, 0) + " EUR = " + FX_LABEL + " FCFA" : "1 EUR = " + FX_LABEL + " FCFA")
+      +  ". Le capital est avancé sur la durée du cycle (" + nf(S.cycleMois, 0)
+      +  " mois) ; les gains sont ramenés à l'année.</p>";
+
+    /* ══ 6. STRESS ═══════════════════════════════════════════ */
+    h += '<div class="rep-page-break"></div>';
+    h += '<h2 class="rep-h2">Stress — la distribution des résultats</h2>';
+    if (!sp) {
+      h += '<div class="rep-callout warn"><div class="rep-callout-t">Stress test non lancé</div>'
+        +  "Cette section est vide pour ce paramétrage. Lancez la simulation dans le simulateur, puis "
+        +  "réexportez : le cas central seul ne dit rien de la probabilité de perte ni de l'ampleur des "
+        +  "mauvais scénarios.</div>";
+    } else {
+      var kpiS = [
+        ["Rendement médian", pct(sp.median, 1), "sur " + nf(lastStress.n, 0) + " tirages", sgn(sp.median)],
+        ["Probabilité de perte", pct(sp.pLoss, 1), "P(rendement < 0)", sp.pLoss > 0.1 ? "neg" : ""],
+        ["VaR 95 %", pct(sp.var95, 1), "seuil des 5 % pires", sgn(sp.var95)],
+        ["Perte moyenne extrême", pct(sp.es95, 1), "moyenne des 5 % pires", sgn(sp.es95)]
+      ];
+      h += '<div class="rep-kpis">' + kpiS.map(function (k) {
+        return '<div class="rep-kpi"><div class="rep-kpi-l">' + esc(k[0]) + "</div>"
+          + '<div class="rep-kpi-v ' + k[3] + '">' + k[1] + "</div>"
+          + '<div class="rep-kpi-s">' + k[2] + "</div></div>";
+      }).join("") + "</div>";
+
+      h += '<p class="rep-p">Chocs de prix communs à toutes les fermes, chocs de production propres à chaque '
+        +  "bande corrélés à " + nf(S.correlation, 2) + ", sinistres et défauts d'éleveur. Les pertes traversent "
+        +  "la cascade : réserve, puis backstop Cika, puis capital du participant plafonné par la garantie, "
+        +  "puis Cika en dernier ressort.</p>";
+      h += '<div class="rep-cols">';
+      h += '<div class="rep-fig">' + (document.getElementById("histPart").innerHTML || "")
+        +  '<div class="rep-fig-cap">Rendement annualisé du participant'
+        +  (S.cotisationReserve > 0
+            ? " — protection active (cotisation " + pct(S.cotisationReserve, 2)
+              + " du capital, backstop plafonné au P" + nf(S.plafondBackstopPct * 100, 1) + ")."
+            : " — sans protection.")
+        +  " Repères : seuil 0 et cas central.</div></div>";
+      h += '<div class="rep-fig">' + (document.getElementById("histCika").innerHTML || "")
+        +  '<div class="rep-fig-cap">Résultat annuel de Cika à la bande de référence.</div></div>';
+      h += "</div>";
+
+      h += '<div class="rep-cols"><div>' + tableStatsPart(sp) + "</div><div>" + tableStatsCika(lastStress.sc) + "</div></div>";
+
+      h += '<div class="rep-callout"><div class="rep-callout-t">Diversification et plancher systémique</div>'
+        +  "Écart-type du rendement participant : <b>" + pct(sp.sd, 1) + "</b> sur "
+        +  nf(S.nbBandesParticipant, 0) + (S.nbBandesParticipant > 1 ? " bandes" : " bande")
+        +  ", à corrélation " + nf(S.correlation, 2) + ". Multiplier les bandes ne réduit que la part "
+        +  "idiosyncratique du risque : au-delà, un plancher subsiste, celui des chocs qui frappent toutes "
+        +  "les fermes ensemble — année sanitaire, climat, prix des intrants. Ce plancher ne se diversifie pas, "
+        +  "et c'est lui qui décide de ce qu'une garantie peut réellement promettre.</div>";
+
+      h += '<div class="rep-fig rep-avoid"><table class="rep-table"><thead><tr><th>Choc défavorable</th>'
+        +  "<th>Rendement espéré</th><th>Δ</th><th>Résultat Cika</th><th>Δ</th></tr></thead><tbody>"
+        +  (document.getElementById("tornado").innerHTML || "")
+        +  '</tbody></table><div class="rep-fig-cap">Sensibilité à un facteur : quel paramètre déplace le plus '
+        +  "le résultat, choc appliqué seul.</div></div>";
+    }
+
+    /* ══ 7. PRIX & ATTRACTIVITÉ ══════════════════════════════ */
+    h += '<div class="rep-page-break"></div>';
+    h += '<h2 class="rep-h2">Prix &amp; attractivité</h2>';
+    h += '<p class="rep-p">Le rendement se juge face à l\'alternative de l\'investisseur : son placement sans '
+      +  "risque, majoré d'une prime pour le blocage du capital et d'une prime pour le risque de perte — cette "
+      +  "dernière réduite à proportion de ce qu'une garantie peut <i>crédiblement</i> couvrir.</p>";
+    h += '<table class="rep-table"><thead><tr><th>Profil</th><th>Sans risque</th><th>Illiquidité</th>'
+      +  "<th>Risque (effective)</th><th>Taux exigé</th><th>Rendement espéré</th><th>α</th><th>Verdict</th></tr></thead><tbody>";
+    ["diaspora", "local"].forEach(function (key) {
+      var pf = PROFILS[key], ap = attractivite(r, mc, { tauxOpportunite: pf.taux });
+      h += "<tr><td>" + esc(pf.label) + (key === profil ? " <b>·</b>" : "") + "</td>"
+        +  '<td class="num">' + pct(pf.taux, 1) + "</td>"
+        +  '<td class="num">' + pct(ap.primeIlliquidite, 1) + "</td>"
+        +  '<td class="num">' + pct(ap.primeRisqueEff, 1) + "</td>"
+        +  '<td class="num"><b>' + pct(ap.tauxExige, 1) + "</b></td>"
+        +  '<td class="num">' + pct(r.roiEspere, 1) + "</td>"
+        +  '<td class="num ' + sgn(ap.alpha) + '"><b>' + nf(ap.alpha * 100, 1) + "</b></td>"
+        +  '<td class="lft"><span class="tag-src ' + (ap.alpha >= 0 ? "tag-reel" : (ap.alpha >= -0.01 ? "tag-hypo" : "tag-alerte"))
+        +  '">' + esc(ap.verdict) + "</span></td></tr>";
+    });
+    h += "</tbody></table>";
+    h += '<div class="rep-fig">' + (document.getElementById("attractBar").innerHTML.replace(/^[\s\S]*?(<svg)/, "$1") || "")
+      +  '<div class="rep-fig-cap">Décomposition du taux exigé au profil « ' + esc(PROFILS[profil].label)
+      +  " », rendement espéré superposé.</div></div>";
+
+    h += '<div class="rep-callout ' + cls + '"><div class="rep-callout-t">Verdict — ' + esc(a.verdict) + "</div>"
+      +  "À ce paramétrage, le produit " + (a.alpha >= 0
+          ? "rémunère l'investisseur au-delà de ce qu'il exige : α = +" + nf(a.alpha * 100, 1) + " pts. "
+            + "La marge de manœuvre peut servir à absorber un choc, à financer la protection, ou à élargir la commission."
+          : "reste " + nf(-a.alpha * 100, 1) + " pts sous le taux exigé. Pour atteindre le clearing il faudrait "
+            + (pmOeuf === null
+                ? "un prix de débouché hors de la plage testée"
+                : "porter le débouché œuf à " + nf(pmOeuf, 1) + " F (contre " + nf(S.prixOeufDebouche, 0) + " F)")
+            + ", ou " + (pmProt === null
+                ? "davantage que ce qu'une cotisation seule peut acheter"
+                : "porter la cotisation à la réserve à " + pct(pmProt, 2) + " du capital")
+            + ". Le segment compte autant que le rendement : ce qui est refusé par un épargnant local peut "
+            + "passer auprès d'une diaspora qui accepte un escompte d'affinité.")
+      +  "</div>";
+
+    /* ══ 7b. PROTECTION — TROIS RANGS ════════════════════════ */
+    h += '<h2 class="rep-h2">Protection — qui porte quoi, et à quel prix</h2>';
+    if (!p.active) {
+      h += '<div class="rep-callout warn"><div class="rep-callout-t">Aucune protection activée</div>'
+        +  "Le participant porte l'intégralité du risque et exige la prime correspondante. "
+        +  "Les sections ci-dessous sont vides pour ce paramétrage.</div>";
+    } else {
+      h += '<p class="rep-p">La couverture est découpée en trois rangs, chacun financé par une partie '
+        +  "différente. Ce découpage borne l'exposition de Cika : elle ne promet jamais une garantie "
+        +  "illimitée, seulement une tranche connue d'avance et prixée dans sa commission.</p>";
+
+      h += '<div class="rep-fig">' + figTranches(p)
+        +  '<div class="rep-fig-cap">Partage de la perte attendue ('
+        +  money(p.perteAttendue, 0) + "/poule/an) entre les trois rangs.</div></div>";
+
+      h += '<table class="rep-table rep-tight rep-wide"><thead><tr><th>Rang</th><th>Qui finance</th>'
+        +  "<th>Absorbe</th><th>Part</th><th>Prixé</th><th>Mécanisme</th></tr></thead><tbody>";
+      h += "<tr><td>1 — Réserve mutuelle</td><td class=\"lft\">Participant</td>"
+        +  '<td class="num">' + money(p.payoutReserve, 0) + "</td>"
+        +  '<td class="num">' + pct(safeDiv(p.payoutReserve, p.perteAttendue), 0) + "</td>"
+        +  '<td class="num">' + money(p.cotisationPart, 0) + "</td>"
+        +  '<td class="lft" style="color:#555">cotisation ' + pct(S.cotisationReserve, 2)
+        +  " du capital ; les cycles qui réussissent paient pour ceux qui échouent</td></tr>";
+      h += "<tr><td>2 — Backstop</td><td class=\"lft\">Cika</td>"
+        +  '<td class="num">' + money(p.payoutBackstop, 0) + "</td>"
+        +  '<td class="num">' + pct(safeDiv(p.payoutBackstop, p.perteAttendue), 0) + "</td>"
+        +  '<td class="num">' + money(p.chargementBackstop, 0) + "</td>"
+        +  '<td class="lft" style="color:#555">plafonné à ' + money(p.plafondParPoule, 0)
+        +  "/poule (perte au percentile " + nf(S.plafondBackstopPct * 100, 1)
+        +  ") ; chargement inclus dans la commission</td></tr>";
+      h += "<tr><td>3 — Résiduel</td><td class=\"lft\">Participant / réassurance</td>"
+        +  '<td class="num">' + money(p.payoutResiduel, 0) + "</td>"
+        +  '<td class="num">' + pct(safeDiv(p.payoutResiduel, p.perteAttendue), 0) + "</td>"
+        +  '<td class="num">—</td>'
+        +  '<td class="lft" style="color:#555">au-delà du plafond : jamais porté par Cika</td></tr>';
+      h += '<tr class="total"><td>Perte attendue totale</td><td></td>'
+        +  '<td class="num">' + money(p.perteAttendue, 0) + '</td><td class="num">100 %</td>'
+        +  '<td class="num">' + money(p.cotisationPart + p.chargementBackstop, 0) + "</td>"
+        +  '<td class="lft" style="color:#555">prélevé au total pour la couverture</td></tr>';
+      h += "</tbody></table>";
+
+      // Les trois poches du prélèvement Cika
+      h += '<h2 class="rep-h2" style="font-size:9pt;border:none;margin:12px 0 5px">Décomposition du prélèvement Cika</h2>';
+      h += '<table class="rep-table rep-tight rep-wide"><thead><tr><th>Poche</th><th>Par poule / an</th><th>Part</th>'
+        +  "<th>Objet</th></tr></thead><tbody>";
+      [["Marge de coordination", p.pocheCoordination, "commissions de flux, couvre l'OPEX attribuable et le profit"],
+       ["Chargement backstop", p.chargementBackstop, "finance la tranche de rang 2 que Cika porte"],
+       ["Commission d'alignement", p.pocheAlignement, "part du BND, nulle si le cycle est en perte"]
+      ].forEach(function (x) {
+        h += "<tr><td>" + esc(x[0]) + "</td>"
+          +  '<td class="num">' + money(x[1], 0) + "</td>"
+          +  '<td class="num">' + pct(safeDiv(x[1], p.prelevementTotal), 0) + "</td>"
+          +  '<td class="lft" style="color:#555">' + esc(x[2]) + "</td></tr>";
+      });
+      h += '<tr class="total"><td>Prélèvement total</td><td class="num">' + money(p.prelevementTotal, 0)
+        +  '</td><td class="num">100 %</td><td class="lft" style="color:#555">OPEX par poule à l\'échelle d\'équilibre : '
+        +  money(p.opexParPoule, 0) + "</td></tr></tbody></table>";
+
+      // Les quatre modes
+      h += '<h2 class="rep-h2" style="font-size:9pt;border:none;margin:12px 0 5px">Quatre lectures du même paramétrage</h2>';
+      h += '<table class="rep-table"><thead><tr><th>Protection</th><th>Lecture</th>'
+        +  "<th>Rendement espéré</th><th>Taux exigé</th><th>α</th><th>Verdict</th></tr></thead><tbody>";
+      [["Sans", "Déterministe", p.modes.sansDet], ["Sans", "Sous stress", p.modes.sansStress],
+       ["Avec", "Déterministe", p.modes.avecDet], ["Avec", "Sous stress", p.modes.avecStress]
+      ].forEach(function (c, i) {
+        var mm = c[2];
+        var vv = mm.alpha >= 0 ? "Attractif" : (mm.alpha >= -0.01 ? "Marginal" : "Non attractif");
+        h += "<tr" + (i === 3 ? ' style="font-weight:600"' : "") + "><td>" + c[0] + "</td><td>" + c[1] + "</td>"
+          +  '<td class="num">' + pct(mm.roi, 2) + "</td>"
+          +  '<td class="num">' + pct(mm.tauxExige, 2) + "</td>"
+          +  '<td class="num ' + sgn(mm.alpha) + '">' + nf(mm.alpha * 100, 1) + " pts</td>"
+          +  '<td class="lft"><span class="tag-src ' + (mm.alpha >= 0 ? "tag-reel" : (mm.alpha >= -0.01 ? "tag-hypo" : "tag-alerte"))
+          +  '">' + vv + "</span></td></tr>";
+      });
+      h += "</tbody></table>";
+      h += '<p class="rep-note">Le mode déterministe suppose la couverture pleinement crédible ; '
+        +  "« sous stress » la corrige par la sévérité mesurée des mauvais scénarios. L'écart entre "
+        +  "les deux lignes « Avec » est exactement ce que le stress révèle — c'est pourquoi une "
+        +  "protection ne se price pas sans lui.</p>";
+
+      // Test positif-somme
+      h += '<div class="rep-callout ' + (p.bienPrice ? "ok" : "bad") + '">'
+        +  '<div class="rep-callout-t">Test positif-somme — ' + (p.bienPrice ? "protection bien pricée" : "protection sur-tarifée") + "</div>"
+        +  "Le participant verse <b>" + nf(p.primeEnPoints * 100, 2) + " pt</b> ("
+        +  money(p.cotisationPart, 0) + "/poule/an) et achète <b>" + nf(p.baisseHurdle * 100, 2)
+        +  " pts</b> de baisse du taux qu'il exige, la couverture crédible atteignant "
+        +  pct(p.couvertureCredible, 0) + " de la perte attendue. Gain net : <b>"
+        +  (p.gainNetPoints >= 0 ? "+" : "") + nf(p.gainNetPoints * 100, 2) + " pts</b>. "
+        +  (p.bienPrice
+            ? "La couverture rapporte plus qu'elle ne coûte : le surplus peut financer la marge de Cika "
+              + "ou améliorer le rendement servi."
+            : "À ce réglage elle coûte plus qu'elle n'achète — ajuster la cotisation ou le plafond.")
+        +  "</div>";
+
+      // Verdict de commission
+      if (rev.dispo) {
+        var libelleFeu = rev.feu === "vert" ? "Commission suffisante"
+                       : rev.feu === "orange" ? "Solvabilité à financer" : "Commission sous-tarifée";
+        h += '<h2 class="rep-h2">Faut-il revoir la commission ?</h2>';
+        h += '<div class="rep-callout ' + (rev.feu === "vert" ? "ok" : rev.feu === "orange" ? "warn" : "bad") + '">'
+          +  '<div class="rep-callout-t">' + esc(libelleFeu) + "</div>" + rev.message + "</div>";
+        h += '<table class="rep-table rep-tight rep-narrow"><thead><tr><th>Tranche</th><th>Prixé</th><th>Coût moyen</th>'
+          +  "<th>Année P95</th><th>Année P99</th><th>Verdict</th></tr></thead><tbody>";
+        [["Réserve (participant)", rev.pricing.cotisationPart, rev.payoutMoyenReserve, rev.reserveP95, rev.reserveP99, rev.reserveOk],
+         ["Backstop (Cika)", rev.pricing.chargementBackstop, rev.payoutMoyenBackstop, rev.backstopP95, rev.backstopP99, rev.backstopOk]
+        ].forEach(function (x) {
+          h += "<tr><td>" + esc(x[0]) + "</td>"
+            +  '<td class="num">' + money(x[1], 0) + "</td>"
+            +  '<td class="num">' + money(x[2], 0) + "</td>"
+            +  '<td class="num">' + money(x[3], 0) + "</td>"
+            +  '<td class="num">' + money(x[4], 0) + "</td>"
+            +  '<td class="lft"><span class="tag-src ' + (x[5] ? "tag-reel" : "tag-alerte") + '">'
+            +  (x[5] ? "couvert" : "sous-tarifé") + "</span></td></tr>";
+        });
+        h += "</tbody></table>";
+        if (rev.ratioQueue) {
+          h += '<p class="rep-note">Ratio queue/moyenne du backstop : <b>' + nf(rev.ratioQueue, 1)
+            +  "×</b>. Une année P99 coûte " + nf(rev.ratioQueue, 1) + " fois le coût moyen — c'est la "
+            +  "corrélation entre fermes qui creuse cet écart. Dimensionner sur la moyenne revient à "
+            +  "ignorer précisément l'année qui fait tomber le dispositif.</p>";
+        }
+        if (rev.provisionTotale > 0) {
+          h += '<p class="rep-p">Provisionner ' + money(rev.provisionTotale, 0) + "/poule sur "
+            +  nf(rev.horizonAns, 0) + " ans demande " + money(rev.hausseRequise, 0)
+            +  "/poule/an de commission supplémentaire ; α passerait de " + nf(rev.alphaAvant * 100, 1)
+            +  " à " + nf(rev.alphaApres * 100, 1) + " pts. "
+            +  (rev.alphaApres < -0.01 && rev.alphaAvant >= -0.01
+                ? "<b>Le produit basculerait en non attractif : c'est le signal.</b> À ce niveau de risque, "
+                  + "couvrir correctement coûte plus que ce que le produit peut servir — il faut externaliser "
+                  + "la queue en réassurance ou choisir un design moins risqué, pas forcer la commission."
+                : "L'alternative est d'abaisser le plafond du backstop ou de réassurer la tranche au-delà de "
+                  + money(rev.pricing.plafondParPoule, 0) + "/poule.")
+            +  "</p>";
+        }
+      }
+
+      // Garde-fous
+      h += '<div class="rep-callout"><div class="rep-callout-t">Deux garde-fous</div>'
+        +  "<b>La réserve est vide au démarrage.</b> Elle se constitue par les cotisations : promettre la "
+        +  "protection avant accumulation exige une capitalisation initiale (≈ " + money(p.payoutReserve, 0)
+        +  "/poule pour couvrir une première année moyenne) ou un backstop élargi sur la montée en charge.<br><br>"
+        +  "<b>Le tail systémique ne se mutualise pas.</b> "
+        +  (mc
+            ? "La réserve est débordée sur " + pct(mc.pReserveInsuffisante, 1) + " des tirages et laisse alors "
+              + pct(mc.partNonCouverte, 1) + " de la perte du programme non couverte (corrélation "
+              + nf(S.correlation, 2) + "). "
+              + (mc.partNonCouverte > 0.4
+                  ? "<b>Réassurance requise</b> — augmenter la réserve ne résout rien puisque toutes les fermes "
+                    + "tombent ensemble."
+                  : "La mutualisation tient à ce niveau de corrélation.")
+            : "Lancez la simulation pour mesurer la probabilité que la réserve soit débordée.")
+        +  "</div>";
+    }
+
+    /* ══ 8. ÉCONOMIE DE CIKA ═════════════════════════════════ */
+    h += '<h2 class="rep-h2">Économie de Cika</h2>';
+    h += '<div class="rep-fig">' + figEchelle(r)
+      +  '<div class="rep-fig-cap">Résultat annuel de Cika selon le nombre de poules sous gestion, à ce pricing. '
+      +  "La zone rouge est déficitaire, la verte bénéficiaire.</div></div>";
+    h += '<p class="rep-p">Avec ' + money(r.revenuCikaParPouleAn, 0) + " de revenu par poule et par an et "
+      +  money(S.opexAnnuel, 0) + " de charges de structure, l'équilibre demande "
+      +  (r.seuilPoules && isFinite(r.seuilPoules)
+          ? "<b>" + nf(Math.ceil(r.seuilPoules), 0) + " poules</b> sous gestion en permanence, soit "
+            + nf(r.seuilPoules / 1000, 1) + " bandes de mille."
+          : "un volume que ce pricing ne permet pas d'atteindre.")
+      +  " À la bande de référence, le résultat est de " + money(r.resultatCikaBande, 0) + " par an.</p>";
+
+    h += '<div class="rep-callout warn"><div class="rep-callout-t">Risque de gouvernance</div>'
+      +  "Les commissions d'aliment et d'œuf sont assises sur des <b>flux</b>, pas sur le résultat : elles "
+      +  "représentent " + money((r.commissionAliment + r.commissionOeuf) * r.annualise, 0)
+      +  " par poule et par an, soit " + pct(safeDiv(r.commissionAliment + r.commissionOeuf, r.revenuCikaParPoule), 0)
+      +  " du revenu de Cika, et restent acquises même sur un cycle en perte. "
+      +  "Dans un mauvais scénario, Cika encaisse pendant que le participant perd du capital. "
+      +  "C'est défendable — ce sont des prestations réellement rendues — mais cela crée un désalignement qu'il "
+      +  "faut traiter explicitement : indexer une part de la rémunération sur le résultat du pool, doter un "
+      +  "backstop, ou plafonner les commissions de flux les années déficitaires. Sans cela, la structure sera "
+      +  "lue comme captant la valeur sans porter le risque.</div>";
+
+    /* ══ 9. LEVIERS & RECOMMANDATION ═════════════════════════ */
+    h += '<h2 class="rep-h2">Leviers de pilotage</h2>';
+    var leviers = [
+      ["Prix de gros de l'aliment négocié", nf(S.prixAlimentNegocie, 0) + " F/kg", "prixAlimentNegocie",
+       "Chaque franc gagné au kilo vaut " + money(S.consoAliment, 0) + "/poule/cycle pour le pool."],
+      ["Prix du débouché œuf", nf(S.prixOeufDebouche, 0) + " F", "prixOeufDebouche",
+       "Levier dominant : un franc vaut " + money(S.oeufsParPoule, 0) + "/poule/cycle."],
+      ["Commissions d'intermédiation", nf(S.commAliment, 0) + " F/kg · " + nf(S.commOeuf, 1) + " F/œuf", "commAliment",
+       "Revenu résilient, mais prélevé sur le gain d'agrégation — au-delà, le pool devient perdant."],
+      ["Charges de structure", money(S.opexAnnuel, 0) + "/an", "opexAnnuel",
+       "Fixe le seuil d'échelle ; sans effet sur le rendement du participant."],
+      ["Cotisation à la réserve", pct(S.cotisationReserve, 2), "cotisationReserve",
+       "Abaisse le taux exigé de " + pct(p.gainRendement, 2) + " pour " + money(p.cotisationPart, 0) + "/poule/an."],
+      ["Plafond du backstop Cika", "P" + nf(S.plafondBackstopPct * 100, 1), "plafondBackstopPct",
+       "Borne l'exposition de Cika à " + money(p.plafondParPoule, 0) + "/poule ; chargement " + money(p.chargementBackstop, 0) + "."],
+      ["Corrélation entre fermes", nf(S.correlation, 2), "correlation",
+       "Plafonne ce qu'une garantie mutualisée peut promettre."]
+    ];
+    h += '<table class="rep-table"><thead><tr><th>Levier</th><th>Valeur retenue</th>'
+      +  "<th>Provenance</th><th>Effet sur le verdict</th></tr></thead><tbody>";
+    leviers.forEach(function (L) {
+      var pr = provenance(L[2]);
+      h += "<tr><td>" + esc(L[0]) + "</td>"
+        +  '<td class="num"><b>' + L[1] + "</b></td>"
+        +  '<td class="lft"><span class="tag-src ' + pr.cls + '">' + esc(pr.txt) + "</span></td>"
+        +  '<td class="lft" style="color:#555">' + esc(L[3]) + "</td></tr>";
+    });
+    h += "</tbody></table>";
+
+    // Ce qui reste à confirmer : uniquement les leviers encore en « saisi ».
+    var aConfirmer = ["prixAlimentNegocie", "prixOeufDebouche", "opexAnnuel", "coutCollectePct", "partCika"]
+      .filter(function (k) { return provenance(k).etat === "saisi"; });
+
+    h += '<div class="rep-callout ok"><div class="rep-callout-t">Recommandation</div><ul class="rep-ul">';
+    h += "<li><b>Verrouiller les deux écarts d'agrégation.</b> Toute l'économie du montage tient à eux : "
+      +  money(r.gainAgregationParPoule, 0) + " par poule et par cycle. Une cotation ferme du provendier sur le "
+      +  "volume du programme et un engagement écrit d'un acheteur d'œufs sur prix et quantité transforment "
+      +  "ces deux lignes de « saisi » en « contractuel » — et le dossier avec elles.</li>";
+    h += "<li><b>Calibrer l'enveloppe de protection plutôt que de l'empiler.</b> "
+      +  (p.valeurParPoule > p.primeTotale
+          ? "Au réglage actuel elle rapporte plus qu'elle ne coûte (" + money(p.valeurParPoule, 0)
+            + " de valeur pour " + money(p.primeTotale, 0) + " de prime) : le surplus est disponible."
+          : "Au réglage actuel elle coûte " + money(p.primeTotale, 0) + " pour " + money(p.valeurParPoule, 0)
+            + " de valeur — elle comprime la marge sans convaincre. ")
+      +  " Une garantie ne vaut que ce que la mutualisation peut tenir : à corrélation "
+      +  nf(S.correlation, 2) + (mc ? ", elle ne retient que " + pct(p.protectionCredible, 0) + " de sa promesse affichée." : ".")
+      +  "</li>";
+    h += "<li><b>Viser l'échelle de survie.</b> "
+      +  (r.seuilPoules && isFinite(r.seuilPoules)
+          ? nf(Math.ceil(r.seuilPoules), 0) + " poules, soit " + nf(r.seuilPoules / 1000, 1)
+            + " bandes, séparent Cika de son équilibre. C'est un objectif de déploiement, pas un paramètre de pricing : "
+            + "aucune commission supplémentaire ne le remplacera sans dégrader le rendement du participant."
+          : "À ce pricing, aucun volume n'équilibre la structure — il faut revoir les commissions ou les charges avant le déploiement.")
+      +  "</li>";
+    if (aConfirmer.length) {
+      h += "<li><b>À confirmer avant décision :</b> "
+        +  aConfirmer.map(function (k) { return esc(META[k].label.toLowerCase()); }).join(", ")
+        +  ". Ces valeurs sont saisies pour la simulation et attendent leur pièce justificative.</li>";
+    }
+    h += "</ul></div>";
+
+    /* ══ ANNEXE ══════════════════════════════════════════════ */
+    h += '<h2 class="rep-h2">Annexe — provenance &amp; sources</h2>';
+    h += '<table class="rep-table"><thead><tr><th>Groupe</th><th>Origine</th></tr></thead><tbody>';
+    [["Technique (poulette, mortalité, ponte, aliment, charges, cycle)",
+      "Hypothèses de marché ADIL FARMS SARL (Bénin), Adeyemi Ogoundele, DG — communiquées à titre indicatif."],
+     ["Prix de vente de l'œuf", "Non fourni par ADIL. Projection à confronter aux débouchés réels."],
+     ["Prix négociés et commissions Cika", "Paramètres de pricing saisis pour cette simulation."],
+     ["Charges de structure, répartition, coût de collecte", "Saisis pour cette simulation."],
+     ["Volatilités, probabilités de sinistre et de défaut, corrélation",
+      "Estimations : ordres de grandeur tant qu'elles ne sont pas calées sur un historique d'exploitation."],
+     ["Taux sans risque", "Livret A 1,7 % et LEP 2,5 % au 1er août 2026 ; bons du Trésor UEMOA ~6 %."],
+     ["Primes d'illiquidité, de risque, escompte d'affinité", "Préférences d'investisseur — estimations."],
+     ["Taux de change", "655,957 FCFA/EUR, parité fixe du franc CFA."]
+    ].forEach(function (L) {
+      h += '<tr><td style="width:38%">' + esc(L[0]) + '</td><td class="lft" style="color:#555">' + esc(L[1]) + "</td></tr>";
+    });
+    h += "</tbody></table>";
+    h += '<p class="rep-note">Les rendements sont annualisés de façon simple (× 12 / durée du cycle) : ce ne sont '
+      +  "pas des TRI, ils ignorent l'échelonnement des flux à l'intérieur du cycle. Les valeurs marquées "
+      +  "« Estimation » sont des projections, non des relevés. Les taux de référence sont datés du "
+      +  "1<sup>er</sup> août 2026. Simulation produite pour éclairer une décision — elle ne remplace ni un "
+      +  "business plan ni une due diligence.</p>";
+
+    h += '<div class="rep-foot"><span>Généré par le simulateur Cika — ' + dateFr() + "</span>"
+      +  "<span>Cika Poultry · simulation économique &amp; pricing</span></div>";
+
+    document.getElementById("report").innerHTML = h;
+  }
+
+  /* ── Graphiques propres au rapport ──────────────────────── */
+
+  // Rendement par scénario : barres nominal / espéré, avec le taux exigé en repère.
+  function figScenarios() {
+    var noms = Object.keys(scenarios);
+    if (!noms.length) return "";
+    var W = 560, H = 190, padL = 42, padR = 12, padT = 16, padB = 40;
+    var vals = [];
+    noms.forEach(function (n) { vals.push(scenarios[n].roiAnnuel, scenarios[n].roiEspere, scenarios[n].tauxExige); });
+    var hi = Math.max.apply(null, vals.concat([0.02])), lo = Math.min.apply(null, vals.concat([0]));
+    hi += (hi - lo) * 0.15; lo -= (hi - lo) * 0.08;
+    var ph = H - padT - padB, pw = W - padL - padR;
+    var y = function (v) { return padT + ph * (hi - v) / (hi - lo); };
+    var gw = pw / noms.length, bw = Math.min(34, gw / 3.2);
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="Rendement par scénario">';
+    svg += '<line x1="' + padL + '" y1="' + y(0).toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y(0).toFixed(1) + '" stroke="#bbb"/>';
+    [lo, (lo + hi) / 2, hi].forEach(function (t) {
+      svg += '<text x="' + (padL - 5) + '" y="' + (y(t) + 3).toFixed(1) + '" text-anchor="end" font-size="8" fill="#999">' + nf(t * 100, 0) + "%</text>";
+    });
+    noms.forEach(function (n, i) {
+      var s = scenarios[n], cx = padL + i * gw + gw / 2;
+      [[s.roiAnnuel, "#69C0FF", -bw * 0.55], [s.roiEspere, "#1D39C4", bw * 0.55]].forEach(function (b) {
+        var y0 = y(0), y1 = y(b[0]);
+        svg += '<rect x="' + (cx + b[2] - bw / 2).toFixed(1) + '" y="' + Math.min(y0, y1).toFixed(1)
+            +  '" width="' + bw.toFixed(1) + '" height="' + Math.max(1, Math.abs(y1 - y0)).toFixed(1)
+            +  '" fill="' + b[1] + '"/>';
+        svg += '<text x="' + (cx + b[2]).toFixed(1) + '" y="' + (Math.min(y0, y1) - 3).toFixed(1)
+            +  '" text-anchor="middle" font-size="7.5" fill="#444">' + nf(b[0] * 100, 1) + "</text>";
+      });
+      // Taux exigé : trait noir en travers du groupe
+      svg += '<line x1="' + (cx - gw * 0.4).toFixed(1) + '" y1="' + y(s.tauxExige).toFixed(1)
+          +  '" x2="' + (cx + gw * 0.4).toFixed(1) + '" y2="' + y(s.tauxExige).toFixed(1)
+          +  '" stroke="#1a1a1a" stroke-width="1.6" stroke-dasharray="4 2"/>';
+      svg += '<text x="' + cx.toFixed(1) + '" y="' + (H - padB + 14) + '" text-anchor="middle" font-size="8.5" fill="#333">' + esc(n) + "</text>";
+      svg += '<text x="' + cx.toFixed(1) + '" y="' + (H - padB + 25) + '" text-anchor="middle" font-size="7.5" fill="'
+          +  (s.alpha >= 0 ? "#135200" : "#820014") + '">α ' + nf(s.alpha * 100, 1) + " pts</text>";
+    });
+    svg += '<text x="' + padL + '" y="' + (H - 4) + '" font-size="7.5" fill="#777">'
+        +  '■ nominal   ■ espéré (net des pertes attendues)   – – taux exigé</text>';
+    return svg + "</svg>";
+  }
+
+  // Économie de Cika : résultat annuel en fonction du nombre de poules sous gestion.
+  function figEchelle(r) {
+    var W = 560, H = 175, padL = 52, padR = 12, padT = 14, padB = 30;
+    var seuil = (r.seuilPoules && isFinite(r.seuilPoules)) ? r.seuilPoules : null;
+    var xmax = seuil ? seuil * 2.2 : 200000;
+    var f = function (n) { return n * r.revenuCikaParPouleAn - S.opexAnnuel; };
+    var ymin = f(0), ymax = f(xmax);
+    var ph = H - padT - padB, pw = W - padL - padR;
+    var X = function (n) { return padL + pw * n / xmax; };
+    var Y = function (v) { return padT + ph * (ymax - v) / Math.max(1e-9, ymax - ymin); };
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="Résultat annuel de Cika selon l\'échelle">';
+    // zones perte / profit
+    if (seuil && seuil < xmax) {
+      svg += '<rect x="' + padL + '" y="' + Y(0).toFixed(1) + '" width="' + (X(seuil) - padL).toFixed(1)
+          +  '" height="' + Math.max(0, padT + ph - Y(0)).toFixed(1) + '" fill="#FFF1F0"/>';
+      svg += '<rect x="' + X(seuil).toFixed(1) + '" y="' + padT + '" width="' + (W - padR - X(seuil)).toFixed(1)
+          +  '" height="' + Math.max(0, Y(0) - padT).toFixed(1) + '" fill="#F6FFED"/>';
+    }
+    svg += '<line x1="' + padL + '" y1="' + Y(0).toFixed(1) + '" x2="' + (W - padR) + '" y2="' + Y(0).toFixed(1) + '" stroke="#bbb"/>';
+    svg += '<line x1="' + padL + '" y1="' + Y(ymax).toFixed(1) + '" x2="' + padL + '" y2="' + Y(ymin).toFixed(1) + '" stroke="#bbb"/>';
+    svg += '<line x1="' + X(0).toFixed(1) + '" y1="' + Y(f(0)).toFixed(1) + '" x2="' + X(xmax).toFixed(1)
+        +  '" y2="' + Y(f(xmax)).toFixed(1) + '" stroke="#1D39C4" stroke-width="2"/>';
+    if (seuil && seuil < xmax) {
+      svg += '<line x1="' + X(seuil).toFixed(1) + '" y1="' + padT + '" x2="' + X(seuil).toFixed(1)
+          +  '" y2="' + (padT + ph) + '" stroke="#A8071A" stroke-width="1.2" stroke-dasharray="4 3"/>';
+      svg += '<text x="' + (X(seuil) + 4).toFixed(1) + '" y="' + (padT + 10) + '" font-size="8" fill="#A8071A">seuil '
+          +  nf(Math.ceil(seuil), 0) + " poules</text>";
+    }
+    // point courant
+    svg += '<circle cx="' + X(Math.min(S.nbPoules, xmax)).toFixed(1) + '" cy="' + Y(f(S.nbPoules)).toFixed(1) + '" r="3" fill="#1a1a1a"/>';
+    svg += '<text x="' + (X(Math.min(S.nbPoules, xmax)) + 5).toFixed(1) + '" y="' + (Y(f(S.nbPoules)) - 5).toFixed(1)
+        +  '" font-size="7.5" fill="#1a1a1a">bande actuelle</text>';
+    [0, xmax / 2, xmax].forEach(function (n) {
+      svg += '<text x="' + X(n).toFixed(1) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="7.5" fill="#999">'
+          +  (n >= 1000 ? nf(n / 1000, 0) + "k" : "0") + "</text>";
+    });
+    [ymin, 0, ymax].forEach(function (v) {
+      svg += '<text x="' + (padL - 5) + '" y="' + (Y(v) + 3).toFixed(1) + '" text-anchor="end" font-size="7.5" fill="#999">'
+          +  nf(v / 1e6, 0) + "M</text>";
+    });
+    svg += '<text x="' + (W - padR) + '" y="' + (H - 2) + '" text-anchor="end" font-size="7.5" fill="#777">poules sous gestion</text>';
+    return svg + "</svg>";
+  }
+
+  /* ── Petits tableaux réutilisés par le rapport ───────────── */
+
+  function tableCascade(r) {
+    var h = '<table class="rep-table"><thead><tr><th>Poste</th><th>FCFA/poule</th><th>%</th></tr></thead><tbody>';
+    var lignes = [
+      ["Recette œufs", r.recetteOeufsPool, 1],
+      ["Recette poules réformées", r.recetteReforme, 1],
+      ["Produits bruts", r.produitsBruts, 0],
+      ["− Intrants (poulette, aliment, santé…)", -r.capitalIntrants, 1],
+      ["− Collecte et commercialisation", -r.coutCollecte, 1]
+    ];
+    lignes.forEach(function (L) {
+      h += "<tr><td>" + esc(L[0]) + "</td>"
+        +  '<td class="num ' + (L[1] < 0 ? "neg" : "") + '">' + nf(Math.round(L[1]), 0) + "</td>"
+        +  '<td class="num">' + nf(L[1] / r.produitsBruts * 100, 1) + "</td></tr>";
+    });
+    h += '<tr class="total"><td>Bénéfice net distribuable</td>'
+      +  '<td class="num ' + sgn(r.BND) + '">' + nf(Math.round(r.BND), 0) + "</td>"
+      +  '<td class="num">' + nf(r.BND / r.produitsBruts * 100, 1) + "</td></tr>";
+    return h + "</tbody></table>";
+  }
+
+  function tableRepartition(r) {
+    var h = '<table class="rep-table"><thead><tr><th>Bénéficiaire</th><th>Part</th><th>FCFA/poule</th></tr></thead><tbody>';
+    [["Participant (investisseur)", r.partParticipant, r.partPartBND],
+     ["Producteur (éleveur)", S.partProducteur, r.partProdBND],
+     ["Cika — commission d'alignement", S.partCika, r.commissionBND]
+    ].forEach(function (L) {
+      h += "<tr><td>" + esc(L[0]) + "</td>"
+        +  '<td class="num">' + pct(L[1], 0) + "</td>"
+        +  '<td class="num ' + sgn(L[2]) + '">' + nf(Math.round(L[2]), 0) + "</td></tr>";
+    });
+    h += '<tr><td colspan="3" style="padding-top:6px;border-bottom:none"></td></tr>';
+    h += "<tr><td>Cika — commission aliment</td><td></td>"
+      +  '<td class="num">' + nf(Math.round(r.commissionAliment), 0) + "</td></tr>";
+    h += "<tr><td>Cika — commission œuf</td><td></td>"
+      +  '<td class="num">' + nf(Math.round(r.commissionOeuf), 0) + "</td></tr>";
+    h += '<tr class="total"><td>Revenu Cika par cycle</td><td></td>'
+      +  '<td class="num">' + nf(Math.round(r.revenuCikaParPoule), 0) + "</td></tr>";
+    return h + "</tbody></table>";
+  }
+
+  function tableStatsPart(sp) {
+    var h = '<table class="rep-table"><thead><tr><th>Participant — rendement annualisé</th><th></th></tr></thead><tbody>';
+    [["Moyenne", pct(sp.mean, 1)], ["Médiane", pct(sp.median, 1)], ["Écart-type", pct(sp.sd, 1)],
+     ["P5 / P10", pct(sp.p5, 1) + " / " + pct(sp.p10, 1)],
+     ["P90 / P95", pct(sp.p90, 1) + " / " + pct(sp.p95, 1)],
+     ["Probabilité de perte", pct(sp.pLoss, 1)], ["VaR 95 %", pct(sp.var95, 1)],
+     ["Perte moyenne des 5 % pires", pct(sp.es95, 1)], ["Pire tirage", pct(sp.min, 1)]
+    ].forEach(function (L) { h += "<tr><td>" + L[0] + '</td><td class="num">' + L[1] + "</td></tr>"; });
+    return h + "</tbody></table>";
+  }
+
+  function tableStatsCika(sc) {
+    var h = '<table class="rep-table"><thead><tr><th>Cika — résultat annuel à la bande</th><th></th></tr></thead><tbody>';
+    [["Moyenne", money(sc.mean, 0)], ["Médiane", money(sc.median, 0)], ["Écart-type", money(sc.sd, 0)],
+     ["P5", money(sc.p5, 0)], ["P95", money(sc.p95, 0)],
+     ["Probabilité de perte", pct(sc.pLoss, 1)], ["Pire tirage", money(sc.min, 0)]
+    ].forEach(function (L) { h += "<tr><td>" + L[0] + '</td><td class="num">' + L[1] + "</td></tr>"; });
+    return h + "</tbody></table>";
+  }
+
+  /* ==============================================================
      14. ÉVÈNEMENTS & INITIALISATION
      ============================================================== */
 
@@ -1849,9 +3424,25 @@
     stressTimer = setTimeout(runStress, 320);
   }
 
+  resetProvenance();
   buildPanel();
 
   var panel = document.getElementById("panel");
+
+  // Clic sur une pastille de provenance : bascule Saisi ⇄ Réel.
+  panel.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("[data-prov]") : null;
+    if (!b) return;
+    e.preventDefault();
+    var k = b.getAttribute("data-prov");
+    basculerProvenance(k);
+    var pr = provenance(k);
+    b.className = "prov prov-" + pr.etat;
+    b.textContent = pr.txt;
+    b.setAttribute("title", "Provenance : " + pr.txt + ". Cliquez pour basculer Saisi / Réel.");
+    render();
+  });
+
   panel.addEventListener("input", function (e) {
     onInput(e);
     var k = e.target.getAttribute("data-k");
@@ -1863,9 +3454,13 @@
   document.getElementById("btnReset").addEventListener("click", function () {
     Object.keys(DEFAULTS).forEach(function (k) { S[k] = DEFAULTS[k]; });
     lastStress = null;
+    scenarios = {};                       // les scénarios mémorisés sont oubliés
+    resetProvenance();                    // et les provenances reviennent aux défauts
+    buildPanel();
+    majBarreScenarios();
     // Les trois sélecteurs reviennent aussi à leur état de base.
-    installation = "poulettes"; profil = "diaspora"; reserveSource = "mutualisee";
-    [["inst","poulettes"],["profil","diaspora"],["ressrc","mutualisee"]].forEach(function (pair) {
+    installation = "poulettes"; profil = "diaspora";
+    [["inst","poulettes"],["profil","diaspora"]].forEach(function (pair) {
       var btns = document.querySelectorAll("[data-" + pair[0] + "]");
       for (var i = 0; i < btns.length; i++) {
         btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-" + pair[0]) === pair[1] ? "true" : "false");
@@ -1919,10 +3514,13 @@
   wireSeg("inst", function (val) {
     installation = val;
     var cfg = INSTALLATIONS[val];
-    // Le toggle règle le prix d'entrée, la mortalité de départ et la durée du cycle.
-    S.prixPoulette = clamp(cfg.prixPoulette, META.prixPoulette.min, META.prixPoulette.max);
-    S.mortalite    = clamp(cfg.mortalite,    META.mortalite.min,    META.mortalite.max);
-    S.cycleMois    = clamp(cfg.cycleMois,    META.cycleMois.min,    META.cycleMois.max);
+    // Le toggle règle l'animal de départ, la mortalité, la durée du cycle ET les
+    // deux postes d'aliment. Sans l'aliment d'élevage, la voie poussins paraîtrait
+    // rentable simplement parce qu'elle ne paie pas sa phase de croissance.
+    ["prixPoulette", "mortalite", "cycleMois", "consoAlimentElevage", "consoAliment", "oeufsParPoule"]
+      .forEach(function (k) {
+        if (cfg[k] !== undefined) S[k] = clamp(cfg[k], META[k].min, META[k].max);
+      });
   });
 
   wireSeg("profil", function (val) {
@@ -1930,10 +3528,41 @@
     if (PROFILS[val].taux !== null) S.tauxOpportunite = PROFILS[val].taux;
   });
 
-  wireSeg("ressrc", function (val) { reserveSource = val; });
+  
+  // ── Export : on reconstruit le rapport depuis l'état courant, puis on laisse
+  // le navigateur produire le PDF (« Enregistrer en PDF » dans le dialogue).
+  // Voie sans dépendance ni réseau : la page reste utilisable hors-ligne.
+  document.getElementById("btnExport").addEventListener("click", function () {
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = "Préparation…";
+    setTimeout(function () {
+      try {
+        buildReport();
+        window.print();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Exporter le rapport (PDF)";
+      }
+    }, 30);
+  });
+
+  // L'impression peut aussi être déclenchée au clavier (Ctrl/Cmd+P) ou par le menu
+  // du navigateur, sans passer par le bouton. On reconstruit alors le rapport ici,
+  // sinon la feuille @media print n'aurait qu'un conteneur vide à afficher.
+  window.addEventListener("beforeprint", function () { buildReport(); });
+
+  // ── Scénarios : mémorisation du réglage courant, comparés dans le rapport.
+  var scenBtns = document.querySelectorAll("[data-scen]");
+  for (var si = 0; si < scenBtns.length; si++) {
+    scenBtns[si].addEventListener("click", function () {
+      memoriserScenario(this.getAttribute("data-scen"));
+    });
+  }
 
   syncInputs();
   render();
+  majBarreScenarios();
 
   // Exposé pour vérification manuelle en console (tests de non-régression).
   window.CIKA = {
@@ -1942,7 +3571,18 @@
     attract: attractivite, pricing: pricingProtection,
     pointMortOeuf: pointMortOeuf, pointMortProtection: pointMortProtection,
     setProfil: function (p) { profil = p; if (PROFILS[p].taux !== null) S.tauxOpportunite = PROFILS[p].taux; },
-    setReserveSource: function (v) { reserveSource = v; }
+    revision: revisionCommission,
+    setInstallation: function (v) {
+      installation = v;
+      var cfg = INSTALLATIONS[v];
+      ["prixPoulette","mortalite","cycleMois","consoAlimentElevage","consoAliment","oeufsParPoule"]
+        .forEach(function (k) { if (cfg[k] !== undefined) S[k] = clamp(cfg[k], META[k].min, META[k].max); });
+    },
+    installations: INSTALLATIONS,
+    buildReport: buildReport, memoriserScenario: memoriserScenario,
+    provenance: provenance, basculerProvenance: basculerProvenance,
+    estPromouvable: estPromouvable, resetProvenance: resetProvenance,
+    scenarios: function () { return scenarios; }
   };
 })();
 </script>
