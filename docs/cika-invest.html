@@ -256,6 +256,29 @@
   .sim-scroll { overflow-x: auto; }
   .num { font-variant-numeric: tabular-nums; }
 
+  /* ── Décomposition « une poule » ──────────────────────────── */
+  .poule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 26px; }
+  .poule-t {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    color: #666; margin-bottom: 9px;
+  }
+  .poule-tab { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .poule-tab td { padding: 7px 4px; border-bottom: 1px solid #f2f2ee; vertical-align: top; }
+  .poule-tab td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .poule-d { display: block; font-size: 11px; color: #999; margin-top: 1px; }
+  .poule-pct { color: #999; font-size: 12px; width: 46px; }
+  .poule-neg { color: #A8071A; }
+  .poule-sub td { border-top: 1px solid #ddd; font-weight: 600; }
+  .poule-tot td { border-top: 1.5px solid #1a1a1a; border-bottom: none; font-weight: 700; padding-top: 8px; }
+  .poule-note {
+    font-size: 12.5px; color: #555; line-height: 1.6; margin-top: 12px;
+    padding: 9px 12px; background: #F4F4F0; border-radius: 5px;
+  }
+
+  /* Table des tickets : le rendement en gras, le montant risqué en second */
+  .tick-tab td { padding: 9px; }
+  .tick-pct { color: #888; font-size: 11.5px; margin-left: 5px; }
+
   /* ── Heatmap ──────────────────────────────────────────────── */
   .hm-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
   .hm-table { border-collapse: collapse; font-size: 11.5px; font-variant-numeric: tabular-nums; }
@@ -737,21 +760,23 @@
         </div>
 
         <div class="sim-block">
-          <h2 class="sim-h">Tickets participant</h2>
+          <h2 class="sim-h">Une poule, un cycle — d'où viennent les chiffres</h2>
+          <p class="sim-hint">Tout le modèle raisonne par poule. Les montants des tickets
+            ci-dessous ne sont que ces valeurs multipliées par le nombre de poules.</p>
+          <div id="unePoule"></div>
+        </div>
+
+        <div class="sim-block">
+          <h2 class="sim-h">Combien investir, combien récupérer</h2>
+          <p class="sim-hint">Si vous financez X poules, voici ce que vous avancez et ce que
+            le projet vous reverse chaque année.</p>
           <div class="sim-scroll">
-            <table class="sim-table">
-              <thead>
-                <tr>
-                  <th scope="col">Ticket</th>
-                  <th scope="col">Capital avancé</th>
-                  <th scope="col">Capital immobilisé</th>
-                  <th scope="col">Gain net annualisé</th>
-                  <th scope="col">Gain espéré (risque)</th>
-                </tr>
-              </thead>
+            <table class="sim-table tick-tab">
+              <thead id="ticketsHead"></thead>
               <tbody id="tickets"></tbody>
             </table>
           </div>
+          <p class="sim-hint" id="tickNote"></p>
         </div>
 
         <div class="sim-block">
@@ -1876,6 +1901,7 @@
     renderVerdict(r);
     renderAttractivite(r);
     renderWaterfall(r);
+    renderUnePoule(r);
     renderTickets(r);
     renderHeatmap(r);
     renderProtection(r);
@@ -2402,22 +2428,99 @@
      9. TICKETS PARTICIPANT
      ============================================================== */
 
+  // ── Ancrage : ce que coûte et rapporte UNE poule sur un cycle.
+  // Sans ce repère, la table des tickets n'est qu'une suite de multiplications
+  // dont le lecteur ne voit jamais le multiplicande.
+  function renderUnePoule(r) {
+    var cy = nf(S.cycleMois, 0);
+    var lignes = [
+      ["Animal de départ", S.prixPoulette, "prix d'achat, 1 tête"],
+      ["Aliment de ponte", S.consoAliment * r.prixAlimentPool,
+       nf(S.consoAliment, 0) + " kg × " + nf(r.prixAlimentPool, 0) + " F/kg"],
+      ["Frais sanitaires", S.sante, "forfait par tête"],
+      ["Autres charges", S.autres, "forfait par tête"]
+    ];
+    if (S.consoAlimentElevage > 0) {
+      lignes.splice(1, 0, ["Aliment d'élevage", S.consoAlimentElevage * r.prixAlimentPool,
+        nf(S.consoAlimentElevage, 0) + " kg × " + nf(r.prixAlimentPool, 0) + " F/kg — voie poussins"]);
+    }
+
+    var h = '<div class="poule-grid">';
+
+    // Colonne 1 — ce qu'il faut avancer
+    h += '<div class="poule-col"><div class="poule-t">Ce qu\'il faut avancer</div><table class="poule-tab">';
+    lignes.forEach(function (l) {
+      var part = safeDiv(l[1], r.capitalIntrants);
+      h += "<tr><td>" + esc(l[0]) + '<span class="poule-d">' + esc(l[2]) + "</span></td>"
+        +  '<td class="num">' + money(l[1], 0) + "</td>"
+        +  '<td class="num poule-pct">' + (isFinite(part) ? nf(part * 100, 0) + " %" : "—") + "</td></tr>";
+    });
+    h += '<tr class="poule-tot"><td>Capital par poule</td><td class="num">'
+      +  money(r.capitalIntrants, 0) + '</td><td class="num poule-pct">100 %</td></tr>';
+    h += "</table></div>";
+
+    // Colonne 2 — ce que la poule rapporte
+    h += '<div class="poule-col"><div class="poule-t">Ce qu\'elle rapporte sur ' + cy + ' mois</div><table class="poule-tab">';
+    h += "<tr><td>Œufs vendus<span class=\"poule-d\">" + nf(r.oeufsVendablesEffectifs, 0)
+      +  " œufs × " + nf(r.prixOeufPool, 0) + " F</span></td>"
+      +  '<td class="num">' + money(r.recetteOeufsPool, 0) + "</td></tr>";
+    h += "<tr><td>Revente de la poule<span class=\"poule-d\">"
+      +  money(S.valeurReforme, 0) + " × (1 − " + pct(S.mortalite, 0) + " de mortalité)</span></td>"
+      +  '<td class="num">' + money(r.recetteReforme, 0) + "</td></tr>";
+    h += '<tr class="poule-sub"><td>Produits bruts</td><td class="num">' + money(r.produitsBruts, 0) + "</td></tr>";
+    h += '<tr><td class="poule-neg">− Capital avancé</td><td class="num poule-neg">−'
+      +  money(r.capitalIntrants, 0) + "</td></tr>";
+    h += '<tr><td class="poule-neg">− Collecte et vente</td><td class="num poule-neg">−'
+      +  money(r.coutCollecte, 0) + "</td></tr>";
+    h += '<tr class="poule-tot"><td>Bénéfice par poule</td><td class="num ' + sgn(r.BND) + '">'
+      +  money(r.BND, 0) + "</td></tr>";
+    h += "</table>";
+    h += '<p class="poule-note">Le participant en touche <b>' + pct(r.partParticipant, 0)
+      +  "</b>, soit <b>" + money(r.partPartBND, 0) + "</b> sur " + cy + " mois — c'est le "
+      +  "<b>" + pct(r.roiAnnuel, 1) + "</b> par an affiché plus haut.</p>";
+    h += "</div></div>";
+
+    document.getElementById("unePoule").innerHTML = h;
+  }
+
   function renderTickets(r) {
     var sizes = [50, 120, 250, 500];
+    // La colonne « immobilisé » n'a de sens que si elle diffère du capital avancé,
+    // c'est-à-dire si le participant ne préfinance pas la totalité des intrants.
+    var montreImmo = Math.abs(S.partPrefin - 1) > 1e-9;
+
+    var head = "<tr><th scope=\"col\">Participation</th>"
+      + "<th scope=\"col\">Vous investissez</th>"
+      + (montreImmo ? "<th scope=\"col\">dont immobilisé</th>" : "")
+      + "<th scope=\"col\">Vous récupérez par an</th>"
+      + "<th scope=\"col\">Rendement</th>"
+      + "<th scope=\"col\">Une fois le risque intégré</th></tr>";
+
     var rows = sizes.map(function (nb) {
-      var cap  = r.capitalIntrants * nb;
-      var capI = r.capitalImmobilise * nb;
-      var gain = r.partPartBND * nb * r.annualise;
+      var cap   = r.capitalIntrants * nb;
+      var capI  = r.capitalImmobilise * nb;
+      var gain  = r.partPartBND * nb * r.annualise;
       var gainE = r.gainEspere * nb * r.annualise;
       return "<tr>" +
-        "<td>" + nb + " poules</td>" +
-        '<td class="num">' + money2(cap) + "</td>" +
-        '<td class="num">' + money2(capI) + "</td>" +
-        '<td class="num ' + sgn(gain) + '">' + money2(gain) + "</td>" +
-        '<td class="num ' + sgn(gainE) + '">' + money2(gainE) + "</td>" +
+        "<td><b>" + nb + " poules</b></td>" +
+        '<td class="num">' + money(cap, 0) + "</td>" +
+        (montreImmo ? '<td class="num">' + money(capI, 0) + "</td>" : "") +
+        '<td class="num ' + sgn(gain) + '">' + (gain >= 0 ? "+" : "") + money(gain, 0) + "</td>" +
+        '<td class="num ' + sgn(r.roiAnnuel) + '">' + pct(r.roiAnnuel, 1) + "</td>" +
+        '<td class="num ' + sgn(gainE) + '">' + (gainE >= 0 ? "+" : "") + money(gainE, 0)
+          + ' <span class="tick-pct">' + pct(r.roiEspere, 1) + "</span></td>" +
       "</tr>";
     });
+    document.getElementById("ticketsHead").innerHTML = head;
     document.getElementById("tickets").innerHTML = rows.join("");
+    document.getElementById("tickNote").innerHTML =
+      "Le capital est immobilisé pendant les <b>" + nf(S.cycleMois, 0) + " mois</b> du cycle — "
+      + "il n'y a pas de marché où revendre sa part en cours de route. La dernière colonne "
+      + "retranche la perte attendue (" + pct(S.probaSinistre, 1) + " de risque de sinistre, "
+      + pct(S.perteSinistre, 0) + " du capital perdu le cas échéant)"
+      + (montreImmo
+          ? ". Vous ne préfinancez que " + pct(S.partPrefin, 0) + " des intrants, d'où la colonne « dont immobilisé »."
+          : ".");
   }
 
   /* ==============================================================
@@ -3645,6 +3748,9 @@
       var cfg = INSTALLATIONS[v];
       ["prixPoulette","mortalite","cycleMois","consoAlimentElevage","consoAliment","oeufsParPoule"]
         .forEach(function (k) { if (cfg[k] !== undefined) S[k] = clamp(cfg[k], META[k].min, META[k].max); });
+      // Comme le bouton du panneau : changer de voie redessine tout.
+      syncInputs();
+      render();
     },
     installations: INSTALLATIONS,
     buildReport: buildReport, memoriserScenario: memoriserScenario,
