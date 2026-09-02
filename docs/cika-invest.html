@@ -881,7 +881,9 @@
     // ── Société & bande
     ["nbPoules","Taille de bande de référence","poules",100,20000,100,1000,SRC.struct,"societe",0],
     ["cycleMois","Durée du cycle","mois",12,24,1,18,SRC.adilCyc,"societe",0],
-    ["opexAnnuel","Charges annuelles de structure Cika","FCFA/an",0,300000000,1000000,60000000,SRC.hypo,"societe",0],
+    // Pas de 100 000 F : avec un pas au million, une structure légère (3,6 M/an,
+    // soit 300 000 F/mois) ne se règle qu'au million près, trop grossier ici.
+    ["opexAnnuel","Charges annuelles de structure Cika","FCFA/an",0,120000000,100000,3600000,SRC.hypo,"societe",0],
     ["fx","Taux de change","FCFA/EUR",655.957,655.957,0.001,655.957,SRC.parite,"societe",3],
 
     // ── Capital immobilisé & risque
