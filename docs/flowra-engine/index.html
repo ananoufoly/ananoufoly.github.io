@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowra Scoring Engine</title>
+  <meta name="description" content="Transparent 60-point scoring for West African agricultural trade finance.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <h1>⚖️ Flowra Trade Finance Scoring Engine</h1>
+      <p class="subtitle">Score West African agricultural trade transactions — every point traceable to a rule.</p>
+    </header>
+
+    <div class="layout">
+
+      <!-- ============ SIDEBAR ============ -->
+      <aside class="sidebar">
+        <div class="info-box">
+          <h3>How It Works</h3>
+          <p>Enter the transaction details. The engine calculates a 60-point score across three layers:</p>
+          <ul class="layer-legend">
+            <li><span class="dot dot-1"></span> Price Coherence <em>25 pts</em></li>
+            <li><span class="dot dot-2"></span> Route Risk <em>20 pts</em></li>
+            <li><span class="dot dot-3"></span> Borrower Activity <em>15 pts</em></li>
+          </ul>
+        </div>
+
+        <div class="info-box">
+          <h3>Tiers</h3>
+          <table class="tier-table">
+            <tbody>
+              <tr><td>50–60</td><td>★★★ Approved</td><td>70%</td></tr>
+              <tr><td>40–49</td><td>★★ Standard</td><td>55%</td></tr>
+              <tr><td>30–39</td><td>★ Conditional</td><td>40%</td></tr>
+              <tr><td>&lt; 30</td><td>⚠ Decline</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="info-box caveat-box">
+          <strong>⚠ Provisional points</strong>
+          <p>Allocations rest on 314 observed transactions and domain expertise — not a fitted model. After 50 completed loans with real repayment data, the scores are recalibrated.</p>
+        </div>
+
+        <div class="sample-loader">
+          <label for="sampleSelect">Sample transactions</label>
+          <select id="sampleSelect"></select>
+          <button id="loadSample" type="button" class="btn-secondary">📋 Load Sample</button>
+          <button id="resetForm" type="button" class="btn-ghost">↺ Clear form</button>
+        </div>
+      </aside>
+
+      <!-- ============ FORM ============ -->
+      <main class="form-section">
+        <form id="scoreForm" novalidate>
+          <fieldset>
+            <legend>Transaction Details</legend>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="f-id">Transaction ID</label>
+                <input type="text" id="f-id" name="id" placeholder="TXN001">
+              </div>
+              <div class="form-group">
+                <label for="f-borrower">Borrower Name <span class="req">*</span></label>
+                <input type="text" id="f-borrower" name="borrower" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="f-corridor">Corridor <span class="req">*</span></label>
+              <select id="f-corridor" name="corridor" required>
+                <option value="">Select corridor…</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="f-product">Product Type <span class="req">*</span></label>
+                <select id="f-product" name="typeProduct" required>
+                  <option value="">Select product type…</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="f-declaredValue">Declared Value (FCFA) <span class="req">*</span></label>
+                <input type="number" id="f-declaredValue" name="declaredValue" min="0" step="1000" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="f-coherence">Price Coherence <span class="req">*</span></label>
+              <select id="f-coherence" name="coherencePrix" required></select>
+              <p class="hint">Does the declared unit price match the observed market for this product and corridor?</p>
+            </div>
+
+            <div class="form-group">
+              <label for="f-spread">Commercial Spread (%) <span class="req">*</span></label>
+              <input type="number" id="f-spread" name="spreadCommercial" min="0" max="200" step="0.1" required>
+              <p class="hint">Margin between purchase and expected resale price. Realistic band: 20–40%.</p>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="f-trips">Prior Trips</label>
+                <input type="number" id="f-trips" name="nbTripsTotal" min="0" step="1" value="0">
+              </div>
+              <div class="form-group">
+                <label for="f-freq">Trips / Month</label>
+                <input type="number" id="f-freq" name="tripsPerMonth" min="0" step="0.1" value="0">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="f-conc">Corridor Concentration</label>
+                <input type="range" id="f-conc" name="concentrationCorridor" min="0" max="1" step="0.01" value="0.7">
+                <output id="concOut" class="range-out">70%</output>
+                <p class="hint">Share of the borrower's trips on their primary corridor.</p>
+              </div>
+              <div class="form-group">
+                <label for="f-incidents">Corridor Incidents</label>
+                <input type="number" id="f-incidents" name="nbIncidents" min="0" step="1" value="0">
+                <p class="hint">Recorded incidents for this borrower on this route.</p>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">🔍 Calculate Score</button>
+            </div>
+          </fieldset>
+        </form>
+      </main>
+
+      <!-- ============ RESULTS ============ -->
+      <section class="results-section">
+        <div id="results">
+          <div class="placeholder">
+            <p class="placeholder-icon">⚖️</p>
+            <p>Enter transaction details and click <strong>Calculate Score</strong>.</p>
+            <p class="placeholder-sub">Or load a sample from the left to see a scored file end to end.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ============ WHAT-IF ============ -->
+    <section class="what-if" id="whatIfSection" hidden>
+      <h3>What-If Scenarios</h3>
+      <p class="what-if-intro">Change one variable to see how it moves the score. The scored transaction above stays the baseline.</p>
+
+      <div class="scenario-inputs">
+        <label>
+          What if the corridor were
+          <select id="whatIfCorridor">
+            <option value="">— keep current —</option>
+          </select>
+        </label>
+
+        <label>
+          What if the spread were
+          <input type="number" id="whatIfSpread" min="0" max="200" step="0.1" placeholder="e.g. 25">
+          <span class="unit">%</span>
+        </label>
+
+        <label>
+          What if price coherence were
+          <select id="whatIfCoherence">
+            <option value="">— keep current —</option>
+          </select>
+        </label>
+
+        <label>
+          What if incidents were
+          <input type="number" id="whatIfIncidents" min="0" step="1" placeholder="e.g. 0">
+        </label>
+
+        <button type="button" id="resetWhatIf" class="btn-ghost">↺ Reset scenarios</button>
+      </div>
+
+      <div id="scenarioComparison"></div>
+    </section>
+
+    <footer>
+      <p>Flowra Scoring Engine — static, client-side, no data leaves this browser.</p>
+      <p class="footer-caveat">Provisional rule weights. See <code>SCORING_RULES.md</code> for the full rule reference.</p>
+    </footer>
+
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/scoring-engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

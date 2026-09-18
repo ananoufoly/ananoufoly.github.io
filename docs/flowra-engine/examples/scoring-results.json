@@ -1,0 +1,1052 @@
+{
+  "generated": "2026-09-18",
+  "engineVersion": "1.0.0",
+  "note": "Output of ScoringEngine.calculateScore() on examples/sample-transactions.json. Regenerate after any rule change.",
+  "results": [
+    {
+      "transactionId": "BRK733XZ",
+      "borrower": "Exemple Vendeur A",
+      "corridor": "Togo → Bénin",
+      "product": "Produits Agricoles",
+      "productDetail": "Gingembre",
+      "declaredValue": 900000,
+      "scoredAt": "2026-09-18T00:00:00.000Z",
+      "scoring": {
+        "layer1": {
+          "name": "Price Coherence",
+          "max": 25,
+          "breakdown": [
+            {
+              "rule": "Cohérence Prix",
+              "max": 15,
+              "value": "✓ Cohérent",
+              "points": 15,
+              "explanation": "The declared price matches the observed market for this product and corridor. The advance is anchored on a value that can be verified independently — this is the single strongest signal in the model."
+            },
+            {
+              "rule": "Spread Commercial",
+              "max": 10,
+              "value": "35% (Realistic (20–40%))",
+              "points": 10,
+              "explanation": "A spread of 35% sits in the realistic band for these corridors: wide enough to absorb transport, levies, and losses, and to leave the borrower a margin from which the advance can be repaid."
+            }
+          ],
+          "total": 25
+        },
+        "layer2": {
+          "name": "Route Risk",
+          "max": 20,
+          "breakdown": [
+            {
+              "rule": "Corridor Success Rate",
+              "max": 9,
+              "value": "Togo → Bénin (94.3%)",
+              "points": 9,
+              "explanation": "Togo → Bénin shows a 94.3% success rate over 70 observed deals. Return leg of the Bénin–Togo axis."
+            },
+            {
+              "rule": "Product Type",
+              "max": 6,
+              "value": "Produits Agricoles",
+              "points": 6,
+              "explanation": "Produits Agricoles: Non-perishable in the main, storable, deepest resale market. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+            },
+            {
+              "rule": "Corridor Incidents",
+              "max": 5,
+              "value": "0 incident(s)",
+              "points": 5,
+              "explanation": "No incidents recorded on this route — no friction. Full credit: a clean route history is the cheapest evidence available."
+            }
+          ],
+          "total": 20
+        },
+        "layer3": {
+          "name": "Borrower Activity",
+          "max": 15,
+          "breakdown": [
+            {
+              "rule": "Repeat Trader Status",
+              "max": 6,
+              "value": "5 prior trip(s)",
+              "points": 6,
+              "explanation": "5 prior trips — a proven track record. The borrower is established and their declarations can be checked against a real history.",
+              "caveat": "Note: Activity does not statistically predict success in current data"
+            },
+            {
+              "rule": "Trading Frequency",
+              "max": 5,
+              "value": "2.1 trips/month",
+              "points": 5,
+              "explanation": "2.1 trips per month is the cadence of an active trader with a working buyer relationship — trading is the borrower's profession, not a sideline.",
+              "caveat": "Portfolio management signal only"
+            },
+            {
+              "rule": "Corridor Specialization",
+              "max": 4,
+              "value": "85% on primary corridor",
+              "points": 4,
+              "explanation": "85% of trips on one corridor. The borrower is a specialist: they know the route, the checkpoints, and the buyers on it."
+            }
+          ],
+          "total": 15
+        },
+        "totalScore": 60,
+        "maxScore": 60,
+        "tier": "★★★ Approved",
+        "tierSlug": "approved",
+        "tierEmoji": "✓",
+        "tierColor": "#2ecc71",
+        "advancePct": 0.7,
+        "advanceFcfa": 630000,
+        "tenor": "14 days",
+        "overriddenByDecline": false
+      },
+      "validation": {
+        "isValid": true,
+        "errors": [],
+        "mandatoryDeclines": [],
+        "manualReviewFlags": []
+      },
+      "rulesTrace": [
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Cohérence Prix",
+          "input": "✓ Cohérent",
+          "points": 15,
+          "max": 15,
+          "reason": "The declared price matches the observed market for this product and corridor. The advance is anchored on a value that can be verified independently — this is the single strongest signal in the model."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Spread Commercial",
+          "input": "35% (Realistic (20–40%))",
+          "points": 10,
+          "max": 10,
+          "reason": "A spread of 35% sits in the realistic band for these corridors: wide enough to absorb transport, levies, and losses, and to leave the borrower a margin from which the advance can be repaid."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 25,
+          "max": 25,
+          "reason": "Layer 1 contributes 25 of a possible 25 points."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Success Rate",
+          "input": "Togo → Bénin (94.3%)",
+          "points": 9,
+          "max": 9,
+          "reason": "Togo → Bénin shows a 94.3% success rate over 70 observed deals. Return leg of the Bénin–Togo axis."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Product Type",
+          "input": "Produits Agricoles",
+          "points": 6,
+          "max": 6,
+          "reason": "Produits Agricoles: Non-perishable in the main, storable, deepest resale market. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Incidents",
+          "input": "0 incident(s)",
+          "points": 5,
+          "max": 5,
+          "reason": "No incidents recorded on this route — no friction. Full credit: a clean route history is the cheapest evidence available."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 20,
+          "max": 20,
+          "reason": "Layer 2 contributes 20 of a possible 20 points."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Repeat Trader Status",
+          "input": "5 prior trip(s)",
+          "points": 6,
+          "max": 6,
+          "reason": "5 prior trips — a proven track record. The borrower is established and their declarations can be checked against a real history."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Trading Frequency",
+          "input": "2.1 trips/month",
+          "points": 5,
+          "max": 5,
+          "reason": "2.1 trips per month is the cadence of an active trader with a working buyer relationship — trading is the borrower's profession, not a sideline."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Corridor Specialization",
+          "input": "85% on primary corridor",
+          "points": 4,
+          "max": 4,
+          "reason": "85% of trips on one corridor. The borrower is a specialist: they know the route, the checkpoints, and the buyers on it."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 15,
+          "max": 15,
+          "reason": "Layer 3 contributes 15 of a possible 15 points."
+        }
+      ],
+      "caveat": {
+        "text": "Points are PROVISIONAL based on domain expertise, not statistical validation.",
+        "detail": "After 50 completed loans, these will be recalibrated based on actual repayment data."
+      }
+    },
+    {
+      "transactionId": "BRK901KM",
+      "borrower": "Exemple Vendeur B",
+      "corridor": "Bénin → Nigeria",
+      "product": "Produits Bétails",
+      "productDetail": "Ovins",
+      "declaredValue": 2400000,
+      "scoredAt": "2026-09-18T00:00:00.000Z",
+      "scoring": {
+        "layer1": {
+          "name": "Price Coherence",
+          "max": 25,
+          "breakdown": [
+            {
+              "rule": "Cohérence Prix",
+              "max": 15,
+              "value": "⚠ Légèrement hors",
+              "points": 8,
+              "explanation": "The declared price deviates from the observed market, but within a range explainable by quality, timing, or a genuine sourcing advantage. Half credit: the price is plausible but unconfirmed."
+            },
+            {
+              "rule": "Spread Commercial",
+              "max": 10,
+              "value": "44% (Borderline (15–19% or 41–50%))",
+              "points": 5,
+              "explanation": "A spread of 44% is above the usual band. It may reflect a genuine sourcing advantage, but it more often signals a mis-stated purchase price. Half credit pending confirmation."
+            }
+          ],
+          "total": 13
+        },
+        "layer2": {
+          "name": "Route Risk",
+          "max": 20,
+          "breakdown": [
+            {
+              "rule": "Corridor Success Rate",
+              "max": 9,
+              "value": "Bénin → Nigeria (95.0%)",
+              "points": 9,
+              "explanation": "Bénin → Nigeria shows a 95.0% success rate over 20 observed deals. Cross-currency corridor (FCFA/NGN), large demand pool."
+            },
+            {
+              "rule": "Product Type",
+              "max": 6,
+              "value": "Produits Bétails",
+              "points": 5,
+              "explanation": "Produits Bétails: Live animals: mortality and feeding costs en route. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+            },
+            {
+              "rule": "Corridor Incidents",
+              "max": 5,
+              "value": "1 incident(s)",
+              "points": 2,
+              "explanation": "One recorded incident. Partial credit: a single event is as likely to be circumstance as pattern, but it triggers the insurance requirement and warrants asking what happened."
+            }
+          ],
+          "total": 16
+        },
+        "layer3": {
+          "name": "Borrower Activity",
+          "max": 15,
+          "breakdown": [
+            {
+              "rule": "Repeat Trader Status",
+              "max": 6,
+              "value": "12 prior trip(s)",
+              "points": 6,
+              "explanation": "12 prior trips — a proven track record. The borrower is established and their declarations can be checked against a real history.",
+              "caveat": "Note: Activity does not statistically predict success in current data"
+            },
+            {
+              "rule": "Trading Frequency",
+              "max": 5,
+              "value": "3.4 trips/month",
+              "points": 5,
+              "explanation": "3.4 trips per month is the cadence of an active trader with a working buyer relationship — trading is the borrower's profession, not a sideline.",
+              "caveat": "Portfolio management signal only"
+            },
+            {
+              "rule": "Corridor Specialization",
+              "max": 4,
+              "value": "62% on primary corridor",
+              "points": 2,
+              "explanation": "62% of trips on the primary corridor. Reasonably diversified, but with less accumulated route knowledge on any single one. Partial credit."
+            }
+          ],
+          "total": 13
+        },
+        "totalScore": 42,
+        "maxScore": 60,
+        "tier": "★★ Standard",
+        "tierSlug": "standard",
+        "tierEmoji": "◐",
+        "tierColor": "#f39c12",
+        "advancePct": 0.55,
+        "advanceFcfa": 1320000,
+        "tenor": "10 days",
+        "overriddenByDecline": false
+      },
+      "validation": {
+        "isValid": true,
+        "errors": [],
+        "mandatoryDeclines": [],
+        "manualReviewFlags": [
+          {
+            "code": "INSURANCE_REQUIRED",
+            "label": "Insurance rate above 1.5% required",
+            "detail": "Mandatory because 1 incident(s) are recorded on this corridor."
+          },
+          {
+            "code": "PRICE_DEVIATION",
+            "label": "Declared price deviates from market",
+            "detail": "Minor deviation. Confirm the source quote before disbursing."
+          }
+        ]
+      },
+      "rulesTrace": [
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Cohérence Prix",
+          "input": "⚠ Légèrement hors",
+          "points": 8,
+          "max": 15,
+          "reason": "The declared price deviates from the observed market, but within a range explainable by quality, timing, or a genuine sourcing advantage. Half credit: the price is plausible but unconfirmed."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Spread Commercial",
+          "input": "44% (Borderline (15–19% or 41–50%))",
+          "points": 5,
+          "max": 10,
+          "reason": "A spread of 44% is above the usual band. It may reflect a genuine sourcing advantage, but it more often signals a mis-stated purchase price. Half credit pending confirmation."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 13,
+          "max": 25,
+          "reason": "Layer 1 contributes 13 of a possible 25 points."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Success Rate",
+          "input": "Bénin → Nigeria (95.0%)",
+          "points": 9,
+          "max": 9,
+          "reason": "Bénin → Nigeria shows a 95.0% success rate over 20 observed deals. Cross-currency corridor (FCFA/NGN), large demand pool."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Product Type",
+          "input": "Produits Bétails",
+          "points": 5,
+          "max": 6,
+          "reason": "Produits Bétails: Live animals: mortality and feeding costs en route. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Incidents",
+          "input": "1 incident(s)",
+          "points": 2,
+          "max": 5,
+          "reason": "One recorded incident. Partial credit: a single event is as likely to be circumstance as pattern, but it triggers the insurance requirement and warrants asking what happened."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 16,
+          "max": 20,
+          "reason": "Layer 2 contributes 16 of a possible 20 points."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Repeat Trader Status",
+          "input": "12 prior trip(s)",
+          "points": 6,
+          "max": 6,
+          "reason": "12 prior trips — a proven track record. The borrower is established and their declarations can be checked against a real history."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Trading Frequency",
+          "input": "3.4 trips/month",
+          "points": 5,
+          "max": 5,
+          "reason": "3.4 trips per month is the cadence of an active trader with a working buyer relationship — trading is the borrower's profession, not a sideline."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Corridor Specialization",
+          "input": "62% on primary corridor",
+          "points": 2,
+          "max": 4,
+          "reason": "62% of trips on the primary corridor. Reasonably diversified, but with less accumulated route knowledge on any single one. Partial credit."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 13,
+          "max": 15,
+          "reason": "Layer 3 contributes 13 of a possible 15 points."
+        }
+      ],
+      "caveat": {
+        "text": "Points are PROVISIONAL based on domain expertise, not statistical validation.",
+        "detail": "After 50 completed loans, these will be recalibrated based on actual repayment data."
+      }
+    },
+    {
+      "transactionId": "BRK455QT",
+      "borrower": "Exemple Vendeur C",
+      "corridor": "Bénin → Togo",
+      "product": "Produits Halieutiques",
+      "productDetail": "Poisson fumé",
+      "declaredValue": 1500000,
+      "scoredAt": "2026-09-18T00:00:00.000Z",
+      "scoring": {
+        "layer1": {
+          "name": "Price Coherence",
+          "max": 25,
+          "breakdown": [
+            {
+              "rule": "Cohérence Prix",
+              "max": 15,
+              "value": "⚠ Hors norme",
+              "points": 0,
+              "explanation": "The declared price does not correspond to any observed market level. No points, and the file is a mandatory decline: an unverifiable price means an unverifiable collateral value."
+            },
+            {
+              "rule": "Spread Commercial",
+              "max": 10,
+              "value": "68% (Unrealistic (<15% or >50%))",
+              "points": 0,
+              "explanation": "A spread of 68% is not observed on these corridors and most likely reflects a mis-stated price on one side of the trade. No points."
+            }
+          ],
+          "total": 0
+        },
+        "layer2": {
+          "name": "Route Risk",
+          "max": 20,
+          "breakdown": [
+            {
+              "rule": "Corridor Success Rate",
+              "max": 9,
+              "value": "Bénin → Togo (90.8%)",
+              "points": 9,
+              "explanation": "Bénin → Togo shows a 90.8% success rate over 120 observed deals. High-volume corridor, well observed."
+            },
+            {
+              "rule": "Product Type",
+              "max": 6,
+              "value": "Produits Halieutiques",
+              "points": 4,
+              "explanation": "Produits Halieutiques: Highly perishable, cold-chain dependent, fastest value decay. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+            },
+            {
+              "rule": "Corridor Incidents",
+              "max": 5,
+              "value": "3 incident(s)",
+              "points": 0,
+              "explanation": "3 recorded incidents. No points — at this frequency the route has too many problems to treat the record as incidental."
+            }
+          ],
+          "total": 13
+        },
+        "layer3": {
+          "name": "Borrower Activity",
+          "max": 15,
+          "breakdown": [
+            {
+              "rule": "Repeat Trader Status",
+              "max": 6,
+              "value": "1 prior trip(s)",
+              "points": 0,
+              "explanation": "One prior trip. A one-off carries almost no information about the borrower — no points on this rule.",
+              "caveat": "Note: Activity does not statistically predict success in current data"
+            },
+            {
+              "rule": "Trading Frequency",
+              "max": 5,
+              "value": "0.4 trips/month",
+              "points": 0,
+              "explanation": "0.4 trips per month is too sporadic to characterise the borrower as an active trader. No points on this rule.",
+              "caveat": "Portfolio management signal only"
+            },
+            {
+              "rule": "Corridor Specialization",
+              "max": 4,
+              "value": "100% on primary corridor",
+              "points": 4,
+              "explanation": "100% of trips on one corridor. The borrower is a specialist: they know the route, the checkpoints, and the buyers on it."
+            }
+          ],
+          "total": 4
+        },
+        "totalScore": 17,
+        "maxScore": 60,
+        "tier": "⚠ Decline",
+        "tierSlug": "decline",
+        "tierEmoji": "✗",
+        "tierColor": "#e74c3c",
+        "advancePct": 0,
+        "advanceFcfa": 0,
+        "tenor": "N/A",
+        "overriddenByDecline": true
+      },
+      "validation": {
+        "isValid": true,
+        "errors": [],
+        "mandatoryDeclines": [
+          {
+            "code": "PRICE_OUT_OF_RANGE",
+            "label": "Declared price is out of range",
+            "detail": "A price that does not match the observed market cannot anchor an advance — the collateral value is unverifiable, and an unrealistic price is a fraud signal."
+          }
+        ],
+        "manualReviewFlags": [
+          {
+            "code": "INSURANCE_REQUIRED",
+            "label": "Insurance rate above 1.5% required",
+            "detail": "Mandatory because the product is perishable (halieutiques), and 3 incident(s) are recorded on this corridor."
+          },
+          {
+            "code": "SPREAD_IMPLAUSIBLE",
+            "label": "Commercial spread of 68% is economically implausible",
+            "detail": "Above 50% the margin is not observed on these corridors and usually indicates a mis-stated price on one side of the trade."
+          }
+        ]
+      },
+      "rulesTrace": [
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Cohérence Prix",
+          "input": "⚠ Hors norme",
+          "points": 0,
+          "max": 15,
+          "reason": "The declared price does not correspond to any observed market level. No points, and the file is a mandatory decline: an unverifiable price means an unverifiable collateral value."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Spread Commercial",
+          "input": "68% (Unrealistic (<15% or >50%))",
+          "points": 0,
+          "max": 10,
+          "reason": "A spread of 68% is not observed on these corridors and most likely reflects a mis-stated price on one side of the trade. No points."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 0,
+          "max": 25,
+          "reason": "Layer 1 contributes 0 of a possible 25 points."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Success Rate",
+          "input": "Bénin → Togo (90.8%)",
+          "points": 9,
+          "max": 9,
+          "reason": "Bénin → Togo shows a 90.8% success rate over 120 observed deals. High-volume corridor, well observed."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Product Type",
+          "input": "Produits Halieutiques",
+          "points": 4,
+          "max": 6,
+          "reason": "Produits Halieutiques: Highly perishable, cold-chain dependent, fastest value decay. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Incidents",
+          "input": "3 incident(s)",
+          "points": 0,
+          "max": 5,
+          "reason": "3 recorded incidents. No points — at this frequency the route has too many problems to treat the record as incidental."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 13,
+          "max": 20,
+          "reason": "Layer 2 contributes 13 of a possible 20 points."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Repeat Trader Status",
+          "input": "1 prior trip(s)",
+          "points": 0,
+          "max": 6,
+          "reason": "One prior trip. A one-off carries almost no information about the borrower — no points on this rule."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Trading Frequency",
+          "input": "0.4 trips/month",
+          "points": 0,
+          "max": 5,
+          "reason": "0.4 trips per month is too sporadic to characterise the borrower as an active trader. No points on this rule."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Corridor Specialization",
+          "input": "100% on primary corridor",
+          "points": 4,
+          "max": 4,
+          "reason": "100% of trips on one corridor. The borrower is a specialist: they know the route, the checkpoints, and the buyers on it."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 4,
+          "max": 15,
+          "reason": "Layer 3 contributes 4 of a possible 15 points."
+        }
+      ],
+      "caveat": {
+        "text": "Points are PROVISIONAL based on domain expertise, not statistical validation.",
+        "detail": "After 50 completed loans, these will be recalibrated based on actual repayment data."
+      }
+    },
+    {
+      "transactionId": "BRK288RD",
+      "borrower": "Exemple Vendeur D",
+      "corridor": "Niger → Côte d'Ivoire",
+      "product": "Produits Agricoles",
+      "productDetail": "Oignon",
+      "declaredValue": 3200000,
+      "scoredAt": "2026-09-18T00:00:00.000Z",
+      "scoring": {
+        "layer1": {
+          "name": "Price Coherence",
+          "max": 25,
+          "breakdown": [
+            {
+              "rule": "Cohérence Prix",
+              "max": 15,
+              "value": "✓ Cohérent",
+              "points": 15,
+              "explanation": "The declared price matches the observed market for this product and corridor. The advance is anchored on a value that can be verified independently — this is the single strongest signal in the model."
+            },
+            {
+              "rule": "Spread Commercial",
+              "max": 10,
+              "value": "27% (Realistic (20–40%))",
+              "points": 10,
+              "explanation": "A spread of 27% sits in the realistic band for these corridors: wide enough to absorb transport, levies, and losses, and to leave the borrower a margin from which the advance can be repaid."
+            }
+          ],
+          "total": 25
+        },
+        "layer2": {
+          "name": "Route Risk",
+          "max": 20,
+          "breakdown": [
+            {
+              "rule": "Corridor Success Rate",
+              "max": 9,
+              "value": "Niger → Côte d'Ivoire (100.0%)",
+              "points": 5,
+              "explanation": "Niger → Côte d'Ivoire shows a 100.0% success rate over 6 observed deals. Rare corridor: a perfect record over 6 deals is not evidence of a safe route. Scored as untested — manual approval required."
+            },
+            {
+              "rule": "Product Type",
+              "max": 6,
+              "value": "Produits Agricoles",
+              "points": 6,
+              "explanation": "Produits Agricoles: Non-perishable in the main, storable, deepest resale market. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+            },
+            {
+              "rule": "Corridor Incidents",
+              "max": 5,
+              "value": "0 incident(s)",
+              "points": 5,
+              "explanation": "No incidents recorded on this route — no friction. Full credit: a clean route history is the cheapest evidence available."
+            }
+          ],
+          "total": 16
+        },
+        "layer3": {
+          "name": "Borrower Activity",
+          "max": 15,
+          "breakdown": [
+            {
+              "rule": "Repeat Trader Status",
+              "max": 6,
+              "value": "9 prior trip(s)",
+              "points": 6,
+              "explanation": "9 prior trips — a proven track record. The borrower is established and their declarations can be checked against a real history.",
+              "caveat": "Note: Activity does not statistically predict success in current data"
+            },
+            {
+              "rule": "Trading Frequency",
+              "max": 5,
+              "value": "1.6 trips/month",
+              "points": 2,
+              "explanation": "1.6 trips per month indicates occasional, regular activity. Partial credit.",
+              "caveat": "Portfolio management signal only"
+            },
+            {
+              "rule": "Corridor Specialization",
+              "max": 4,
+              "value": "71% on primary corridor",
+              "points": 2,
+              "explanation": "71% of trips on the primary corridor. Reasonably diversified, but with less accumulated route knowledge on any single one. Partial credit."
+            }
+          ],
+          "total": 10
+        },
+        "totalScore": 51,
+        "maxScore": 60,
+        "tier": "★★★ Approved",
+        "tierSlug": "approved",
+        "tierEmoji": "✓",
+        "tierColor": "#2ecc71",
+        "advancePct": 0.7,
+        "advanceFcfa": 2240000,
+        "tenor": "14 days",
+        "overriddenByDecline": false
+      },
+      "validation": {
+        "isValid": true,
+        "errors": [],
+        "mandatoryDeclines": [],
+        "manualReviewFlags": [
+          {
+            "code": "RARE_CORRIDOR",
+            "label": "Rare corridor — only 6 observed deals",
+            "detail": "Manual approval required. The success rate for this route rests on a sample too small to rely on."
+          },
+          {
+            "code": "TIER_BOUNDARY",
+            "label": "Score of 51 sits on the Approved/Standard boundary",
+            "detail": "A single rule moves this file between tiers. The tier is not robust — apply judgement."
+          }
+        ]
+      },
+      "rulesTrace": [
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Cohérence Prix",
+          "input": "✓ Cohérent",
+          "points": 15,
+          "max": 15,
+          "reason": "The declared price matches the observed market for this product and corridor. The advance is anchored on a value that can be verified independently — this is the single strongest signal in the model."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Spread Commercial",
+          "input": "27% (Realistic (20–40%))",
+          "points": 10,
+          "max": 10,
+          "reason": "A spread of 27% sits in the realistic band for these corridors: wide enough to absorb transport, levies, and losses, and to leave the borrower a margin from which the advance can be repaid."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 25,
+          "max": 25,
+          "reason": "Layer 1 contributes 25 of a possible 25 points."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Success Rate",
+          "input": "Niger → Côte d'Ivoire (100.0%)",
+          "points": 5,
+          "max": 9,
+          "reason": "Niger → Côte d'Ivoire shows a 100.0% success rate over 6 observed deals. Rare corridor: a perfect record over 6 deals is not evidence of a safe route. Scored as untested — manual approval required."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Product Type",
+          "input": "Produits Agricoles",
+          "points": 6,
+          "max": 6,
+          "reason": "Produits Agricoles: Non-perishable in the main, storable, deepest resale market. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Incidents",
+          "input": "0 incident(s)",
+          "points": 5,
+          "max": 5,
+          "reason": "No incidents recorded on this route — no friction. Full credit: a clean route history is the cheapest evidence available."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 16,
+          "max": 20,
+          "reason": "Layer 2 contributes 16 of a possible 20 points."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Repeat Trader Status",
+          "input": "9 prior trip(s)",
+          "points": 6,
+          "max": 6,
+          "reason": "9 prior trips — a proven track record. The borrower is established and their declarations can be checked against a real history."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Trading Frequency",
+          "input": "1.6 trips/month",
+          "points": 2,
+          "max": 5,
+          "reason": "1.6 trips per month indicates occasional, regular activity. Partial credit."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Corridor Specialization",
+          "input": "71% on primary corridor",
+          "points": 2,
+          "max": 4,
+          "reason": "71% of trips on the primary corridor. Reasonably diversified, but with less accumulated route knowledge on any single one. Partial credit."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 10,
+          "max": 15,
+          "reason": "Layer 3 contributes 10 of a possible 15 points."
+        }
+      ],
+      "caveat": {
+        "text": "Points are PROVISIONAL based on domain expertise, not statistical validation.",
+        "detail": "After 50 completed loans, these will be recalibrated based on actual repayment data."
+      }
+    },
+    {
+      "transactionId": "BRK612VN",
+      "borrower": "Exemple Vendeur E",
+      "corridor": "Bénin → Burkina Faso",
+      "product": "Produits Agricoles",
+      "productDetail": "Maïs",
+      "declaredValue": 1800000,
+      "scoredAt": "2026-09-18T00:00:00.000Z",
+      "scoring": {
+        "layer1": {
+          "name": "Price Coherence",
+          "max": 25,
+          "breakdown": [
+            {
+              "rule": "Cohérence Prix",
+              "max": 15,
+              "value": "✓ Cohérent",
+              "points": 15,
+              "explanation": "The declared price matches the observed market for this product and corridor. The advance is anchored on a value that can be verified independently — this is the single strongest signal in the model."
+            },
+            {
+              "rule": "Spread Commercial",
+              "max": 10,
+              "value": "17% (Borderline (15–19% or 41–50%))",
+              "points": 5,
+              "explanation": "A spread of 17% is thin. It is achievable, but transport and informal levies leave little room — a delay or a price move on the buyer side erases the margin."
+            }
+          ],
+          "total": 20
+        },
+        "layer2": {
+          "name": "Route Risk",
+          "max": 20,
+          "breakdown": [
+            {
+              "rule": "Corridor Success Rate",
+              "max": 9,
+              "value": "Bénin → Burkina Faso (93.8%)",
+              "points": 9,
+              "explanation": "Bénin → Burkina Faso shows a 93.8% success rate over 32 observed deals. Longer inland route, stable performance."
+            },
+            {
+              "rule": "Product Type",
+              "max": 6,
+              "value": "Produits Agricoles",
+              "points": 6,
+              "explanation": "Produits Agricoles: Non-perishable in the main, storable, deepest resale market. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+            },
+            {
+              "rule": "Corridor Incidents",
+              "max": 5,
+              "value": "0 incident(s)",
+              "points": 5,
+              "explanation": "No incidents recorded on this route — no friction. Full credit: a clean route history is the cheapest evidence available."
+            }
+          ],
+          "total": 20
+        },
+        "layer3": {
+          "name": "Borrower Activity",
+          "max": 15,
+          "breakdown": [
+            {
+              "rule": "Repeat Trader Status",
+              "max": 6,
+              "value": "3 prior trip(s)",
+              "points": 6,
+              "explanation": "3 prior trips — a proven track record. The borrower is established and their declarations can be checked against a real history.",
+              "caveat": "Note: Activity does not statistically predict success in current data"
+            },
+            {
+              "rule": "Trading Frequency",
+              "max": 5,
+              "value": "0.9 trips/month",
+              "points": 0,
+              "explanation": "0.9 trips per month is too sporadic to characterise the borrower as an active trader. No points on this rule.",
+              "caveat": "Portfolio management signal only"
+            },
+            {
+              "rule": "Corridor Specialization",
+              "max": 4,
+              "value": "55% on primary corridor",
+              "points": 2,
+              "explanation": "55% of trips on the primary corridor. Reasonably diversified, but with less accumulated route knowledge on any single one. Partial credit."
+            }
+          ],
+          "total": 8
+        },
+        "totalScore": 48,
+        "maxScore": 60,
+        "tier": "★★ Standard",
+        "tierSlug": "standard",
+        "tierEmoji": "◐",
+        "tierColor": "#f39c12",
+        "advancePct": 0.55,
+        "advanceFcfa": 990000,
+        "tenor": "10 days",
+        "overriddenByDecline": false
+      },
+      "validation": {
+        "isValid": true,
+        "errors": [],
+        "mandatoryDeclines": [],
+        "manualReviewFlags": [
+          {
+            "code": "TIER_BOUNDARY",
+            "label": "Score of 48 sits on the Approved/Standard boundary",
+            "detail": "A single rule moves this file between tiers. The tier is not robust — apply judgement."
+          }
+        ]
+      },
+      "rulesTrace": [
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Cohérence Prix",
+          "input": "✓ Cohérent",
+          "points": 15,
+          "max": 15,
+          "reason": "The declared price matches the observed market for this product and corridor. The advance is anchored on a value that can be verified independently — this is the single strongest signal in the model."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "Spread Commercial",
+          "input": "17% (Borderline (15–19% or 41–50%))",
+          "points": 5,
+          "max": 10,
+          "reason": "A spread of 17% is thin. It is achievable, but transport and informal levies leave little room — a delay or a price move on the buyer side erases the margin."
+        },
+        {
+          "layer": "Layer 1 — Price Coherence",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 20,
+          "max": 25,
+          "reason": "Layer 1 contributes 20 of a possible 25 points."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Success Rate",
+          "input": "Bénin → Burkina Faso (93.8%)",
+          "points": 9,
+          "max": 9,
+          "reason": "Bénin → Burkina Faso shows a 93.8% success rate over 32 observed deals. Longer inland route, stable performance."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Product Type",
+          "input": "Produits Agricoles",
+          "points": 6,
+          "max": 6,
+          "reason": "Produits Agricoles: Non-perishable in the main, storable, deepest resale market. Product risk is scored on how fast the goods lose value if the trip is delayed and how readily they can be resold if the buyer walks."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "Corridor Incidents",
+          "input": "0 incident(s)",
+          "points": 5,
+          "max": 5,
+          "reason": "No incidents recorded on this route — no friction. Full credit: a clean route history is the cheapest evidence available."
+        },
+        {
+          "layer": "Layer 2 — Route Risk",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 20,
+          "max": 20,
+          "reason": "Layer 2 contributes 20 of a possible 20 points."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Repeat Trader Status",
+          "input": "3 prior trip(s)",
+          "points": 6,
+          "max": 6,
+          "reason": "3 prior trips — a proven track record. The borrower is established and their declarations can be checked against a real history."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Trading Frequency",
+          "input": "0.9 trips/month",
+          "points": 0,
+          "max": 5,
+          "reason": "0.9 trips per month is too sporadic to characterise the borrower as an active trader. No points on this rule."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "Corridor Specialization",
+          "input": "55% on primary corridor",
+          "points": 2,
+          "max": 4,
+          "reason": "55% of trips on the primary corridor. Reasonably diversified, but with less accumulated route knowledge on any single one. Partial credit."
+        },
+        {
+          "layer": "Layer 3 — Borrower Activity",
+          "rule": "SUBTOTAL",
+          "input": "",
+          "points": 8,
+          "max": 15,
+          "reason": "Layer 3 contributes 8 of a possible 15 points."
+        }
+      ],
+      "caveat": {
+        "text": "Points are PROVISIONAL based on domain expertise, not statistical validation.",
+        "detail": "After 50 completed loans, these will be recalibrated based on actual repayment data."
+      }
+    }
+  ]
+}
