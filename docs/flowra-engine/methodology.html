@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowra Methodology</title>
+  <meta name="description" content="How the Flowra scoring engine works: the intuition, the arithmetic, the evidence, and the limits.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container methodology-container">
+
+    <header>
+      <h1>⚖️ Flowra Scoring Engine — Methodology</h1>
+      <p class="subtitle">What each rule does, how the points are computed, what the data supports — and what it does not.</p>
+    </header>
+
+    <nav class="methodology-nav" aria-label="Methodology sections">
+      <a href="#" data-section="overview" class="nav-link active">Overview</a>
+      <a href="#" data-section="layer1" class="nav-link">1 · Price</a>
+      <a href="#" data-section="layer2" class="nav-link">2 · Route</a>
+      <a href="#" data-section="layer3" class="nav-link">3 · Activity</a>
+      <a href="#" data-section="tiers" class="nav-link">Tiers</a>
+      <a href="#" data-section="caveats" class="nav-link">Caveats</a>
+      <a href="#" data-section="glossary" class="nav-link">Glossary</a>
+      <a href="index.html" class="nav-link nav-home">← Back to Engine</a>
+    </nav>
+
+    <!-- ================= OVERVIEW ================= -->
+    <section id="overview" class="methodology-section active">
+      <h2>What this engine does</h2>
+      <p class="lede">
+        It scores a West African agricultural trade transaction out of 60 points and turns that
+        score into an advance rate. Every point traces back to one rule, and every rule is
+        stated below with the arithmetic that produces it.
+      </p>
+
+      <div class="stat-row">
+        <div class="stat"><span class="stat-value">60</span><span class="stat-label">points maximum</span></div>
+        <div class="stat"><span class="stat-value">3</span><span class="stat-label">decision layers</span></div>
+        <div class="stat"><span class="stat-value">314</span><span class="stat-label">observed transactions</span></div>
+        <div class="stat"><span class="stat-value">40–70%</span><span class="stat-label">advance range</span></div>
+      </div>
+
+      <h3>The three layers</h3>
+      <table class="method-table">
+        <thead><tr><th>Layer</th><th>Question it asks</th><th>Points</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1 · Price Coherence</strong></td><td>Is the declared price honest?</td><td class="num">25</td></tr>
+          <tr><td><strong>2 · Route Risk</strong></td><td>Does this corridor work reliably?</td><td class="num">20</td></tr>
+          <tr><td><strong>3 · Borrower Activity</strong></td><td>Is this a serious, repeat trader?</td><td class="num">15</td></tr>
+          <tr class="total-row"><td>Total</td><td></td><td class="num">60</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Where the weights come from</h3>
+      <p>
+        The rules were written from domain expertise and sense-checked against 314 transactions
+        recorded between January and April 2026. They were <em>not</em> fitted to that data. No
+        regression was run, no weights were optimised, and no borrower in the base has yet
+        completed a loan — so nothing here has been validated against repayment.
+      </p>
+
+      <div class="caveat-box">
+        <strong>⚠ The weights are provisional.</strong>
+        <p>
+          Treat a score as a structured argument about a file, not a measurement of its risk.
+          After 50 completed loans the weights should be recalibrated against what actually
+          predicted repayment. The <a href="#" data-section="caveats" class="inline-nav">Caveats</a>
+          section sets out what the data can and cannot support.
+        </p>
+      </div>
+
+      <h3>One honest summary</h3>
+      <p>
+        Of everything measured, only <strong>price coherence</strong> shows a defensible
+        relationship with transaction success, and even that is modest. Route risk is
+        observable but barely discriminates. Borrower activity shows no relationship at all.
+        The engine is weighted accordingly — the largest single rule is the price check.
+      </p>
+    </section>
+
+    <!-- ================= LAYER 1 ================= -->
+    <section id="layer1" class="methodology-section">
+      <h2>Layer 1 — Price Coherence <span class="pts-badge">25 points</span></h2>
+
+      <h3>The intuition</h3>
+      <p>
+        A declared price is the one number the lender can check independently. WACTAF records a
+        median market price for each product on each route; if the seller's declared price sits
+        near it, the cargo is worth roughly what they say, and the advance is anchored to
+        something real. If it does not, the collateral value is unverifiable — and a price far
+        from the market is the classic signature of an inflated invoice.
+      </p>
+
+      <div class="layer-box">
+        <strong>Concretely</strong>
+        <p>Ginger declared at the WACTAF median reads as an honest file. The same ginger declared far above the median means either the seller does not know the market or the value is being inflated to borrow against. Neither is a file to fund at 70%.</p>
+      </div>
+
+      <h3>The arithmetic</h3>
+
+      <p><strong>Rule 1A — Cohérence Prix (15 pts).</strong> A categorical field set by comparing the declared unit price against the WACTAF median.</p>
+      <div class="math-box">
+IF Cohérence Prix = "✓ Cohérent"        → +15 pts
+IF Cohérence Prix = "⚠ Légèrement hors" →  +8 pts
+IF Cohérence Prix = "⚠ Hors norme"      →   0 pts  + MANDATORY DECLINE
+      </div>
+
+      <p><strong>Rule 1B — Spread Commercial (10 pts).</strong> The trading margin.</p>
+      <div class="math-box">
+Spread % = (Resale value − Purchase cost) / Purchase cost × 100
+
+IF 20 ≤ Spread ≤ 40        → +10 pts   realistic
+IF 15 ≤ Spread &lt; 20  or
+   40 &lt; Spread ≤ 50        →  +5 pts   borderline
+OTHERWISE                  →   0 pts   implausible + review flag
+      </div>
+      <p class="note">
+        Below 15%, transport and levies consume the entire margin and the trade cannot service
+        the advance. Above 50% is not observed on these corridors and usually means one side of
+        the trade is mis-stated.
+      </p>
+
+      <h3>What the data shows</h3>
+      <table class="method-table">
+        <thead><tr><th>Cohérence Prix</th><th>Conformant</th><th>Rate</th></tr></thead>
+        <tbody>
+          <tr><td>✓ Cohérent</td><td class="num">218 / 232</td><td class="num">94.0%</td></tr>
+          <tr><td>⚠ Légèrement hors</td><td class="num">39 / 42</td><td class="num">92.9%</td></tr>
+          <tr><td>⚠ Hors norme</td><td class="num">36 / 40</td><td class="num">90.0%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The gradient runs the right way — coherent pricing performs best — and the odds ratio
+        between coherent and out-of-range pricing is <strong>1.73</strong>. This is the
+        strongest relationship in the dataset, which is why Rule 1A carries the single largest
+        weight.
+      </p>
+      <div class="caveat-box caveat-inline">
+        <strong>⚠ But keep it in proportion.</strong>
+        <p>
+          The gap is 4 percentage points across 314 records, and even out-of-range pricing
+          succeeded 90% of the time. On a sample this size that difference is not
+          statistically decisive. It is suggestive, consistent with the operational logic, and
+          entirely unvalidated against repayment.
+        </p>
+      </div>
+
+      <h3>Worked example</h3>
+      <div class="example-calc">
+Declared value      900,000 FCFA
+Purchase cost       650,000 FCFA
+Cohérence Prix      ✓ Cohérent
+
+Spread = (900,000 − 650,000) / 650,000 × 100 = 38.5%
+
+Rule 1A  ✓ Cohérent            → +15
+Rule 1B  38.5% → within 20–40% → +10
+                                 ────
+Layer 1 subtotal                   25 / 25
+      </div>
+    </section>
+
+    <!-- ================= LAYER 2 ================= -->
+    <section id="layer2" class="methodology-section">
+      <h2>Layer 2 — Route Risk <span class="pts-badge">20 points</span></h2>
+
+      <h3>The intuition</h3>
+      <p>
+        Corridors are not equal. Road quality, border formalities, and checkpoint density vary,
+        and each leaves a trace in how often cargo arrives conformant. The product matters too:
+        the question is how fast goods lose value if the trip is delayed, and how readily they
+        resell if the buyer walks away.
+      </p>
+
+      <h3>The arithmetic</h3>
+
+      <p><strong>Rule 2A — Corridor (9 pts).</strong> A lookup against observed routes.</p>
+      <div class="math-box">
+Established corridor (in the observed base)  → +9 pts
+Rare corridor (fewer than ~15 deals)         → +5 pts  + review flag
+Untested corridor (absent from the base)     → +5 pts  + MANDATORY DECLINE
+      </div>
+
+      <p><strong>Rule 2B — Product type (6 pts).</strong></p>
+      <div class="math-box">
+Produits Agricoles     → +6 pts   storable, deepest resale market
+Produits Bétails       → +5 pts   mortality and feed costs en route
+Produits Halieutiques  → +4 pts   highly perishable, cold-chain dependent
+Unclassified           →   0 pts  + MANDATORY DECLINE
+      </div>
+
+      <p><strong>Rule 2C — Corridor incidents (5 pts).</strong></p>
+      <div class="math-box">
+IF incidents = 0   → +5 pts
+IF incidents = 1   → +2 pts   + insurance requirement
+IF incidents ≥ 2   →   0 pts
+      </div>
+
+      <h3>What the data shows</h3>
+      <table class="method-table">
+        <thead><tr><th>Corridor</th><th>Deals</th><th>Conformant</th></tr></thead>
+        <tbody>
+          <tr><td>Bénin → Togo</td><td class="num">120</td><td class="num">90.8%</td></tr>
+          <tr><td>Togo → Bénin</td><td class="num">70</td><td class="num">94.3%</td></tr>
+          <tr><td>Bénin → Burkina Faso</td><td class="num">32</td><td class="num">93.8%</td></tr>
+          <tr><td>Bénin → Côte d'Ivoire</td><td class="num">24</td><td class="num">95.8%</td></tr>
+          <tr><td>Bénin → Ghana</td><td class="num">20</td><td class="num">95.0%</td></tr>
+          <tr><td>Bénin → Nigeria</td><td class="num">20</td><td class="num">95.0%</td></tr>
+          <tr><td>Niger → Côte d'Ivoire</td><td class="num">14</td><td class="num">100%</td></tr>
+          <tr><td>Nigeria → Côte d'Ivoire</td><td class="num">5</td><td class="num">100%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The entire spread across established corridors is about 5 percentage points. Route is a
+        real but weak discriminator — it earns 9 of 60 points, not more.
+      </p>
+
+      <div class="caveat-box caveat-inline">
+        <strong>⚠ A 100% corridor is not a safe corridor.</strong>
+        <p>
+          Niger → Côte d'Ivoire (14 deals) and Nigeria → Côte d'Ivoire (5 deals) have perfect
+          records. On samples that small, a perfect record is what you expect from a
+          ~94% route by chance — roughly a 43% chance over 14 deals. Both are scored as
+          <em>rare</em> (5 points), not excellent, and both raise a manual-approval flag.
+          Rewarding them for a success rate the data cannot support would be the single
+          easiest way to lose money with this engine.
+        </p>
+      </div>
+
+      <p><strong>By product type:</strong> Agricoles 154/165 (93.3%), Bétails 138/147 (93.9%),
+      Halieutiques 1/1 (100%). The first two are statistically indistinguishable; the third is a
+      single transaction and carries no information. The ordering in Rule 2B rests on the
+      perishability argument, not on this data.</p>
+
+      <div class="caveat-box danger-box">
+        <strong>⚠ Why incidents are not weighted more heavily.</strong>
+        <p>
+          <code>Nb Incidents</code> correlates with failure at <strong>r = −0.687</strong>, far
+          stronger than anything else measured. Every one of the 11 transactions with a recorded
+          incident was non-conformant; all 303 with none were 96.7% conformant.
+        </p>
+        <p>
+          That is too clean to be foresight. An "incident" appears to be recorded <em>as part
+          of</em> the same failure it would be predicting — so using it as a forward-looking
+          signal leaks the outcome into the score. It would look superb in backtest and predict
+          nothing at application time, when no incident has yet occurred. It is therefore capped
+          at 5 points as a history check on the borrower's past route record, not treated as
+          the dominant predictor the correlation would suggest.
+        </p>
+      </div>
+
+      <h3>Worked example</h3>
+      <div class="example-calc">
+Corridor    Togo → Bénin  (70 deals, 94.3%)
+Product     Produits Agricoles
+Incidents   0
+
+Rule 2A  established corridor  → +9
+Rule 2B  Agricoles             → +6
+Rule 2C  no incidents          → +5
+                                 ────
+Layer 2 subtotal                  20 / 20
+      </div>
+    </section>
+
+    <!-- ================= LAYER 3 ================= -->
+    <section id="layer3" class="methodology-section">
+      <h2>Layer 3 — Borrower Activity <span class="pts-badge">15 points</span></h2>
+
+      <div class="caveat-box danger-box">
+        <strong>⚠ Read this before the rules: this layer does not predict success.</strong>
+        <p>
+          In the observed base, trading activity has no relationship with whether a transaction
+          completes conformant. Prior trips correlate at <strong>r = −0.067</strong> — slightly
+          <em>negative</em> — and monthly frequency at <strong>r = +0.004</strong>, which is
+          zero. The layer is kept for <strong>portfolio management</strong>: preferring
+          established repeat traders over one-offs is a defensible commercial policy. It is
+          not a risk measurement, and it is deliberately capped at a quarter of the score.
+        </p>
+      </div>
+
+      <h3>The arithmetic</h3>
+      <div class="math-box">
+Rule 3A — Repeat trader (6 pts)
+  trips ≥ 3   → +6      trips = 2 → +3      trips = 1 → 0
+  trips = 0   →  0 pts  + MANDATORY DECLINE
+
+Rule 3B — Frequency (5 pts)
+  ≥ 2 / month → +5      1–1.9 / month → +2      &lt; 1 → 0
+
+Rule 3C — Specialization (4 pts)
+  concentration ≥ 80% → +4    50–79% → +2    &lt; 50% → 0
+
+  where concentration = trips on primary corridor / total trips
+      </div>
+
+      <h3>What the data shows</h3>
+      <table class="method-table">
+        <thead><tr><th>Prior trips</th><th>Conformant</th><th>Rate</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="num">209 / 223</td><td class="num">93.7%</td></tr>
+          <tr><td>2</td><td class="num">26 / 26</td><td class="num">100%</td></tr>
+          <tr><td>3</td><td class="num">5 / 6</td><td class="num">83.3%</td></tr>
+          <tr><td>4</td><td class="num">11 / 12</td><td class="num">91.7%</td></tr>
+          <tr><td>47</td><td class="num">42 / 47</td><td class="num">89.4%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        There is no monotone pattern here. Two trips outperforms three; the most active trader
+        in the base (47 trips) sits below the one-trip group. With 223 of 314 records at a
+        single trip, there is barely any variation to learn from in the first place.
+      </p>
+
+      <h3>Why the relationship is absent</h3>
+      <p>
+        Most likely selection: every borrower in the base already passed a screen, so the
+        variation that would separate good from bad was removed before the data was recorded.
+        This is a reason to distrust the measurement, not evidence that experience is
+        worthless. It should be re-tested once there is outcome variation to test against.
+      </p>
+
+      <h3>Worked example</h3>
+      <div class="example-calc">
+Prior trips     5
+Frequency       2.1 / month
+Concentration   85% on primary corridor
+
+Rule 3A  5 trips (≥3)        → +6
+Rule 3B  2.1/month (≥2)      → +5
+Rule 3C  85% (≥80%)          → +4
+                                ────
+Layer 3 subtotal                 15 / 15
+      </div>
+    </section>
+
+    <!-- ================= TIERS ================= -->
+    <section id="tiers" class="methodology-section">
+      <h2>Tiers and advance rates</h2>
+
+      <div class="math-box">
+Total = Layer 1 + Layer 2 + Layer 3
+      = (0–25)  +  (0–20)  +  (0–15)   =   0–60
+
+Advance (FCFA) = round(declared value × advance rate)
+      </div>
+
+      <table class="method-table">
+        <thead><tr><th>Score</th><th>Tier</th><th>Advance</th><th>Tenor</th><th>Processing</th></tr></thead>
+        <tbody>
+          <tr class="tier-approved"><td class="num">50–60</td><td>★★★ Approved</td><td class="num">70%</td><td>14 days</td><td>Automated</td></tr>
+          <tr class="tier-standard"><td class="num">40–49</td><td>★★ Standard</td><td class="num">55%</td><td>10 days</td><td>Standard review</td></tr>
+          <tr class="tier-conditional"><td class="num">30–39</td><td>★ Conditional</td><td class="num">40%</td><td>7 days</td><td>Manual review + guarantor</td></tr>
+          <tr class="tier-decline"><td class="num">&lt; 30</td><td>⚠ Decline</td><td class="num">—</td><td>—</td><td>Not recommended</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Hard stops override the score</h3>
+      <p>
+        Five conditions decline a file no matter how well it scores. The points are still shown,
+        so a reviewer can see how the file looked, but the advance is forced to zero.
+      </p>
+      <table class="method-table">
+        <thead><tr><th>Code</th><th>Condition</th></tr></thead>
+        <tbody>
+          <tr><td><code>PRICE_OUT_OF_RANGE</code></td><td>Cohérence Prix = ⚠ Hors norme</td></tr>
+          <tr><td><code>PRODUCT_UNKNOWN</code></td><td>Product type unclassified</td></tr>
+          <tr><td><code>CORRIDOR_UNTESTED</code></td><td>Corridor absent from the observed base</td></tr>
+          <tr><td><code>NO_TRIP_HISTORY</code></td><td>Zero prior trips (no WACTAF record)</td></tr>
+          <tr><td><code>NO_DECLARED_VALUE</code></td><td>Declared value ≤ 0</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Worked example — a full file</h3>
+      <div class="example-calc">
+Ginger · Togo → Bénin · declared 900,000 FCFA
+
+Layer 1   coherent price, 38.5% spread        25 / 25
+Layer 2   established corridor, agricoles,
+          no incidents                        20 / 20
+Layer 3   5 trips, 2.1/month, 85% focus       15 / 15
+                                              ───────
+Total                                         60 / 60
+
+Tier          ★★★ Approved
+Advance rate  70%
+Max advance   900,000 × 0.70 = 630,000 FCFA
+Tenor         14 days
+      </div>
+
+      <div class="caveat-box caveat-inline">
+        <strong>⚠ Tier boundaries are brittle.</strong>
+        <p>
+          A 39 and a 40 differ by one rule but by 15 percentage points of advance. The engine
+          flags any file within two points of a threshold, so the fragility is visible rather
+          than hidden behind a tier label. Nothing in the data justifies the thresholds sitting
+          at exactly 30, 40 and 50 — they are round numbers pending calibration.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= CAVEATS ================= -->
+    <section id="caveats" class="methodology-section">
+      <h2>Validation and caveats</h2>
+
+      <h3>The observed base</h3>
+      <div class="stat-row">
+        <div class="stat"><span class="stat-value">314</span><span class="stat-label">transactions</span></div>
+        <div class="stat"><span class="stat-value">293</span><span class="stat-label">conformant</span></div>
+        <div class="stat"><span class="stat-value">93.3%</span><span class="stat-label">success rate</span></div>
+        <div class="stat"><span class="stat-value">4</span><span class="stat-label">months (Jan–Apr 2026)</span></div>
+      </div>
+
+      <div class="caveat-box danger-box">
+        <strong>⚠ Caveat 1 — This measures delivery, not repayment.</strong>
+        <p>
+          The 93.3% is the share of cargo that arrived conformant. It is <em>not</em> a
+          repayment rate. No borrower in the base has completed a loan, so nothing in this
+          engine has ever been tested against the outcome it exists to predict. A file can
+          deliver perfectly and still not be repaid.
+        </p>
+      </div>
+
+      <div class="caveat-box">
+        <strong>⚠ Caveat 2 — The sample is small and one-sided.</strong>
+        <p>
+          314 records over four months, with only 21 failures in total. Credit models are
+          normally built on thousands. With so few failures, no rule here can be estimated with
+          meaningful precision — and four months captures no seasonality, so lean-season
+          behaviour is entirely unobserved.
+        </p>
+      </div>
+
+      <div class="caveat-box">
+        <strong>⚠ Caveat 3 — A 93.3% success rate is suspiciously high.</strong>
+        <p>
+          Every borrower in the base already passed a screen before being recorded. The
+          failures that would teach the model most are probably missing, which both inflates
+          the success rate and flattens the differences between rules. This is the most likely
+          explanation for Layer 3 showing no signal.
+        </p>
+      </div>
+
+      <div class="caveat-box">
+        <strong>⚠ Caveat 4 — Two inputs are derived, not measured.</strong>
+        <p>
+          The workbook has no corridor-concentration column, so concentration is computed as
+          each seller's share of trips on their most-used corridor. Its <code>Trips/Mois</code>
+          column reads 30 even for sellers with a single trip — a days-in-period constant, not a
+          frequency — so frequency is derived as trips over the four-month window instead.
+          Both derivations are reasonable; neither is the operator's own measurement.
+        </p>
+      </div>
+
+      <h3>Validation plan</h3>
+      <table class="method-table">
+        <thead><tr><th>Phase</th><th>When</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1 · Deploy</strong></td><td>Now</td><td>Score every file, fund conservatively, record every outcome including the declines.</td></tr>
+          <tr><td><strong>2 · First calibration</strong></td><td>50 loans</td><td>Did high scores repay and low scores default? Re-weight from observed repayment. Rebuild the corridor table.</td></tr>
+          <tr><td><strong>3 · Statistical model</strong></td><td>200+ loans</td><td>Fit a probability-of-default model. Test whether the tier thresholds sit anywhere defensible.</td></tr>
+          <tr><td><strong>4 · Production</strong></td><td>~1 year</td><td>Confidence intervals, monitored drift, documented performance by segment.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="note">
+        Recording outcomes for files the engine <em>declines</em> matters as much as for those
+        it funds. Without them there is no way to learn whether the hard stops are rejecting
+        genuinely bad files or simply good business.
+      </p>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section id="glossary" class="methodology-section">
+      <h2>Glossary</h2>
+
+      <dl class="glossary">
+        <dt>Cohérence Prix</dt>
+        <dd>A categorical judgement of the declared unit price against the WACTAF market median for that product and route: <em>Cohérent</em>, <em>Légèrement hors</em>, or <em>Hors norme</em>. The single heaviest input in the engine.</dd>
+
+        <dt>Spread Commercial</dt>
+        <dd>The trading margin, <code>(resale − purchase) / purchase × 100</code>. Under 15% leaves nothing to repay from once transport and levies are met; over 50% is not observed on these corridors.</dd>
+
+        <dt>Corridor</dt>
+        <dd>An origin→destination country pair, e.g. <em>Togo → Bénin</em>. Scored on how reliably cargo has completed on that route in the observed base.</dd>
+
+        <dt>Corridor concentration</dt>
+        <dd>Share of a seller's trips running on their most-used corridor. A trader with 4 of 5 trips on one route is at 80% — a specialist who knows its checkpoints and buyers.</dd>
+
+        <dt>Conformant delivery</dt>
+        <dd>Cargo arrived as declared (<code>Livraison Conforme = Oui</code>). This is the outcome measured in the base — <strong>not</strong> loan repayment.</dd>
+
+        <dt>Advance rate</dt>
+        <dd>Share of declared cargo value released to the borrower up front: 70 / 55 / 40% by tier. The remainder is the lender's buffer against the cargo being worth less than declared.</dd>
+
+        <dt>Tenor</dt>
+        <dd>Maximum days to repayment, 7 to 14 by tier.</dd>
+
+        <dt>Mandatory decline</dt>
+        <dd>A hard stop that forces the advance to zero regardless of points.</dd>
+
+        <dt>PD — Probability of Default</dt>
+        <dd>The statistical likelihood a borrower fails to repay. <strong>Not yet computable here</strong>: it needs completed loans with known outcomes, and there are none. It is the metric phase 3 exists to produce.</dd>
+
+        <dt>Point-biserial correlation (r)</dt>
+        <dd>Association between a numeric input and a yes/no outcome, from −1 to +1. Zero means no linear relationship. Reported above for each activity variable — all near zero.</dd>
+      </dl>
+
+      <h3>Reproducing these figures</h3>
+      <p>
+        Every statistic on this page was computed directly from the 314-record workbook:
+        success rates by category, the 1.73 odds ratio, and each correlation. The rule tables
+        match <code>js/scoring-engine.js</code> as deployed. The underlying workbook is not
+        published — it carries borrower names, phone numbers and vehicle plates.
+      </p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">← Back to the scoring engine</a></p>
+      <p class="footer-caveat">Provisional rule weights, pending recalibration against repayment data.</p>
+    </footer>
+
+  </div>
+
+  <script src="js/methodology.js"></script>
+</body>
+</html>

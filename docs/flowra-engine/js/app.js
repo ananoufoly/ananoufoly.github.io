@@ -18,12 +18,19 @@
    * BOOT
    * ================================================================ */
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     populateSelects();
     wireForm();
-    wireSamples();
     wireWhatIf();
     wireRangeOutput();
+
+    // Transactions load before the picker is wired, so it never shows an
+    // empty list or a stale set.
+    await loadTransactions();
+    populateSampleSelect();
+    wireSamples();
+    wireBorrowerSearch();
+    announceDataSource();
   });
 
   /* ================================================================ *
@@ -53,10 +60,30 @@
       whatIfCoherence.appendChild(makeOption(opt.value, opt.label));
     });
 
+  }
+
+  /** Filled once transactions have loaded. */
+  function populateSampleSelect() {
     const sampleSelect = document.getElementById('sampleSelect');
-    SAMPLE_TRANSACTIONS.forEach((s, i) => {
-      sampleSelect.appendChild(makeOption(String(i), `${s.id} — ${s.borrower}`));
+    sampleSelect.innerHTML = '';
+    SAMPLE_TRANSACTIONS.slice(0, 200).forEach((t, i) => {
+      const label = t.borrower ? `${t.id} — ${t.borrower}` : t.id;
+      sampleSelect.appendChild(makeOption(String(i), label));
     });
+  }
+
+  /** Tell the user which dataset is in play — real file or synthetic samples. */
+  function announceDataSource() {
+    const el = document.getElementById('dataSource');
+    if (!el) return;
+    const n = SAMPLE_TRANSACTIONS.length;
+    if (USING_REAL_DATA) {
+      el.textContent = `${n} transaction${n > 1 ? 's' : ''} loaded from flowra-transactions.json.`;
+      el.className = 'data-source data-source-real';
+    } else {
+      el.textContent = `${n} synthetic sample${n > 1 ? 's' : ''} — no transaction file present.`;
+      el.className = 'data-source data-source-fallback';
+    }
   }
 
   function makeOption(value, label) {
@@ -114,6 +141,98 @@
   }
 
   /* ================================================================ *
+   * BORROWER SEARCH
+   * ================================================================ */
+
+  /** Index of the currently displayed suggestions, by list position. */
+  let currentSuggestions = [];
+
+  function wireBorrowerSearch() {
+    const input = document.getElementById('borrowerSearch');
+    if (!input) return;
+
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      if (query.length < 2) {
+        hideSuggestions();
+        return;
+      }
+
+      currentSuggestions = SAMPLE_TRANSACTIONS.filter(t => {
+        const name = String(t.borrower || '').toLowerCase();
+        const id = String(t.id || '').toLowerCase();
+        const corridor = String(t.corridor || '').toLowerCase();
+        return name.includes(query) || id.includes(query) || corridor.includes(query);
+      }).slice(0, 8);
+
+      if (currentSuggestions.length) {
+        showSuggestions(currentSuggestions);
+      } else {
+        showNoMatch(query);
+      }
+    });
+
+    // Escape closes the list; a click elsewhere dismisses it.
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { hideSuggestions(); input.blur(); }
+    });
+    document.addEventListener('click', e => {
+      if (e.target !== input && !e.target.closest('#borrowerSuggestions')) {
+        hideSuggestions();
+      }
+    });
+  }
+
+  function suggestionBox() {
+    let box = document.getElementById('borrowerSuggestions');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'borrowerSuggestions';
+      box.className = 'suggestions';
+      const input = document.getElementById('borrowerSearch');
+      input.parentNode.insertBefore(box, input.nextSibling);
+    }
+    return box;
+  }
+
+  function showSuggestions(matches) {
+    const box = suggestionBox();
+    box.innerHTML = matches.map((m, i) => `
+      <button type="button" class="suggestion" data-index="${i}">
+        <span class="suggestion-name">${esc(m.borrower || m.id)}</span>
+        <span class="suggestion-meta">${esc(m.corridor || '—')} · ${esc(m.product || m.typeProduct || '—')}</span>
+      </button>
+    `).join('');
+
+    // Listeners rather than inline onclick: borrower names are data, and a
+    // name containing a quote would break an inline handler.
+    box.querySelectorAll('.suggestion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectSuggestion(Number(btn.dataset.index));
+      });
+    });
+  }
+
+  function showNoMatch(query) {
+    suggestionBox().innerHTML =
+      `<p class="suggestion-empty">No borrower matching “${esc(query)}”.</p>`;
+  }
+
+  function hideSuggestions() {
+    const box = document.getElementById('borrowerSuggestions');
+    if (box) box.remove();
+    currentSuggestions = [];
+  }
+
+  function selectSuggestion(index) {
+    const chosen = currentSuggestions[index];
+    if (!chosen) return;
+    populateForm(chosen);
+    hideSuggestions();
+    document.getElementById('borrowerSearch').value = '';
+  }
+
+  /* ================================================================ *
    * FORM I/O
    * ================================================================ */
 
@@ -138,6 +257,12 @@
   function populateForm(sample) {
     setValue('f-id', sample.id);
     setValue('f-borrower', sample.borrower);
+
+    // Real records may name a corridor or product the dropdown has never seen.
+    // Add it rather than silently leaving the field blank — the engine scores
+    // an unknown corridor as untested, which is the honest outcome.
+    ensureOption('f-corridor', sample.corridor);
+    ensureOption('f-product', sample.typeProduct);
     setValue('f-corridor', sample.corridor);
     setValue('f-product', sample.typeProduct);
     setValue('f-declaredValue', sample.declaredValue);
@@ -154,6 +279,17 @@
   function setValue(id, value) {
     const el = document.getElementById(id);
     if (el) el.value = value;
+  }
+
+  /** Add a value to a <select> if it is not already one of its options. */
+  function ensureOption(selectId, value) {
+    if (!value) return;
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    const exists = Array.from(sel.options).some(o => o.value === value);
+    if (!exists) {
+      sel.appendChild(makeOption(value, `${value} (not in reference data)`));
+    }
   }
 
   /* ================================================================ *

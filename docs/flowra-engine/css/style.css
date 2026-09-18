@@ -733,3 +733,332 @@ footer code { background: rgba(255, 255, 255, 0.2); padding: 1px 5px; border-rad
   .layer { page-break-inside: avoid; background: #f5f5f5; }
   header h1 { color: #000; font-size: 1.2rem; }
 }
+
+/* ---------------- Borrower search ---------------- */
+
+.search-group {
+  position: relative;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--light);
+  margin-bottom: 16px;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+}
+
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  padding: 9px 11px;
+  border: none;
+  border-bottom: 1px solid var(--light);
+  border-radius: 0;
+  background: var(--white);
+  cursor: pointer;
+}
+
+.suggestion:last-child { border-bottom: none; }
+.suggestion:hover, .suggestion:focus { background: #eef5fb; filter: none; outline: none; }
+
+.suggestion-name { font-weight: 600; font-size: 0.87rem; color: var(--dark); }
+.suggestion-meta { font-size: 0.76rem; color: var(--muted); }
+
+.suggestion-empty {
+  margin: 0;
+  padding: 10px 11px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ---------------- Data source indicator ---------------- */
+
+.data-source {
+  margin: 0 0 4px;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--muted);
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--light);
+}
+
+.data-source-real {
+  background: #eafaf1;
+  color: #1e7e46;
+}
+
+.data-source-fallback {
+  background: #fff8e6;
+  color: #8a6100;
+}
+
+/* ==================================================================
+   Methodology page
+   ================================================================== */
+
+.methodology-container { max-width: 940px; }
+
+.methodology-nav {
+  background: var(--white);
+  padding: 14px;
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.methodology-nav a {
+  padding: 7px 13px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--dark);
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.methodology-nav a:hover { background: #eef2fb; border-color: #c3d0ee; }
+
+.methodology-nav a.active {
+  background: #667eea;
+  color: var(--white);
+  border-color: #667eea;
+}
+
+.methodology-nav .nav-home {
+  margin-left: auto;
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+.methodology-nav .nav-home:hover { background: #29b765; border-color: #29b765; }
+
+/* Sections are all visible until the script confirms it can switch them. */
+.js-enabled .methodology-section { display: none; }
+.js-enabled .methodology-section.active { display: block; animation: fadeIn 0.25s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.methodology-section {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.methodology-section h2 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.methodology-section h3 {
+  margin: 26px 0 8px;
+  font-size: 1rem;
+  color: var(--dark);
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--light);
+}
+
+.methodology-section p { margin: 0 0 12px; font-size: 0.92rem; color: #3d4f5d; }
+.methodology-section .lede { font-size: 1rem; color: var(--dark); }
+.methodology-section .note { font-size: 0.85rem; color: var(--muted); }
+.methodology-section a { color: #4a63c8; }
+
+.pts-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: #667eea;
+  color: var(--white);
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Stat row ---- */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 16px 0 20px;
+}
+
+.stat {
+  background: #f0f3ff;
+  border-left: 4px solid #667eea;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.stat-value { display: block; font-size: 1.45rem; font-weight: 800; color: var(--dark); line-height: 1.1; }
+.stat-label { display: block; font-size: 0.76rem; color: var(--muted); margin-top: 3px; }
+
+/* ---- Boxes ---- */
+
+.layer-box {
+  background: #f0f3ff;
+  border-left: 4px solid #667eea;
+  padding: 14px 16px;
+  margin: 16px 0;
+  border-radius: var(--radius-sm);
+}
+
+.layer-box strong { display: block; margin-bottom: 5px; }
+.layer-box p { margin: 0; font-size: 0.88rem; }
+
+.math-box {
+  background: #fafbfc;
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin: 14px 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  white-space: pre;
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  color: #2f3e4c;
+}
+
+.example-calc {
+  background: #fff9e6;
+  border-left: 4px solid #ffb300;
+  padding: 14px 16px;
+  margin: 14px 0;
+  border-radius: var(--radius-sm);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  white-space: pre;
+  overflow-x: auto;
+  color: #5c4708;
+}
+
+.caveat-box {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  padding: 14px 16px;
+  margin: 18px 0;
+  border-radius: var(--radius-sm);
+}
+
+.caveat-box strong { display: block; margin-bottom: 5px; color: #8a6100; font-size: 0.92rem; }
+.caveat-box p { margin: 0 0 8px; font-size: 0.87rem; color: #6b5200; }
+.caveat-box p:last-child { margin-bottom: 0; }
+.caveat-box code { background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 3px; font-size: 0.85em; }
+.caveat-inline { margin: 14px 0; }
+
+.danger-box { background: #fdecea; border-color: #f5b7b1; }
+.danger-box strong { color: #8e2a20; }
+.danger-box p { color: #7b2d24; }
+
+/* ---- Tables ---- */
+
+.method-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.87rem;
+  margin: 12px 0 16px;
+  display: block;
+  overflow-x: auto;
+}
+
+.method-table th, .method-table td {
+  padding: 8px 11px;
+  border-bottom: 1px solid var(--light);
+  text-align: left;
+  vertical-align: top;
+}
+
+.method-table th {
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.method-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.method-table .total-row { font-weight: 700; background: #f7f9fa; }
+.method-table code { font-size: 0.82em; background: var(--light); padding: 1px 5px; border-radius: 3px; }
+
+.method-table .tier-approved    { background: rgba(46, 204, 113, 0.07); }
+.method-table .tier-standard    { background: rgba(243, 156, 18, 0.07); }
+.method-table .tier-conditional { background: rgba(230, 126, 34, 0.07); }
+.method-table .tier-decline     { background: rgba(231, 76, 60, 0.07); }
+
+/* ---- Glossary ---- */
+
+.glossary { margin: 12px 0; }
+.glossary dt { font-weight: 700; font-size: 0.9rem; margin-top: 14px; color: var(--dark); }
+.glossary dd { margin: 4px 0 0; font-size: 0.87rem; color: #4a5a68; line-height: 1.55; }
+.glossary code { background: var(--light); padding: 1px 5px; border-radius: 3px; font-size: 0.85em; }
+
+/* ---- Top nav on the engine page ---- */
+
+.site-nav {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  padding: 6px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  transition: background 0.2s;
+}
+
+.site-nav a:hover { background: rgba(255, 255, 255, 0.3); }
+.site-nav a.current { background: var(--white); color: #4a63c8; border-color: var(--white); }
+
+/* ---- Print ---- */
+
+@media print {
+  .methodology-nav, .site-nav { display: none !important; }
+  /* Print every section, not just the visible one. */
+  .js-enabled .methodology-section { display: block !important; }
+  .methodology-section {
+    box-shadow: none;
+    border: 1px solid #bbb;
+    page-break-inside: avoid;
+    margin-bottom: 14px;
+  }
+  .math-box, .example-calc, .caveat-box, .method-table { page-break-inside: avoid; }
+  .stat { border-left-color: #666; }
+}

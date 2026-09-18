@@ -13,6 +13,10 @@
     <header>
       <h1>⚖️ Flowra Trade Finance Scoring Engine</h1>
       <p class="subtitle">Score West African agricultural trade transactions — every point traceable to a rule.</p>
+      <nav class="site-nav">
+        <a href="index.html" class="current">🏠 Scoring Engine</a>
+        <a href="methodology.html">📖 Methodology</a>
+      </nav>
     </header>
 
     <div class="layout">
@@ -47,7 +51,8 @@
         </div>
 
         <div class="sample-loader">
-          <label for="sampleSelect">Sample transactions</label>
+          <label for="sampleSelect">Transactions</label>
+          <p id="dataSource" class="data-source">Loading…</p>
           <select id="sampleSelect"></select>
           <button id="loadSample" type="button" class="btn-secondary">📋 Load Sample</button>
           <button id="resetForm" type="button" class="btn-ghost">↺ Clear form</button>
@@ -59,6 +64,13 @@
         <form id="scoreForm" novalidate>
           <fieldset>
             <legend>Transaction Details</legend>
+
+            <div class="form-group search-group">
+              <label for="borrowerSearch">Search Borrower</label>
+              <input type="text" id="borrowerSearch" autocomplete="off"
+                     placeholder="Type a name, ID, or corridor to autofill…">
+              <p class="hint">Searches the loaded transactions and fills the form from the record you pick.</p>
+            </div>
 
             <div class="form-row">
               <div class="form-group">

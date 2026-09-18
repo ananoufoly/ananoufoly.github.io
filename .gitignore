@@ -33,3 +33,7 @@ seed_planner.js
 loan_planner_seeded.html
 
 planner_apps_script.gs
+
+# Real transaction data — borrower PII, never publish
+flowra-transactions.json
+docs/**/flowra-transactions.json
