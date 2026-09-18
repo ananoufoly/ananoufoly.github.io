@@ -8,6 +8,7 @@
 (function () {
   'use strict';
 
+  const BUILD = '2026-09-18c';
   const engine = new ScoringEngine();
 
   /** Last scored transaction + result — the baseline for what-if scenarios. */
@@ -77,6 +78,9 @@
     const el = document.getElementById('dataSource');
     if (!el) return;
     const n = SAMPLE_TRANSACTIONS.length;
+    console.log(`Flowra engine build ${BUILD} ready.`);
+    const tag = document.getElementById('buildTag');
+    if (tag) tag.textContent = `build ${BUILD}`;
     if (USING_REAL_DATA) {
       el.textContent = `${n} transaction${n > 1 ? 's' : ''} loaded from flowra-transactions.json.`;
       el.className = 'data-source data-source-real';
