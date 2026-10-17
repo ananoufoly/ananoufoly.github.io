@@ -407,11 +407,11 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
 <section class="panel" id="tab-fiche" hidden>
   <div class="fiche-bar">
     <button class="btn primary" type="button" id="printBtn">Exporter en PDF</button>
-    <span class="hint">Choisir « Enregistrer au format PDF » dans la fenêtre d'impression. Format A4, une page.</span>
+    <span class="hint">Choisir « Enregistrer au format PDF » dans la fenêtre d'impression. Format A4, une page. La fiche présente toujours le cas complet, quel que soit le cas sélectionné dans le simulateur.</span>
   </div>
   <article class="sheet">
     <h1>CIKA · Canal diaspora Europe : <span data-bind="scenarioName"></span></h1>
-    <div class="meta"><span id="fDate"></span> · Comparaison des options de réalisation sur <span data-bind="horizon"></span> ans, <span data-bind="mode"></span> · montants en K€</div>
+    <div class="meta"><span id="fDate"></span> · Comparaison des options de réalisation sur <span data-bind="horizon"></span> ans, cas complet · montants en K€</div>
     <div class="keys" id="fKeys"></div>
     <h2>Indicateurs</h2>
     <div class="tbl-wrap"><table id="fInd"></table></div>
@@ -423,7 +423,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <div class="reading" id="fReading"></div>
     <p id="fCases" style="margin:4px 0 0"></p>
     <h2>Notre recommandation</h2>
-    <ul class="parcours"></ul>
+    <ul id="fParcours"></ul>
     <p class="warnline">Projections établies sur les hypothèses du scénario indiqué en tête de fiche.</p>
   </article>
 </section>
@@ -735,8 +735,8 @@ function onInput(e){
    ================================================================ */
 function bestIdx(R, f, dir){ var b = 0; R.forEach(function(r, i){ if (dir*f(r) > dir*f(R[b]) + 1e-9) b = i; }); return b; }
 
-function readingSentences(R){
-  var s = [], st = state;
+function readingSentences(R, st){
+  var s = []; st = st || state;
   // 1. Trésorerie de l'année " + HN() + "
   var bc = bestIdx(R, function(r){ return r.cashH; }, 1);
   var negs = [], poss = [];
@@ -1233,17 +1233,18 @@ function update(){
       '<dt>Retour à l\'équilibre</dt><dd>' + yrS(r.payback) + '</dd>' +
       '<dt>Trésorerie an ' + HN() + '</dt><dd' + (r.cashH < -0.5 ? ' class="neg"' : '') + '>' + Ks(r.cashH) + '</dd></dl></div>';
   }).join("");
-  // Fiche
-  var c = state.common;
+  // Fiche : toujours le cas complet
+  var c = state.common, stF = withMode(state, "complet"), RF = runAll(stF);
   document.getElementById("fDate").textContent = new Date().toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"});
   document.getElementById("fKeys").innerHTML = "Montant investi " + EUR(c.invest) + " par client et par an · clients an 1 à 5 : " + c.clients.map(function(x){ return nf0.format(x); }).join(" / ") +
     " · acquisition " + state.options.map(function(o){ return fmtN(o.cac); }).join(" / ") + " € par client (options 1 / 2 / 3 / 3 + PSFP)" +
-    (c.mode === "comparatif" ? " · cas comparatif : mêmes clients actifs pour toutes les options" : " · cas complet : " + fmtN(state.options[0].ratioStart, 1) + " puis " + fmtN(state.options[0].ratioCruise, 1) + " clients actifs par investisseur (option 1), " + fmtN(state.options[1].ratioStart, 1) + " puis " + fmtN(state.options[1].ratioCruise, 1) + " (option 2)") + " · commission SGP " + PCT(c.sgp) + " · PSFP " + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume · coûts fixes +" + PCT(c.growth) + " par an · horizon " + HN() + " ans, clients +" + PCT(c.gLate) + " par an après l'an 5" +
+    (" · cas complet : " + fmtN(state.options[0].ratioStart, 1) + " puis " + fmtN(state.options[0].ratioCruise, 1) + " clients actifs par investisseur (option 1), " + fmtN(state.options[1].ratioStart, 1) + " puis " + fmtN(state.options[1].ratioCruise, 1) + " (option 2)") + " · commission SGP " + PCT(c.sgp) + " · PSFP " + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume · coûts fixes +" + PCT(c.growth) + " par an · horizon " + HN() + " ans, clients +" + PCT(c.gLate) + " par an après l'an 5" +
     (state.options[0].other > 0 && state.options[0].otherYear > 0 ? " · autres produits du wallet (option 1) " + EUR(state.options[0].other) + " par client dès l'an " + state.options[0].otherYear : "");
-  document.getElementById("fInd").innerHTML = indicatorsTable(R, true);
-  document.getElementById("fLegend").innerHTML = legendHTML(R);
-  drawChart(document.getElementById("fChart"), R, 720, 230, false);
-  document.getElementById("fReading").innerHTML = rd;
+  document.getElementById("fInd").innerHTML = indicatorsTable(RF, true);
+  document.getElementById("fLegend").innerHTML = legendHTML(RF);
+  drawChart(document.getElementById("fChart"), RF, 720, 230, false);
+  document.getElementById("fReading").innerHTML = readingSentences(RF, stF).map(function(x){ return "<p>" + x + "</p>"; }).join("");
+  document.getElementById("fParcours").innerHTML = parcoursHTML(RF);
   var pc = parcoursHTML(R);
   Array.prototype.forEach.call(document.querySelectorAll(".parcours"), function(el){ el.innerHTML = pc; });
   // Textes et hypothèses
