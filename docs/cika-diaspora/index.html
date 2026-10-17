@@ -284,7 +284,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     </ul>
 
     <h2>Chiffrage</h2>
-    <p>Les options sont comparées sur le même marché : seuls changent la date de lancement, les coûts et les revenus que chaque option permet de capter. Les tableaux ci-dessous montrent les valeurs du scénario courant.</p>
+    <p>Les options sont comparées sur le même marché : seuls changent la date de lancement, les coûts et les revenus que chaque option permet de capter. Les données sont calibrées à titre illustratif et benchmarkées sur le marché des néobanques. Les tableaux ci-dessous montrent les valeurs du scénario courant.</p>
     <div class="tbl-wrap"><table id="txtCommon"></table></div>
     <h3>Clients actifs : investisseurs et clients bancaires</h3>
     <p>Les options 1 et 2 offrent plus que l'investissement : carte, compte et transferts vers l'Afrique. En plus des investisseurs, elles attirent des clients qui utilisent le wallet au quotidien sans forcément investir. Ces clients ne génèrent pas de commission d'investissement ; ils génèrent les revenus du wallet et des autres produits, et ils ont un coût d'acquisition. Les options 3 ne servent que les investisseurs.</p>
@@ -322,6 +322,8 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <h2>Ce que les chiffres démontrent</h2>
     <h3>Ce qui est démontré <span class="cur-note">(dans le scénario courant)</span></h3>
     <ul id="txtDemo"></ul>
+    <h3>Notre recommandation</h3>
+    <ul class="parcours"></ul>
   </div>
 </section>
 
@@ -420,6 +422,8 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <h2>Lecture</h2>
     <div class="reading" id="fReading"></div>
     <p id="fCases" style="margin:4px 0 0"></p>
+    <h2>Notre recommandation</h2>
+    <ul class="parcours"></ul>
     <p class="warnline">Projections établies sur les hypothèses du scénario indiqué en tête de fiche.</p>
   </article>
 </section>
@@ -768,6 +772,18 @@ function readingSentences(R){
   return s;
 }
 
+
+function parcoursHTML(R){
+  var n3 = R[2].need, n3p = R[3].need, lo = Math.min(n3, n3p), hi = Math.max(n3, n3p);
+  var need3 = Math.abs(hi - lo) < 5 ? M(hi) : M(lo) + " à " + M(hi);
+  var o3 = runOption(state.common, state.options[2]);
+  var vol3 = o3.rows[2].vol;
+  return [
+    "<li><strong>Années 1 et 2 : option 3.</strong> Filiale européenne légère, distribution des offres d'une SGP partenaire, sans wallet. Besoin de financement : " + cur(need3) + SC + ". Objectif : mesurer le montant investi par client, le coût d'acquisition et la rétention.</li>",
+    "<li><strong>Année 3 : plateforme PSFP propre</strong>, si le volume collecté dépasse une dizaine de millions d'euros par an (volume modélisé de l'option 3 en année 3 : " + cur(M(vol3)) + ")" + SC + ".</li>",
+    "<li><strong>Wallet endogène (option 1 ou 4)</strong> seulement si la diaspora demande un usage quotidien (carte, transferts vers l'Afrique) et qu'une levée de l'ordre de " + cur(M(R[0].need)) + SC + " est sécurisée. Les raccourcis de l'option 4 (rachat, passeport) sont à étudier à ce moment-là.</li>"
+  ].join("");
+}
 
 /* ================================================================
    Tableaux
@@ -1228,6 +1244,8 @@ function update(){
   document.getElementById("fLegend").innerHTML = legendHTML(R);
   drawChart(document.getElementById("fChart"), R, 720, 230, false);
   document.getElementById("fReading").innerHTML = rd;
+  var pc = parcoursHTML(R);
+  Array.prototype.forEach.call(document.querySelectorAll(".parcours"), function(el){ el.innerHTML = pc; });
   // Textes et hypothèses
   renderText(R);
   renderHyp();
