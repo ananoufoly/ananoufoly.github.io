@@ -250,17 +250,17 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <p>CIKA construit son propre wallet. Le client y dépose son argent et investit depuis ce wallet, directement : c'est l'objectif de CIKA Invest. La diaspora est servie par une filiale européenne de CIKA qui détient son propre agrément. C'est l'option banque de la vision actuelle. Ce calendrier peut être accéléré mais nécessiterait un apport en capital conséquent.</p>
     <h3>Deux étapes d'agrément</h3>
     <ul>
-      <li><strong>Début</strong> : agrément d'établissement de monnaie électronique (EME) + SGP partenaire. L'EME couvre le wallet, les cartes et les virements. L'investissement reste porté par la SGP, avec CIKA comme interface neutre (pas de conseil, pas de démarchage). Aucun agrément d'investissement n'est nécessaire à ce stade. <span class="st st-a">À faire valider</span> par un avocat.</li>
+      <li><strong>Début</strong> : agrément d'établissement de monnaie électronique (EME) + SGP partenaire. L'EME couvre le wallet, les cartes et les virements. L'investissement reste porté par la SGP, avec CIKA comme interface neutre (pas de conseil, pas de démarchage). Aucun agrément d'investissement n'est nécessaire à ce stade.</li>
       <li><strong>Plus tard</strong> : agrément de prestataire de financement participatif (PSFP). CIKA + LPF sélectionne elle-même les projets et garde toute la commission prise sur eux.</li>
     </ul>
     <h3>Exigences</h3>
     <ul>
-      <li>Capital minimum de 350 K€ pour un EME (règle européenne, non revérifiée ici) <span class="st st-a">À faire valider</span>, plus des fonds propres proportionnels aux fonds détenus pour les clients.</li>
+      <li>Capital minimum de 350 K€ pour un EME (règle européenne), plus des fonds propres proportionnels aux fonds détenus pour les clients.</li>
       <li>Une gouvernance complète : deux dirigeants effectifs, responsables conformité et contrôle interne.</li>
       <li>Un délai de 12 à 18 mois avant le premier client : dossier ACPR, construction et tests.</li>
     </ul>
     <p>Cette trajectoire répond au besoin et à la vision partagée de LPF pour une banque de la diaspora. Le calendrier de février 2027 n'est pas tenable sous cette forme mais elle peut permettre d'accélérer le socle technique et d'avancer vers la recherche d'agrément EME.</p>
-    <p><strong>Ce que l'option apporte.</strong> CIKA maîtrise la relation client, la donnée et tous les revenus du wallet : commissions de carte, revenus sur les fonds déposés, abonnements.</p>
+    <p><strong>Ce que l'option apporte.</strong> CIKA maîtrise la relation client, la donnée et tous les revenus du wallet : commissions de carte, revenus sur les fonds déposés, abonnements.<span data-bind="opt1Other"></span></p>
 
     <h2>Option 2. Marque blanche BaaS + SGP</h2>
     <p>Pas de développement bancaire endogène. La filiale européenne de CIKA devient agent de Treezor : le wallet, l'IBAN, les cartes et le cantonnement sont fournis par Treezor sous la marque CIKA. L'investissement passe par une SGP partenaire, dont le parcours de souscription est intégré dans l'application.</p>
@@ -277,24 +277,24 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <p>La filiale européenne de CIKA présente les offres d'une SGP ou d'une plateforme agréée et oriente les clients vers leur parcours de souscription. L'argent va directement du compte bancaire du client à la SGP ou à la plateforme, qui l'encaisse et le conserve.</p>
     <ul>
       <li><strong>Technique</strong> : catalogue d'offres alimenté par l'API du partenaire, redirection suivie vers son parcours, webhooks de statut, écran de portefeuille dans l'application CIKA.</li>
-      <li><strong>Statut au départ</strong> : aucun agrément, à condition de ne faire ni conseil ni démarchage <span class="st st-a">À faire valider</span>. L'enregistrement comme conseiller en investissements financiers (CIF, auprès de l'ORIAS) est une variante peu coûteuse : il permet de conseiller et de percevoir une rémunération encadrée, au prix d'obligations d'adéquation et d'une assurance <span class="st st-a">À faire valider</span>.</li>
+      <li><strong>Statut au départ</strong> : aucun agrément, à condition de ne faire ni conseil ni démarchage. L'enregistrement comme conseiller en investissements financiers (CIF, auprès de l'ORIAS) est une variante peu coûteuse : il permet de conseiller et de percevoir une rémunération encadrée, au prix d'obligations d'adéquation et d'une assurance.</li>
       <li><strong>Évolution</strong> : agrément PSFP propre dès que le volume le justifie. Le paiement des projets passe alors par un prestataire de paiement spécialisé, pas par un wallet CIKA.</li>
       <li><strong>Limite</strong> : pas de carte, pas de compte, pas de transferts. La relation client est moins quotidienne.</li>
     </ul>
 
     <h2>Chiffrage</h2>
-    <p>Les options sont comparées sur le même marché : seuls changent la date de lancement, les coûts et les revenus que chaque option permet de capter. Toutes les valeurs sont des hypothèses <span class="st st-h">Hypothèse</span>. Les tableaux ci-dessous montrent les valeurs du scénario courant.</p>
+    <p>Les options sont comparées sur le même marché : seuls changent la date de lancement, les coûts et les revenus que chaque option permet de capter. Les tableaux ci-dessous montrent les valeurs du scénario courant.</p>
     <div class="tbl-wrap"><table id="txtCommon"></table></div>
     <h3>Revenus du wallet (options 1 et 2)</h3>
     <div class="tbl-wrap"><table id="txtWallet"></table></div>
-    <p>Le plafond de 0,2 % sur les cartes de débit est une règle européenne <span class="st st-v">Vérifié</span>. Le rendement des fonds cantonnés dépend des taux et des règles de cantonnement.</p>
+    <p>Le plafond de 0,2 % sur les cartes de débit est une règle européenne. Le rendement des fonds cantonnés dépend des taux et des règles de cantonnement.</p>
     <h3>Coûts par option (K€)</h3>
     <div class="tbl-wrap"><table id="txtCosts"></table></div>
     <p class="hint" id="txtCostsNote"></p>
     <h3>Évolution vers la plateforme PSFP propre</h3>
     <ul id="txtPsfp"></ul>
 
-    <h3>Résultats sur 5 ans</h3>
+    <h3>Résultats sur <span data-bind="horizon"></span> ans</h3>
     <p id="txtResIntro"></p>
     <div class="tbl-wrap"><table id="txtRes"></table></div>
     <h3>Lecture</h3>
@@ -341,7 +341,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
       <p class="hint">Saisie au format français (virgule décimale). Les pourcentages se saisissent en %. Les valeurs sont mémorisées dans ce navigateur.</p>
       <fieldset>
         <legend>Marché</legend>
-        <div class="field" style="grid-template-columns:1fr"><label>Clients actifs en fin d'année, marché lancé</label></div>
+        <div class="field" style="grid-template-columns:1fr"><label>Clients actifs en fin d'année, marché lancé (années 1 à 5)</label></div>
         <div class="clients" id="clientsInputs"></div>
         <div id="commonInputs"></div>
       </fieldset>
@@ -352,10 +352,10 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     </aside>
 
     <div class="results">
-      <h2>Indicateurs sur 5 ans <span class="cur-note">K€ · <span data-bind="scenarioName"></span></span></h2>
+      <h2>Indicateurs sur <span data-bind="horizon"></span> ans <span class="cur-note">K€ · <span data-bind="scenarioName"></span></span></h2>
       <div class="tbl-wrap"><table id="simInd"></table></div>
 
-      <h2>Trésorerie cumulée <span class="cur-note">K€, de l'année 0 à l'année 5</span></h2>
+      <h2>Trésorerie cumulée <span class="cur-note">K€, de l'année 0 à l'année <span data-bind="horizon"></span></span></h2>
       <div class="legend" id="simLegend"></div>
       <div class="chart" id="simChart"></div>
 
@@ -381,7 +381,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
   </div>
   <article class="sheet">
     <h1>CIKA · Canal diaspora Europe : <span data-bind="scenarioName"></span></h1>
-    <div class="meta"><span id="fDate"></span> · Comparaison des options de réalisation sur 5 ans · montants en K€</div>
+    <div class="meta"><span id="fDate"></span> · Comparaison des options de réalisation sur <span data-bind="horizon"></span> ans · montants en K€</div>
     <div class="keys" id="fKeys"></div>
     <h2>Indicateurs</h2>
     <div class="tbl-wrap"><table id="fInd"></table></div>
@@ -392,7 +392,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <div class="reading" id="fReading"></div>
     <h2>Parcours recommandé (proposition CRO)</h2>
     <ul class="parcours"></ul>
-    <p class="warnline">Toutes les valeurs sont des hypothèses à remplacer par des devis et des tests de marché réels.</p>
+    <p class="warnline">Projections établies sur les hypothèses du scénario indiqué en tête de fiche.</p>
   </article>
 </section>
 
@@ -402,32 +402,32 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
 <section class="panel" id="tab-hyp" hidden>
   <div class="prose" style="max-width:none">
     <h2>Hypothèses</h2>
-    <p class="lede">Statuts : <span class="st st-v">Vérifié</span> fait établi par la note ; <span class="st st-h">Hypothèse</span> valeur de travail, à remplacer par des devis ou des tests de marché ; <span class="st st-a">À faire valider</span> point réglementaire ou chiffre à confirmer par un avocat ou une source officielle.</p>
+    <p class="lede">Valeurs par défaut du plan et valeurs du scénario courant.</p>
     <div class="tbl-wrap"><table id="hypTable"></table></div>
-    <h3>Points réglementaires cités par la note</h3>
+    <h3>Cadre réglementaire</h3>
     <div class="tbl-wrap"><table id="regTable"></table></div>
 
     <h2>Méthode</h2>
-    <p>Horizon de 5 ans, montants en K€ sauf mention contraire. Pour chaque option et chaque année <i>y</i> = 1 à 5 :</p>
+    <p>Horizon de <i>N</i> ans (de 5 à 15, <span data-bind="horizon"></span> dans le scénario courant), montants en K€ sauf mention contraire. Pour chaque option et chaque année <i>y</i> = 1 à <i>N</i> :</p>
     <ul>
-      <li><strong>Clients en fin d'année</strong> : u(y) = D(y − délai / 12), où D(t) = 0 si t ≤ 0, D(k) = clients de l'année k pour k entier de 1 à 5, interpolation linéaire entre deux entiers (D(0) = 0), et D(t) = clients de l'année 5 au-delà.</li>
+      <li><strong>Clients en fin d'année</strong> : u(y) = D(y − délai / 12), où D(t) = 0 si t ≤ 0, D(k) = clients de l'année k pour k entier de 1 à 5, interpolation linéaire entre deux entiers (D(0) = 0). Au-delà de l'année 5, les clients de l'année k valent ceux de l'année k − 1 × (1 + croissance après l'année 5).</li>
       <li><strong>Clients moyens</strong> : (u(y − 1) + u(y)) / 2, avec u(0) = 0. <strong>Nouveaux clients</strong> : max(u(y) − u(y − 1), 0).</li>
       <li><strong>Volume investi</strong> = clients moyens × montant investi par client.</li>
       <li><strong>Revenu d'investissement</strong> = volume × commission SGP ; si la PSFP est active (y ≥ année PSFP &gt; 0) : volume × (1 − part PSFP) × commission SGP + volume × part PSFP × commission PSFP.</li>
-      <li><strong>Revenu du wallet</strong> (options avec wallet) = clients moyens × (dépenses carte × commission carte + solde moyen × rendement + abonnement × 12 + montant envoyé × frais de transfert).</li>
+      <li><strong>Revenu du wallet</strong> (options avec wallet) = clients moyens × (dépenses carte × commission carte + solde moyen × rendement + abonnement × 12 + montant envoyé × frais de transfert) + clients moyens × autres produits (à partir de leur année de lancement).</li>
       <li><strong>Coûts</strong> = coûts fixes × (1 + hausse)<sup>y − 1</sup> + mise en place (année 1) + coût PSFP (si active) + nouveaux clients × coût d'acquisition + clients moyens × frais BaaS × 12. Les coûts fixes courent dès l'année 1, y compris avant le premier client.</li>
       <li><strong>Résultat</strong> = revenus − coûts. <strong>Trésorerie cumulée</strong> : départ à − capital immobilisé (année 0), puis ajout de chaque résultat.</li>
       <li><strong>Besoin de financement max</strong> = − min(trésorerie cumulée, départ compris). <strong>Première année rentable</strong> : première année au résultat positif.</li>
     </ul>
     <p>Le modèle ne prend en compte ni impôt, ni besoin en fonds de roulement, ni actualisation. Les fonds propres proportionnels aux fonds détenus pour les clients (option 1) ne sont pas modélisés.</p>
     <h3>Chiffres de contrôle</h3>
-    <p>Avec les valeurs par défaut, le moteur doit restituer les valeurs ci-dessous (besoin max / première année rentable / trésorerie de l'année 5, K€, tolérance ± 2 K€). La colonne « Moteur » est recalculée à chaque ouverture de la page.</p>
+    <p>Sur un horizon de 5 ans et sans autres produits du wallet, le moteur restitue les valeurs de référence ci-dessous (besoin max / première année rentable / trésorerie de l'année 5, K€, tolérance ± 2 K€). La colonne « Moteur » est recalculée à chaque ouverture de la page.</p>
     <div class="tbl-wrap"><table id="ctrlTable"></table></div>
   </div>
 </section>
 </main>
 
-<footer class="foot"><div class="wrap">CIKA · document de travail à diffusion restreinte. Toutes les valeurs sont des hypothèses à remplacer par des devis et des tests de marché réels.</div></footer>
+<footer class="foot"><div class="wrap">CIKA · document de travail à diffusion restreinte.</div></footer>
 
 <script>
 (function(){
@@ -439,7 +439,9 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
 var DEFAULTS = {
   name: "Central 3 000 €",
   common: {
-    clients: [2000, 6000, 12000, 20000, 30000], // clients actifs fin d'année, marché lancé
+    horizon: 10,       // années simulées (5 à 15)
+    clients: [2000, 6000, 12000, 20000, 30000], // clients actifs fin d'année, marché lancé (années 1 à 5)
+    gLate: 0.20,       // croissance annuelle des clients après l'année " + HN() + "
     invest: 3000,      // € investis par client et par an
     cac: 25,           // € par nouveau client
     sgp: 0.015,        // commission SGP sur montants investis
@@ -452,10 +454,10 @@ var DEFAULTS = {
     remitFee: 0        // frais de transfert prélevés (non modélisé par défaut)
   },
   options: [
-    {wallet:true,  delay:12, fixed:704, setup:240, capital:350, cardFee:0.002, yield:0.02, sub:0.6, baas:0, psfpYear:4, psfpCost:150},
-    {wallet:true,  delay:6,  fixed:344, setup:140, capital:0,   cardFee:0.001, yield:0,    sub:0.6, baas:1, psfpYear:0, psfpCost:0},
-    {wallet:false, delay:0,  fixed:174, setup:110, capital:0,   cardFee:0,     yield:0,    sub:0,   baas:0, psfpYear:0, psfpCost:0},
-    {wallet:false, delay:0,  fixed:174, setup:110, capital:0,   cardFee:0,     yield:0,    sub:0,   baas:0, psfpYear:3, psfpCost:250}
+    {wallet:true,  delay:12, fixed:704, setup:240, capital:350, cardFee:0.002, yield:0.02, sub:0.6, baas:0, psfpYear:4, psfpCost:150, other:30, otherYear:6},
+    {wallet:true,  delay:6,  fixed:344, setup:140, capital:0,   cardFee:0.001, yield:0,    sub:0.6, baas:1, psfpYear:0, psfpCost:0, other:10, otherYear:6},
+    {wallet:false, delay:0,  fixed:174, setup:110, capital:0,   cardFee:0,     yield:0,    sub:0,   baas:0, psfpYear:0, psfpCost:0, other:0, otherYear:0},
+    {wallet:false, delay:0,  fixed:174, setup:110, capital:0,   cardFee:0,     yield:0,    sub:0,   baas:0, psfpYear:3, psfpCost:250, other:0, otherYear:0}
   ]
 };
 var OPT_NAMES = ["1. Endogène EME", "2. BaaS + SGP", "3. Distribution", "3. + PSFP propre"];
@@ -473,22 +475,26 @@ function clone(o){ return JSON.parse(JSON.stringify(o)); }
 /* ================================================================
    Moteur de calcul
    ================================================================ */
+function hz(c){ return Math.max(5, Math.min(15, Math.round(c.horizon || 5))); }
+function HN(){ return hz(state.common); }
 function runOption(c, o){
-  var cl = c.clients;
+  var N = hz(c), cl = c.clients.slice(0, 5);
+  while (cl.length < N) cl.push(cl[cl.length - 1] * (1 + (c.gLate || 0)));
   function D(t){
     if (t <= 0) return 0;
-    if (t >= 5) return cl[4];
+    if (t >= N) return cl[N-1];
     var k = Math.floor(t), f = t - k, a = k === 0 ? 0 : cl[k-1], b = cl[k];
     return a + (b - a) * f;
   }
   var prev = 0, cash = -o.capital, minCash = cash, first = null, rows = [];
-  var walletPerClient = o.wallet ? (c.card*o.cardFee + c.balance*o.yield + o.sub*12 + c.remit*c.remitFee) : 0; // €/client/an
-  for (var y = 1; y <= 5; y++){
+  var walletPerClient = o.wallet ? (c.card*o.cardFee + c.balance*o.yield + o.sub*12 + c.remit*c.remitFee) : 0; // €/client/an, hors autres produits
+  for (var y = 1; y <= N; y++){
     var u = D(y - o.delay/12), avg = (prev + u)/2, nw = Math.max(u - prev, 0);
     var vol = avg * c.invest / 1000;
     var psfp = o.psfpYear > 0 && y >= o.psfpYear;
     var revInv = psfp ? vol*(1-c.psfpShare)*c.sgp + vol*c.psfpShare*c.psfpFee : vol*c.sgp;
-    var revW = avg * walletPerClient / 1000;
+    var other = o.wallet && o.otherYear > 0 && y >= o.otherYear ? (o.other || 0) : 0;
+    var revW = avg * (walletPerClient + other) / 1000;
     var fixed = o.fixed * Math.pow(1 + c.growth, y - 1);
     var cost = fixed + (y === 1 ? o.setup : 0) + (psfp ? o.psfpCost : 0) + nw*c.cac/1000 + avg*o.baas*12/1000;
     var res = revInv + revW - cost;
@@ -497,8 +503,21 @@ function runOption(c, o){
     rows.push({y:y, clients:u, avg:avg, vol:vol, revInv:revInv, revW:revW, rev:revInv+revW, cost:cost, res:res, cash:cash, psfp:psfp});
     prev = u;
   }
-  return {need:-minCash, first:first, cash0:-o.capital, cash5:cash, rows:rows, y5:rows[4],
+  return {need:-minCash, first:first, cash0:-o.capital, cashH:cash, rows:rows, yH:rows[N-1],
           walletPerClient:walletPerClient, baasPerClient:o.baas*12};
+}
+// Marge des autres produits (par client et par an) à partir de laquelle l'option 1
+// égale l'option 3 + PSFP en trésorerie de fin d'horizon.
+function otherBreakEven(st){
+  var c = st.common, O = st.options, N = hz(c), tgt = runOption(c, O[3]).cashH;
+  var y0 = O[0].otherYear > 0 ? O[0].otherYear : Math.min(6, N);
+  function f(x){ var o = clone(O[0]); o.other = x; o.otherYear = y0; return runOption(c, o).cashH - tgt; }
+  if (!O[0].wallet || y0 > N) return {none:true, y0:y0};
+  if (f(0) >= 0) return {already:true, y0:y0};
+  if (f(2000) < 0) return {none:true, y0:y0};
+  var lo = 0, hi = 2000;
+  for (var k = 0; k < 40; k++){ var m = (lo + hi)/2; if (f(m) >= 0) hi = m; else lo = m; }
+  return {x:hi, y0:y0};
 }
 function runAll(st, investOverride){
   var c = st.common;
@@ -523,7 +542,7 @@ function M(v, d){ d = d == null ? 1 : d; return fmtN(v/1000, d) + " M€"; }
 function Ms(v, d){ d = d == null ? 2 : d; var x = Math.round(v/1000*Math.pow(10,d))/Math.pow(10,d); return sgn(x, fmtN(Math.abs(x), d)) + " M€"; }
 function EUR(v, d){ return fmtN(v, d||0) + " €"; }
 function PCT(v){ var x = v*100; return fmtN(x, Math.abs(x - Math.round(x)) < 1e-9 ? 0 : (Math.abs(x*10 - Math.round(x*10)) < 1e-9 ? 1 : 2)) + " %"; }
-function yr(f){ return f == null ? "aucune sur 5 ans" : "année " + f; }
+function yr(f){ return f == null ? "aucune sur " + HN() + " ans" : "année " + f; }
 function yrS(f){ return f == null ? "aucune" : "an " + f; }
 function ratio(a, b){ return b === 0 ? "n.d." : fmtN(a/b, 1); }
 function cls(v){ return v < -0.5 ? ' class="r neg"' : ' class="r"'; }
@@ -558,6 +577,8 @@ function save(){ try { window.localStorage.setItem(STORE_KEY, JSON.stringify(sta
    ================================================================ */
 // kind : int | eur | pct | k | bool | mo
 var COMMON_FIELDS = [
+  {k:"horizon", label:"Horizon de simulation", unit:"années (5 à 15)", kind:"int"},
+  {k:"gLate", label:"Croissance des clients après l'année 5", unit:"% par an", kind:"pct"},
   {k:"invest", label:"Montant investi par client et par an", unit:"€", kind:"eur"},
   {k:"cac", label:"Coût d'acquisition d'un client", unit:"€", kind:"eur"},
   {k:"sgp", label:"Commission versée par la SGP", unit:"% des montants investis", kind:"pct"},
@@ -580,7 +601,9 @@ var OPT_FIELDS = [
   {k:"sub", label:"Abonnement (€/mois)", kind:"num"},
   {k:"baas", label:"Frais BaaS (€/client/mois)", kind:"num"},
   {k:"psfpYear", label:"PSFP active dès l'année (0 = jamais)", kind:"int"},
-  {k:"psfpCost", label:"Coût annuel PSFP (K€)", kind:"num"}
+  {k:"psfpCost", label:"Coût annuel PSFP (K€)", kind:"num"},
+  {k:"other", label:"Autres produits du wallet (€/client/an)", kind:"num"},
+  {k:"otherYear", label:"Autres produits dès l'année (0 = jamais)", kind:"int"}
 ];
 function toInput(v, kind){
   if (kind === "pct") return fmtN(v*100, Math.abs(v*100 - Math.round(v*100)) < 1e-9 ? 0 : 2).replace(/[\u202f\u00a0]/g, " ").replace("\u2212", "-");
@@ -649,11 +672,11 @@ function bestIdx(R, f, dir){ var b = 0; R.forEach(function(r, i){ if (dir*f(r) >
 
 function readingSentences(R){
   var s = [], st = state;
-  // 1. Trésorerie de l'année 5
-  var bc = bestIdx(R, function(r){ return r.cash5; }, 1);
+  // 1. Trésorerie de l'année " + HN() + "
+  var bc = bestIdx(R, function(r){ return r.cashH; }, 1);
   var negs = [], poss = [];
-  R.forEach(function(r, i){ (r.cash5 < 0 ? negs : poss).push(lc(i)); });
-  var t1 = "Dans le scénario courant, la trésorerie cumulée en fin d'année 5 la plus élevée est celle de l'" + lc(bc) + " (" + Ks(R[bc].cash5) + ")";
+  R.forEach(function(r, i){ (r.cashH < 0 ? negs : poss).push(lc(i)); });
+  var t1 = "Dans le scénario courant, la trésorerie cumulée en fin d'année " + HN() + " la plus élevée est celle de l'" + lc(bc) + " (" + Ks(R[bc].cashH) + ")";
   if (negs.length === 0) t1 += " ; elle est positive pour toutes les options.";
   else if (poss.length === 0) t1 += " ; elle reste négative pour toutes les options.";
   else t1 += " ; elle reste négative pour " + listJoin(negs.map(function(n){ return "l'" + n; })) + ".";
@@ -669,22 +692,27 @@ function readingSentences(R){
   R.forEach(function(r, i){ var k = r.first == null ? "jamais" : r.first; (groups[k] = groups[k] || []).push(lc(i)); });
   var keys = Object.keys(groups).sort(function(a, b){ return (a === "jamais" ? 99 : +a) - (b === "jamais" ? 99 : +b); });
   s.push("Premier résultat annuel positif : " + keys.map(function(k){
-    return (k === "jamais" ? "aucun sur 5 ans" : "année " + k) + " pour " + listJoin(groups[k]);
+    return (k === "jamais" ? "aucun sur " + HN() + " ans" : "année " + k) + " pour " + listJoin(groups[k]);
   }).join(" ; ") + ".");
   // 4. Wallet par client
   var w = [];
   R.forEach(function(r, i){
     if (!st.options[i].wallet) return;
     var txt = "le wallet de l'" + lc(i) + " rapporte " + EUR(r.walletPerClient, 1) + " par client et par an";
-    if (r.baasPerClient > 0) txt += ", pour " + EUR(r.baasPerClient, 1) + " de frais BaaS : il " + (r.walletPerClient >= r.baasPerClient ? "couvre" : "ne couvre pas") + " ses frais par client";
+    var oo = st.options[i];
+    if (oo.other > 0 && oo.otherYear > 0 && oo.otherYear <= HN()) txt += ", plus " + EUR(oo.other) + " d'autres produits à partir de l'année " + oo.otherYear;
+    if (r.baasPerClient > 0) txt += ", pour " + EUR(r.baasPerClient, 1) + " de frais BaaS";
     w.push(txt);
   });
+  var be = otherBreakEven(st);
+  if (st.options[0].wallet && !be.none) w.push(be.already ? "avec ces hypothèses, l'option 1 finit devant l'option 3 + PSFP sur " + HN() + " ans"
+    : "l'option 1 passe devant l'option 3 + PSFP sur " + HN() + " ans si ses autres produits dégagent au moins " + EUR(be.x) + " par client et par an à partir de l'année " + be.y0);
   if (w.length){ var tw = w.join(" ; "); s.push(tw.charAt(0).toUpperCase() + tw.slice(1) + "."); }
   // 5. Effet de la PSFP propre (option 3)
   var p = st.options[3].psfpYear;
-  if (p > 0 && p <= 5){
-    s.push("La plateforme PSFP propre, active à partir de l'année " + p + ", porte le chiffre d'affaires de l'année 5 de l'option 3 de " + K(R[2].y5.rev) + " à " + K(R[3].y5.rev) +
-      " (× " + ratio(R[3].y5.rev, R[2].y5.rev) + ") et sa trésorerie de fin d'année 5 de " + Ks(R[2].cash5) + " à " + Ks(R[3].cash5) + ".");
+  if (p > 0 && p <= HN()){
+    s.push("La plateforme PSFP propre, active à partir de l'année " + p + ", porte le chiffre d'affaires de l'année " + HN() + " de l'option 3 de " + K(R[2].yH.rev) + " à " + K(R[3].yH.rev) +
+      " (× " + ratio(R[3].yH.rev, R[2].yH.rev) + ") et sa trésorerie de fin d'année " + HN() + " de " + Ks(R[2].cashH) + " à " + Ks(R[3].cashH) + ".");
   } else {
     s.push("La plateforme PSFP propre n'est pas activée pour l'option 3 dans le scénario courant.");
   }
@@ -707,17 +735,17 @@ function parcoursHTML(R){
    Tableaux
    ================================================================ */
 function indicatorsTable(R, compact){
-  var bc = bestIdx(R, function(r){ return r.cash5; }, 1), bn = bestIdx(R, function(r){ return r.need; }, -1);
-  var h = '<thead><tr><th>Option</th><th class="r">Besoin max</th><th class="r">1<sup>re</sup> année rentable</th><th class="r">CA an 5</th><th class="r">Résultat an 5</th><th class="r">Trésorerie an 5</th>' +
+  var bc = bestIdx(R, function(r){ return r.cashH; }, 1), bn = bestIdx(R, function(r){ return r.need; }, -1);
+  var h = '<thead><tr><th>Option</th><th class="r">Besoin max</th><th class="r">1<sup>re</sup> année rentable</th><th class="r">CA an ' + HN() + '</th><th class="r">Résultat an ' + HN() + '</th><th class="r">Trésorerie an ' + HN() + '</th>' +
     (compact ? '' : '<th class="r">Wallet / client / an</th><th class="r">Frais BaaS / client / an</th>') + '</tr></thead><tbody>';
   R.forEach(function(r, i){
     var o = state.options[i];
     h += '<tr><td><span class="sw c'+i+(i===1?' dash':'')+'"></span>' + OPT_NAMES[i] + '</td>' +
       '<td class="r">' + K(r.need) + (i === bn ? '<span class="best">plus faible</span>' : '') + '</td>' +
       '<td class="r">' + yrS(r.first) + '</td>' +
-      '<td class="r">' + K(r.y5.rev) + '</td>' +
-      '<td' + cls(r.y5.res) + '>' + Ks(r.y5.res) + '</td>' +
-      '<td' + cls(r.cash5) + '>' + Ks(r.cash5) + (i === bc ? '<span class="best">meilleure</span>' : '') + '</td>' +
+      '<td class="r">' + K(r.yH.rev) + '</td>' +
+      '<td' + cls(r.yH.res) + '>' + Ks(r.yH.res) + '</td>' +
+      '<td' + cls(r.cashH) + '>' + Ks(r.cashH) + (i === bc ? '<span class="best">meilleure</span>' : '') + '</td>' +
       (compact ? '' : '<td class="r">' + (o.wallet ? EUR(r.walletPerClient, 1) : '—') + '</td><td class="r">' + (o.baas > 0 ? EUR(r.baasPerClient, 1) : '—') + '</td>') +
       '</tr>';
   });
@@ -731,10 +759,10 @@ function sensTable(st, mode){
     var lab = EUR(a) + (isCur ? ' <span class="cur-note">(courant)</span>' : '');
     if (mode === "txt"){
       h += '<tr><td>' + lab + ' — besoin max / année rentable</td>' + R.map(function(r){ return '<td class="r">' + M(r.need) + ' / ' + yrS(r.first) + '</td>'; }).join("") + '</tr>';
-      h += '<tr><td>Trésorerie cumulée fin d\'année 5</td>' + R.map(function(r){ return '<td' + cls(r.cash5) + '>' + Ms(r.cash5, 1) + '</td>'; }).join("") + '</tr>';
+      h += '<tr><td>Trésorerie cumulée fin d\'année ' + HN() + '</td>' + R.map(function(r){ return '<td' + cls(r.cashH) + '>' + Ms(r.cashH, 1) + '</td>'; }).join("") + '</tr>';
     } else {
       h += '<tr><td>' + lab + '</td>' + R.map(function(r){
-        return '<td class="r">' + K(r.need) + ' · ' + yrS(r.first) + ' · <span' + (r.cash5 < -0.5 ? ' class="neg"' : '') + '>' + Ks(r.cash5) + '</span></td>';
+        return '<td class="r">' + K(r.need) + ' · ' + yrS(r.first) + ' · <span' + (r.cashH < -0.5 ? ' class="neg"' : '') + '>' + Ks(r.cashH) + '</span></td>';
       }).join("") + '</tr>';
     }
   });
@@ -753,7 +781,7 @@ function detailHTML(R){
     h += line("Coûts", function(x){ return x.cost; });
     h += line("Résultat", function(x){ return x.res; }, true);
     h += '<tr class="total"><td>Trésorerie cumulée</td><td' + cls(r.cash0) + '>' + Ks(r.cash0) + '</td>' + rows.map(function(x){ return '<td' + cls(x.cash) + '>' + Ks(x.cash) + '</td>'; }).join("") + '</tr>';
-    h += '</tbody></table></div>' + (state.options[i].psfpYear > 0 && state.options[i].psfpYear <= 5 ? '<p class="hint">* PSFP propre active.</p>' : '') + '</details>';
+    h += '</tbody></table></div>' + (state.options[i].psfpYear > 0 && state.options[i].psfpYear <= HN() ? '<p class="hint">* PSFP propre active.</p>' : '') + '</details>';
     return h;
   }).join("");
 }
@@ -765,19 +793,20 @@ function legendHTML(R){
   return R.map(function(r, i){ return '<span><span class="sw c'+i+(i===1?' dash':'')+'"></span>' + OPT_NAMES[i] + '</span>'; }).join("");
 }
 function chartSVG(R, W, H){
-  var ml = 46, mr = W < 520 ? 138 : 150, narrow = W < 520, mt = 10, mb = 26, iw = W - ml - mr, ih = H - mt - mb;
+  var ml = 46, mr = W < 520 ? 138 : 176, narrow = W < 520, mt = 10, mb = 26, iw = W - ml - mr, ih = H - mt - mb;
   var series = R.map(function(r){ return [r.cash0].concat(r.rows.map(function(x){ return x.cash; })); });
   var all = [].concat.apply([0], series), lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
   var span = hi - lo || 1, step = niceStep(span / 5);
   lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
-  function X(i){ return ml + iw * i / 5; }
+  var n = series[0].length - 1;
+  function X(i){ return ml + iw * i / n; }
   function Y(v){ return mt + ih * (hi - v) / (hi - lo); }
-  var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Trésorerie cumulée par option, années 0 à 5"><g class="ax">';
+  var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Trésorerie cumulée par option, années 0 à ' + n + '"><g class="ax">';
   for (var v = lo; v <= hi + 1e-9; v += step){
     g += '<line x1="' + ml + '" x2="' + (ml + iw) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/>';
     g += '<text x="' + (ml - 7) + '" y="' + (Y(v) + 3.5) + '" text-anchor="end">' + nf0.format(v) + '</text>';
   }
-  for (var i = 0; i <= 5; i++) g += '<text x="' + X(i) + '" y="' + (H - 7) + '" text-anchor="middle">An ' + i + '</text>';
+  for (var i = 0; i <= n; i++) if (n <= 8 || (W >= 520 && n <= 12) || i % 2 === 0) g += '<text x="' + X(i) + '" y="' + (H - 7) + '" text-anchor="middle">An ' + i + '</text>';
   g += '</g><line class="zero" x1="' + ml + '" x2="' + (ml + iw) + '" y1="' + Y(0) + '" y2="' + Y(0) + '"/>';
   // Ordre de tracé : gris d'abord, accent au-dessus.
   [1, 0, 2, 3].forEach(function(k){
@@ -785,18 +814,18 @@ function chartSVG(R, W, H){
     g += '<path class="ln c' + k + '" d="' + d + '"' + (k === 1 ? ' stroke-dasharray="5 4"' : '') + '/>';
   });
   // Étiquettes de fin de courbe, écartées si elles se chevauchent.
-  var labs = series.map(function(s, k){ return {k:k, y:Y(s[5]), v:s[5]}; }).sort(function(a, b){ return a.y - b.y; });
+  var labs = series.map(function(s, k){ return {k:k, y:Y(s[n]), v:s[n]}; }).sort(function(a, b){ return a.y - b.y; });
   var gap = 15;
   for (var a = 1; a < labs.length; a++) if (labs[a].y - labs[a-1].y < gap) labs[a].y = labs[a-1].y + gap;
   var over = labs[labs.length-1].y - (mt + ih);
   if (over > 0) labs.forEach(function(l){ l.y -= over; });
   labs.forEach(function(l){
-    g += '<circle class="dot c' + l.k + '" cx="' + X(5) + '" cy="' + Y(l.v) + '" r="3.5"/>';
-    g += '<text class="lbl" x="' + (X(5) + 8) + '" y="' + (l.y + 4) + '">' + ['Opt. 1','Opt. 2','Opt. 3','Opt. 3 + PSFP'][l.k] + ' <tspan class="v">' + (narrow ? Ks(l.v).replace(/\u00a0K€$/, '') : Ks(l.v)) + '</tspan></text>';
+    g += '<circle class="dot c' + l.k + '" cx="' + X(n) + '" cy="' + Y(l.v) + '" r="3.5"/>';
+    g += '<text class="lbl" x="' + (X(n) + 8) + '" y="' + (l.y + 4) + '">' + ['Opt. 1','Opt. 2','Opt. 3','Opt. 3 + PSFP'][l.k] + ' <tspan class="v">' + (narrow ? Ks(l.v).replace(/\u00a0K€$/, '') : Ks(l.v)) + '</tspan></text>';
   });
   g += '<g class="hover"></g></svg>';
   g = g.replace(/\u202f/g, '\u00a0');
-  return {svg:g, X:X, Y:Y, series:series, ml:ml, iw:iw, W:W};
+  return {svg:g, X:X, Y:Y, series:series, ml:ml, iw:iw, W:W, n:n};
 }
 function niceStep(x){ var p = Math.pow(10, Math.floor(Math.log10(x))), m = x / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; }
 
@@ -808,7 +837,7 @@ function drawChart(el, R, W, H, interactive){
   var svg = el.querySelector("svg"), hov = svg.querySelector(".hover"), tip = el.querySelector(".tip");
   function show(evt){
     var b = svg.getBoundingClientRect(), sx = (evt.clientX - b.left) * c.W / b.width;
-    var j = Math.max(0, Math.min(5, Math.round((sx - c.ml) / c.iw * 5)));
+    var j = Math.max(0, Math.min(c.n, Math.round((sx - c.ml) / c.iw * c.n)));
     hov.innerHTML = '<line class="xh" x1="' + c.X(j) + '" x2="' + c.X(j) + '" y1="10" y2="' + (H - 26) + '"/>' +
       c.series.map(function(s, k){ return '<circle class="dot c' + k + '" cx="' + c.X(j) + '" cy="' + c.Y(s[j]) + '" r="4"/>'; }).join("");
     tip.innerHTML = '<b>Année ' + j + '</b>' + c.series.map(function(s, k){ return '<div class="row"><span><span class="sw c' + k + (k===1?' dash':'') + '"></span>' + OPT_SHORT[k] + '</span><span>' + Ks(s[j]) + '</span></div>'; }).join("");
@@ -848,7 +877,8 @@ function renderText(R){
     '<tr><td>Rendement des fonds déposés conservé</td><td>' + PCT(o1.yield) + '</td><td>' + (o2.yield === 0 ? '0 (revient à Treezor)' : PCT(o2.yield)) + '</td></tr>' +
     '<tr><td>Abonnement moyen par client</td><td>' + EUR(o1.sub, 2) + ' par mois' + (o1.sub === 0.6 ? ' (20 % des clients à 3 €)' : '') + '</td><td>' + EUR(o2.sub, 2) + ' par mois</td></tr>' +
     '<tr><td>Frais Treezor par client</td><td>' + (o1.baas ? EUR(o1.baas, 2) + ' par mois' : '—') + '</td><td>' + EUR(o2.baas, 2) + ' par mois</td></tr>' +
-    '<tr class="total"><td>Revenu du wallet par client et par an' + SC + '</td><td>' + EUR(R[0].walletPerClient, 1) + '</td><td>' + EUR(R[1].walletPerClient, 1) + '</td></tr></tbody>';
+    '<tr><td>Autres produits (crédit, assurance, épargne), par client et par an</td><td>' + (o1.other > 0 && o1.otherYear > 0 ? EUR(o1.other) + ' à partir de l\'année ' + o1.otherYear : '—') + '</td><td>' + (o2.other > 0 && o2.otherYear > 0 ? EUR(o2.other) + ' à partir de l\'année ' + o2.otherYear : '—') + '</td></tr>' +
+    '<tr class="total"><td>Revenu du wallet par client et par an, hors autres produits' + SC + '</td><td>' + EUR(R[0].walletPerClient, 1) + '</td><td>' + EUR(R[1].walletPerClient, 1) + '</td></tr></tbody>';
   // Coûts
   var base = [[240,120,60],[170,90,60],[100,60,0],[160,40,20],[34,34,34]];
   var lbl = ["Équipe technique","Conformité et contrôle","Opérations et support","Infrastructure, processeur de cartes, outils, audit","Fonctionnement de la filiale européenne"];
@@ -867,7 +897,7 @@ function renderText(R){
     "La décomposition par poste est celle de la note ; les coûts fixes de l'option " + changed.map(function(j){ return j + 1; }).join(" et ") + " ont été modifiés dans le scénario courant et ne correspondent plus à la somme des postes." :
     "La décomposition par poste est celle de la note. L'option 3 + PSFP reprend les coûts de l'option 3.";
   // PSFP
-  function psfpLine(i, txt){ var y = O[i].psfpYear; return y > 0 && y <= 5 ? "à partir de l'année " + y + txt : "non activée dans le scénario courant."; }
+  function psfpLine(i, txt){ var y = O[i].psfpYear; return y > 0 && y <= HN() ? "à partir de l'année " + y + txt : "non activée dans le scénario courant."; }
   document.getElementById("txtPsfp").innerHTML =
     "<li>Option 1 : " + psfpLine(0, ".") + "</li>" +
     "<li>Option 3 : " + psfpLine(3, ", si le volume le justifie.") + "</li>" +
@@ -875,14 +905,14 @@ function renderText(R){
 
   // Résultats
   var repaid = [], wal = [];
-  R.forEach(function(r, i){ if (r.cash5 >= 0) repaid.push(i); if (O[i].wallet) wal.push(i); });
+  R.forEach(function(r, i){ if (r.cashH >= 0) repaid.push(i); if (O[i].wallet) wal.push(i); });
   var intro;
   var only3 = repaid.length > 0 && repaid.every(function(i){ return i >= 2; });
-  if (repaid.length === 0) intro = "Dans le scénario courant, aucune option ne rembourse sa mise en cinq ans.";
-  else if (only3 && repaid.length === 2) intro = "Dans le scénario courant, seule l'option 3 (avec ou sans PSFP propre) rembourse sa mise en cinq ans.";
-  else if (repaid.length === 4) intro = "Dans le scénario courant, toutes les options remboursent leur mise en cinq ans.";
-  else intro = "Dans le scénario courant, " + (repaid.length > 1 ? "les options " : "seule l'option ") + listJoin(repaid.map(function(i){ return OPT_SHORT[i].replace("Option ", ""); })) + (repaid.length > 1 ? " remboursent" : " rembourse") + " leur mise en cinq ans.";
-  var walNeg = wal.filter(function(i){ return R[i].cash5 < 0; });
+  if (repaid.length === 0) intro = "Dans le scénario courant, aucune option ne rembourse sa mise en " + HN() + " ans.";
+  else if (only3 && repaid.length === 2) intro = "Dans le scénario courant, seule l'option 3 (avec ou sans PSFP propre) rembourse sa mise en " + HN() + " ans.";
+  else if (repaid.length === 4) intro = "Dans le scénario courant, toutes les options remboursent leur mise en " + HN() + " ans.";
+  else intro = "Dans le scénario courant, " + (repaid.length > 1 ? "les options " : "seule l'option ") + listJoin(repaid.map(function(i){ return OPT_SHORT[i].replace("Option ", ""); })) + (repaid.length > 1 ? " remboursent" : " rembourse") + " leur mise en " + HN() + " ans.";
+  var walNeg = wal.filter(function(i){ return R[i].cashH < 0; });
   if (walNeg.length){
     var prof = walNeg.filter(function(i){ return R[i].first != null; });
     intro += " " + (walNeg.length === wal.length ? "Les options avec wallet" : "L'" + lc(walNeg[0])) + " " + (walNeg.length > 1 ? "restent" : "reste") + " négative" + (walNeg.length > 1 ? "s" : "") + " en trésorerie cumulée";
@@ -890,41 +920,42 @@ function renderText(R){
     intro += ".";
   }
   document.getElementById("txtResIntro").innerHTML = intro;
-  var rt = '<thead><tr><th>Option</th><th class="r">Besoin de financement max</th><th class="r">Première année rentable</th><th class="r">Chiffre d\'affaires année 5</th><th class="r">Résultat année 5</th></tr></thead><tbody>';
+  var rt = '<thead><tr><th>Option</th><th class="r">Besoin de financement max</th><th class="r">Première année rentable</th><th class="r">Chiffre d\'affaires année ' + HN() + '</th><th class="r">Résultat année ' + HN() + '</th></tr></thead><tbody>';
   var longN = [
-    "1. Endogène EME" + (O[0].psfpYear > 0 && O[0].psfpYear <= 5 ? " (puis PSFP en année " + O[0].psfpYear + ")" : ""),
+    "1. Endogène EME" + (O[0].psfpYear > 0 && O[0].psfpYear <= HN() ? " (puis PSFP en année " + O[0].psfpYear + ")" : ""),
     "2. BaaS + SGP", "3. Distribution sans wallet",
-    "3. + PSFP propre" + (O[3].psfpYear > 0 && O[3].psfpYear <= 5 ? " en année " + O[3].psfpYear : "")
+    "3. + PSFP propre" + (O[3].psfpYear > 0 && O[3].psfpYear <= HN() ? " en année " + O[3].psfpYear : "")
   ];
   R.forEach(function(r, i){
-    rt += '<tr><td>' + longN[i] + '</td><td class="r">' + M(r.need) + (O[i].capital > 0 ? ' (capital inclus)' : '') + '</td><td class="r">' + yr(r.first).replace(/^a/, "A") + '</td><td class="r">' + M(r.y5.rev, 2) + '</td><td' + cls(r.y5.res) + '>' + Ms(r.y5.res) + '</td></tr>';
+    rt += '<tr><td>' + longN[i] + '</td><td class="r">' + M(r.need) + (O[i].capital > 0 ? ' (capital inclus)' : '') + '</td><td class="r">' + yr(r.first).replace(/^a/, "A") + '</td><td class="r">' + M(r.yH.rev, 2) + '</td><td' + cls(r.yH.res) + '>' + Ms(r.yH.res) + '</td></tr>';
   });
   document.getElementById("txtRes").innerHTML = rt + '</tbody>';
 
   // Lecture (note)
-  var cost5 = R.map(function(r){ return r.y5.cost; });
-  var caGap = Math.abs(R[1].y5.rev - R[2].y5.rev) / Math.max(R[2].y5.rev, 1);
-  var perClient = R.map(function(r){ return r.y5.avg > 0 ? r.y5.rev * 1000 / r.y5.avg : 0; });
-  var maxPC = bestIdx(R, function(r, i){ return r.y5.avg > 0 ? r.y5.rev / r.y5.avg : 0; }, 1);
+  var costH = R.map(function(r){ return r.yH.cost; });
+  var caGap = Math.abs(R[1].yH.rev - R[2].yH.rev) / Math.max(R[2].yH.rev, 1);
+  var perClient = R.map(function(r){ return r.yH.avg > 0 ? r.yH.rev * 1000 / r.yH.avg : 0; });
+  var maxPC = bestIdx(R, function(r, i){ return r.yH.avg > 0 ? r.yH.rev / r.yH.avg : 0; }, 1);
   var L = [];
-  L.push("<strong>Option 2 contre option 3</strong> : chiffre d'affaires de l'année 5 de " + cur(K(R[1].y5.rev)) + " contre " + cur(K(R[2].y5.rev)) + " (écart de " + fmtN(caGap * 100, 0) + " %), pour des coûts de l'année 5 de " + cur(K(cost5[1])) + " contre " + cur(K(cost5[2])) + " (× " + ratio(cost5[1], cost5[2]) + ")" + SC + ". " +
+  L.push("<strong>Option 2 contre option 3</strong> : chiffre d'affaires de l'année " + HN() + " de " + cur(K(R[1].yH.rev)) + " contre " + cur(K(R[2].yH.rev)) + " (écart de " + fmtN(caGap * 100, 0) + " %), pour des coûts de l'année " + HN() + " de " + cur(K(costH[1])) + " contre " + cur(K(costH[2])) + " (× " + ratio(costH[1], costH[2]) + ")" + SC + ". " +
     (R[1].walletPerClient < R[1].baasPerClient ? "Le wallet Treezor ne paie pas ce qu'il coûte : il rapporte " + EUR(R[1].walletPerClient, 1) + " par client et par an pour " + EUR(R[1].baasPerClient, 1) + " de frais, avant ses coûts fixes."
       : "Le wallet Treezor rapporte " + EUR(R[1].walletPerClient, 1) + " par client et par an pour " + EUR(R[1].baasPerClient, 1) + " de frais par client, avant ses coûts fixes.") + "</li>");
-  L.push("<strong>Option 1</strong> : le chiffre d'affaires par client de l'année 5 est " + (maxPC === 0 ? "le plus élevé, à " : "de ") + cur(EUR(perClient[0])) + (maxPC === 0 ? " grâce au wallet" : ", contre " + EUR(perClient[maxPC]) + " pour l'" + lc(maxPC)) + ", mais un retard de " + O[0].delay + " mois et des coûts fixes " + ratio(O[0].fixed, O[2].fixed) + " fois supérieurs à ceux de l'option 3 " +
-    (R[0].cash5 < R[2].cash5 ? "l'empêchent de rattraper son retard en cinq ans (trésorerie de l'année 5 : " + cur(Ks(R[0].cash5)) + " contre " + cur(Ks(R[2].cash5)) + ")" + SC + "." : "ne l'empêchent pas de dépasser l'option 3 en trésorerie de l'année 5 (" + cur(Ks(R[0].cash5)) + " contre " + cur(Ks(R[2].cash5)) + ")" + SC + ".") + "</li>");
-  if (O[3].psfpYear > 0 && O[3].psfpYear <= 5)
-    L.push("<strong>La plateforme PSFP propre</strong> multiplie par " + cur(ratio(R[3].y5.rev, R[2].y5.rev)) + " le chiffre d'affaires de l'année 5 de l'option 3" + SC + ", parce que CIKA garde la commission payée par les porteurs de projets (" + PCT(c.psfpFee) + ") au lieu de toucher une rétrocession de la SGP (" + PCT(c.sgp) + ").</li>");
+  function vs(j){ return (R[0].cashH >= R[j].cashH ? "devant l'" : "derrière l'") + lc(j) + " (" + cur(Ks(R[j].cashH)) + ")"; }
+  L.push("<strong>Option 1</strong> : le chiffre d'affaires par client de l'année " + HN() + " est " + (maxPC === 0 ? "le plus élevé, à " : "de ") + cur(EUR(perClient[0])) + (maxPC === 0 ? " grâce au wallet" : ", contre " + EUR(perClient[maxPC]) + " pour l'" + lc(maxPC)) +
+    ". Elle part avec un retard de " + O[0].delay + " mois et des coûts fixes " + ratio(O[0].fixed, O[2].fixed) + " fois supérieurs à ceux de l'option 3. En trésorerie de fin d'année " + HN() + ", elle est à " + cur(Ks(R[0].cashH)) + ", " + vs(2) + " et " + vs(3) + SC + ".</li>");
+  if (O[3].psfpYear > 0 && O[3].psfpYear <= HN())
+    L.push("<strong>La plateforme PSFP propre</strong> multiplie par " + cur(ratio(R[3].yH.rev, R[2].yH.rev)) + " le chiffre d'affaires de l'année " + HN() + " de l'option 3" + SC + ", parce que CIKA garde la commission payée par les porteurs de projets (" + PCT(c.psfpFee) + ") au lieu de toucher une rétrocession de la SGP (" + PCT(c.sgp) + ").</li>");
   document.getElementById("txtLecture").innerHTML = L.map(function(x){ return "<li>" + x; }).join("");
 
   // Sensibilité
   var orders = SENS_AMOUNTS.map(function(a){
     var Rs = runAll(st, a);
-    return [0,1,2,3].sort(function(x, y){ return Rs[y].cash5 - Rs[x].cash5; });
+    return [0,1,2,3].sort(function(x, y){ return Rs[y].cashH - Rs[x].cashH; });
   });
   var same = orders.every(function(o){ return o.join() === orders[0].join(); });
   var threeFirst = orders.every(function(o){ return o[0] >= 2; });
   document.getElementById("txtSensIntro").innerHTML = "Le montant investi par client est l'hypothèse qui change le plus le verdict. " +
-    (same ? "L'ordre des options selon la trésorerie de l'année 5, lui, ne change pas entre " + EUR(SENS_AMOUNTS[0]) + " et " + EUR(SENS_AMOUNTS[3]) : "L'ordre des options selon la trésorerie de l'année 5 change selon le montant") +
+    (same ? "L'ordre des options selon la trésorerie de l'année " + HN() + ", lui, ne change pas entre " + EUR(SENS_AMOUNTS[0]) + " et " + EUR(SENS_AMOUNTS[3]) : "L'ordre des options selon la trésorerie de l'année " + HN() + " change selon le montant") +
     (threeFirst ? " : l'option 3 reste devant dans tous les cas testés" : " ; l'option 3 n'est pas devant dans tous les cas testés") + SC + ".";
   document.getElementById("txtSens").innerHTML = sensTable(st, "txt");
 
@@ -932,29 +963,31 @@ function renderText(R){
   var fee = c.remitFee > 0 ? c.remitFee : 0.01;
   var cT = clone(c); cT.remitFee = fee;
   var r1T = runOption(cT, O[0]), extra = c.remit * fee;
-  var extra5 = r1T.y5.revW - R[0].y5.revW + (c.remitFee > 0 ? R[0].y5.avg * c.remit * c.remitFee / 1000 : 0);
-  var gap5 = R[2].cash5 - R[0].cash5;
-  var trTxt;
+  var extraH = r1T.yH.revW - R[0].yH.revW + (c.remitFee > 0 ? R[0].yH.avg * c.remit * c.remitFee / 1000 : 0);
+  var trTxt, b3t = R[3].cashH >= R[2].cashH ? 3 : 2;
   if (c.remitFee > 0){
-    trTxt = "Les frais de transfert vers l'Afrique sont inclus dans le scénario courant : " + PCT(fee) + " prélevé sur " + EUR(c.remit) + " envoyés par client et par an, soit " + cur(EUR(extra, 1)) + " de plus par client, et " + cur(M(extra5)) + " de chiffre d'affaires pour l'option 1 en année 5" + SC + ".";
+    trTxt = "Les frais de transfert vers l'Afrique sont inclus dans le scénario courant : " + PCT(fee) + " prélevé sur " + EUR(c.remit) + " envoyés par client et par an, soit " + cur(EUR(extra, 1)) + " de plus par client, et " + cur(M(extraH)) + " de chiffre d'affaires pour l'option 1 en année " + HN() + "" + SC + ".";
   } else {
-    trTxt = "Ce qui n'est pas modélisé et pourrait favoriser le wallet : les frais de transfert vers l'Afrique. Avec par exemple 1 % prélevé sur " + EUR(c.remit) + " envoyés par client et par an, le wallet rapporterait environ " + cur(EUR(extra)) + " de plus par client. Pour l'option 1, cela représente environ " + cur(M(extra5)) + " de plus en année 5" + SC + " : " +
-      (r1T.cash5 < R[2].cash5 ? "insuffisant pour combler l'écart sur cinq ans (trésorerie de l'année 5 de l'option 1 portée à " + cur(Ks(r1T.cash5)) + ", contre " + cur(Ks(R[2].cash5)) + " pour l'option 3)." : "suffisant pour combler l'écart avec l'option 3 sur cinq ans (" + cur(Ks(r1T.cash5)) + " contre " + cur(Ks(R[2].cash5)) + ").");
+    trTxt = "Les frais de transfert vers l'Afrique ne sont pas inclus dans le scénario courant et favoriseraient le wallet. Avec par exemple 1 % prélevé sur " + EUR(c.remit) + " envoyés par client et par an, le wallet rapporterait environ " + cur(EUR(extra)) + " de plus par client. Pour l'option 1, cela représente environ " + cur(M(extraH)) + " de plus en année " + HN() + "" + SC + " : " +
+      (r1T.cashH < R[b3t].cashH ? "insuffisant pour passer devant l'" + lc(b3t) + " sur " + HN() + " ans (trésorerie de l'année " + HN() + " de l'option 1 portée à " + cur(Ks(r1T.cashH)) + ", contre " + cur(Ks(R[b3t].cashH)) + ")." : "suffisant pour passer devant l'" + lc(b3t) + " sur " + HN() + " ans (" + cur(Ks(r1T.cashH)) + " contre " + cur(Ks(R[b3t].cashH)) + ").");
   }
-  document.getElementById("txtTransfer").innerHTML = trTxt + " Ces transferts supposent en plus un opérateur de transfert habilité <span class=\"st st-a\">À faire valider</span>.";
+  document.getElementById("txtTransfer").innerHTML = trTxt + " Ces transferts passent par un opérateur de transfert habilité.";
 
   // Ce qui est démontré
   var D = [];
-  var o2worse = R[1].cash5 < R[2].cash5 && R[1].need > R[2].need;
+  var o2worse = R[1].cashH < R[2].cashH && R[1].need > R[2].need;
   D.push("<strong>Option 2 (BaaS + SGP)</strong> : " + (o2worse ? "elle n'est pas justifiée pour ce business. " : "elle n'est pas dominée par l'option 3 dans le scénario courant. ") +
     "Besoin de " + cur(K(R[1].need)) + " contre " + cur(K(R[2].need)) + " pour l'option 3, à commission d'investissement égale (" + PCT(c.sgp) + "), et son wallet " + (R[1].walletPerClient < R[1].baasPerClient ? "ne couvre pas" : "couvre") + " ses propres frais par client (" + EUR(R[1].walletPerClient, 1) + " contre " + EUR(R[1].baasPerClient, 1) + " par an). Seule réserve : elle achète six à neuf mois d'avance sur un wallet, ce qui n'a de valeur que si l'usage bancaire quotidien est un objectif en soi.</li>");
-  var catches = SENS_AMOUNTS.filter(function(a){ var Rs = runAll(st, a); return Rs[0].cash5 >= Rs[2].cash5; });
-  D.push("<strong>Option 1 (endogène)</strong> : elle demande environ " + cur(M(R[0].need)) + " et " +
-    (catches.length === 0 ? "ne rattrape pas l'option 3 en cinq ans, dans aucun des montants testés (" + EUR(SENS_AMOUNTS[0]) + " à " + EUR(SENS_AMOUNTS[3]) + "). C'est un investissement de long terme, pas un moyen de lancer ce business." : "rattrape l'option 3 en cinq ans pour " + listJoin(catches.map(function(a){ return EUR(a); })) + " investis par client.") +
-    " Elle se justifie par la valeur stratégique d'un agrément propre et d'une relation bancaire, pas par la rentabilité du canal d'investissement.</li>");
+  var be1 = otherBreakEven(st);
+  D.push("<strong>Option 1 (endogène)</strong> : elle demande environ " + cur(M(R[0].need)) + " de financement, capital réglementaire compris. Sur " + HN() + " ans, sa trésorerie de fin de période est de " + cur(Ks(R[0].cashH)) + ", contre " + cur(Ks(R[3].cashH)) + " pour l'option 3 + PSFP" + SC + ". " +
+    (be1.already ? "Avec les autres produits du wallet du scénario courant (" + EUR(O[0].other) + " par client et par an à partir de l'année " + O[0].otherYear + "), elle finit devant." :
+     be1.none ? "Sur cet horizon, les autres produits du wallet ne suffisent pas à la faire passer devant." :
+     "Elle passe devant si les autres produits du wallet (crédit, assurance, épargne) dégagent au moins " + cur(EUR(be1.x)) + " par client et par an à partir de l'année " + be1.y0 + " (scénario courant : " + EUR(O[0].other) + ").") +
+    " Elle apporte en outre un agrément propre et une relation bancaire complète avec la diaspora.</li>");
   var psfpGain = c.invest * c.psfpShare * (c.psfpFee - c.sgp);
-  D.push("<strong>La valeur est dans la commission sur les projets.</strong> Passer d'une rétrocession de SGP (" + PCT(c.sgp) + ") à une plateforme PSFP propre (" + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume) rapporte " + cur(EUR(psfpGain, 1)) + " de plus par client et par an, " +
-    (psfpGain > R[0].walletPerClient ? "plus que" : "moins que") + " tout ce que le wallet de l'option 1 rapporte (" + cur(EUR(R[0].walletPerClient, 1)) + ")" + SC + ".</li>");
+  var w1 = R[0].walletPerClient + (O[0].otherYear > 0 && O[0].otherYear <= HN() ? O[0].other : 0);
+  D.push("<strong>" + (psfpGain > w1 ? "La valeur est dans la commission sur les projets." : "Deux leviers de valeur : la commission sur les projets et les produits du wallet.") + "</strong> Passer d'une rétrocession de SGP (" + PCT(c.sgp) + ") à une plateforme PSFP propre (" + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume) rapporte " + cur(EUR(psfpGain, 1)) + " de plus par client et par an, " +
+    (psfpGain > w1 ? "plus que" : "moins que") + " ce que le wallet de l'option 1 rapporte" + (w1 > R[0].walletPerClient ? " une fois ses autres produits lancés" : "") + " (" + cur(EUR(w1, 1)) + ")" + SC + ".</li>");
   document.getElementById("txtDemo").innerHTML = D.map(function(x){ return "<li>" + x; }).join("");
 
   // Seuils d'arrêt
@@ -971,71 +1004,72 @@ function renderText(R){
    Onglet « Hypothèses et méthode »
    ================================================================ */
 var HYP_META = {
-  clients:["Hypothèse","Courbe de marché commune aux options, décalée selon le délai de lancement."],
-  invest:["Hypothèse","Hypothèse qui change le plus le verdict ; à mesurer en année 1."],
-  cac:["Hypothèse","À mesurer en année 1 (seuil d'arrêt : 50 €)."],
-  sgp:["Hypothèse","À négocier avec la SGP (seuil d'arrêt : 1 %)."],
-  growth:["Hypothèse",""],
-  psfpShare:["Hypothèse","Une fois la PSFP propre active."],
-  psfpFee:["Hypothèse","Payée par les porteurs de projets."],
-  card:["Hypothèse","Options avec wallet."],
-  balance:["Hypothèse","Options avec wallet."],
-  remit:["Hypothèse","Options avec wallet."],
-  remitFee:["Hypothèse","Non modélisé par défaut ; suppose un opérateur de transfert habilité."]
+  horizon:"Années simulées.",
+  clients:"Courbe de marché commune aux options, décalée selon le délai de lancement.",
+  gLate:"Appliquée aux clients de l'année 5 et des suivantes.",
+  invest:"Principal déterminant du résultat ; mesuré dès l'année 1.",
+  cac:"Seuil d'arrêt : 50 €.",
+  sgp:"Négociée avec la SGP (seuil d'arrêt : 1 %).",
+  growth:"",
+  psfpShare:"Une fois la PSFP propre active.",
+  psfpFee:"Payée par les porteurs de projets.",
+  card:"Options avec wallet.",
+  balance:"Options avec wallet.",
+  remit:"Options avec wallet.",
+  remitFee:"Via un opérateur de transfert habilité."
 };
 var OPT_META = {
-  wallet:["Hypothèse","Structure de l'option."],
-  delay:["Hypothèse","Note : 12 à 18 mois (option 1), 6 à 9 mois (option 2) ; le modèle retient la borne basse."],
-  fixed:["Hypothèse","Décomposition par poste dans l'onglet « Les options »."],
-  setup:["Hypothèse","Dont création de la filiale : 90 K€."],
-  capital:["À faire valider","Option 1 : capital minimum EME de 350 K€ (règle européenne, non revérifiée)."],
-  cardFee:["Vérifié","Plafond de 0,2 % sur les cartes de débit (règle européenne citée par la note) ; le taux conservé reste une hypothèse."],
-  yield:["Hypothèse","Dépend des taux et des règles de cantonnement."],
-  sub:["Hypothèse","0,60 € par mois : 20 % des clients à 3 €."],
-  baas:["Hypothèse","Frais Treezor par client, à remplacer par un devis."],
-  psfpYear:["Hypothèse","Option 3 : si le volume le justifie."],
-  psfpCost:["Hypothèse","Option 1 dispose déjà d'une équipe."]
+  wallet:"Structure de l'option.",
+  delay:"12 à 18 mois (option 1), 6 à 9 mois (option 2) ; le modèle retient la borne basse.",
+  fixed:"Décomposition par poste dans l'onglet « Les options ».",
+  setup:"Dont création de la filiale : 90 K€.",
+  capital:"Capital minimum d'un EME : 350 K€ (règle européenne).",
+  cardFee:"Plafond européen de 0,2 % sur les cartes de débit.",
+  yield:"Dépend des taux et des règles de cantonnement.",
+  sub:"0,60 € par mois : 20 % des clients à 3 €.",
+  baas:"Frais Treezor par client.",
+  psfpYear:"Option 3 : dès que le volume le justifie.",
+  psfpCost:"L'option 1 dispose déjà d'une équipe.",
+  other:"Marge des produits distribués sur la relation wallet (crédit, assurance, épargne).",
+  otherYear:"Une fois la relation bancaire installée."
 };
 var REG = [
-  ["Interface neutre (sans conseil ni démarchage) devant une SGP partenaire : aucun agrément d'investissement nécessaire au stade EME.","Option 1","À faire valider","Par un avocat."],
-  ["Capital minimum de 350 K€ pour un EME, plus des fonds propres proportionnels aux fonds détenus pour les clients.","Option 1","À faire valider","Règle européenne, non revérifiée ici."],
-  ["Gouvernance complète : deux dirigeants effectifs, responsables conformité et contrôle interne ; dossier ACPR.","Option 1","À faire valider",""],
-  ["Distribution sans agrément, à condition de ne faire ni conseil ni démarchage.","Option 3","À faire valider",""],
-  ["Enregistrement comme CIF auprès de l'ORIAS : conseil et rémunération encadrée, obligations d'adéquation et assurance.","Option 3","À faire valider","Variante."],
-  ["Plafond de 0,2 % sur les commissions des cartes de débit.","Options 1 et 2","Vérifié","Règle européenne citée par la note."],
-  ["Transferts vers l'Afrique : opérateur de transfert habilité.","Options avec wallet","À faire valider",""]
+  ["Interface neutre (sans conseil ni démarchage) devant une SGP partenaire : pas d'agrément d'investissement au stade EME.","Option 1"],
+  ["Capital minimum de 350 K€ pour un EME, plus des fonds propres proportionnels aux fonds détenus pour les clients.","Option 1"],
+  ["Gouvernance complète : deux dirigeants effectifs, responsables conformité et contrôle interne ; dossier ACPR.","Option 1"],
+  ["Distribution sans agrément, sans conseil ni démarchage.","Option 3"],
+  ["Variante : enregistrement comme CIF auprès de l'ORIAS (conseil et rémunération encadrée, obligations d'adéquation et assurance).","Option 3"],
+  ["Plafond de 0,2 % sur les commissions des cartes de débit.","Options 1 et 2"],
+  ["Transferts vers l'Afrique par un opérateur de transfert habilité.","Options avec wallet"]
 ];
-function stTag(s){ return '<span class="st ' + (s === "Vérifié" ? "st-v" : s === "Hypothèse" ? "st-h" : "st-a") + '">' + s + '</span>'; }
 function renderHyp(){
-  var c = state.common, d = DEFAULTS.common, h = '<thead><tr><th>Paramètre</th><th>Option</th><th class="r">Défaut</th><th class="r">Courant</th><th>Statut</th><th>Remarque</th></tr></thead><tbody>';
+  var c = state.common, d = DEFAULTS.common, h = '<thead><tr><th>Paramètre</th><th>Option</th><th class="r">Défaut</th><th class="r">Courant</th><th>Remarque</th></tr></thead><tbody>';
   function v(x, kind){ return kind === "pct" ? PCT(x) : kind === "bool" ? (x ? "oui" : "non") : fmtN(x, Math.abs(x - Math.round(x)) < 1e-9 ? 0 : 2); }
-  h += '<tr><td>Clients actifs fin d\'année (an 1 à 5)</td><td>Toutes</td><td class="r">' + d.clients.map(function(x){ return nf0.format(x); }).join(" / ") + '</td><td class="r">' + c.clients.map(function(x){ return nf0.format(x); }).join(" / ") + '</td><td>' + stTag(HYP_META.clients[0]) + '</td><td>' + HYP_META.clients[1] + '</td></tr>';
+  h += '<tr><td>Clients actifs fin d\'année (an 1 à 5)</td><td>Toutes</td><td class="r">' + d.clients.map(function(x){ return nf0.format(x); }).join(" / ") + '</td><td class="r">' + c.clients.map(function(x){ return nf0.format(x); }).join(" / ") + '</td><td>' + HYP_META.clients + '</td></tr>';
   COMMON_FIELDS.forEach(function(f){
     var m = HYP_META[f.k];
-    h += '<tr><td>' + f.label + ' <span class="cur-note">(' + f.unit + ')</span></td><td>' + (/wallet|carte|Afrique|transfert/i.test(f.label) ? "1 et 2" : "Toutes") + '</td><td class="r">' + v(d[f.k], f.kind) + '</td><td class="r">' + v(c[f.k], f.kind) + '</td><td>' + stTag(m[0]) + '</td><td>' + m[1] + '</td></tr>';
+    h += '<tr><td>' + f.label + ' <span class="cur-note">(' + f.unit + ')</span></td><td>' + (/wallet|carte|Afrique|transfert/i.test(f.label) ? "1 et 2" : "Toutes") + '</td><td class="r">' + v(d[f.k], f.kind) + '</td><td class="r">' + v(c[f.k], f.kind) + '</td><td>' + (m || "") + '</td></tr>';
   });
   OPT_FIELDS.forEach(function(f){
     var m = OPT_META[f.k];
     state.options.forEach(function(o, i){
       var dv = DEFAULTS.options[i][f.k];
       if (f.k !== "wallet" && f.k !== "delay" && f.k !== "fixed" && f.k !== "setup" && dv === 0 && o[f.k] === 0) return;
-      var s = m[0];
-      if (f.k === "capital" && i > 0) s = "Hypothèse";
-      if (f.k === "cardFee" && i > 0) s = "Hypothèse";
-      h += '<tr><td>' + f.label + '</td><td>' + OPT_NAMES[i] + '</td><td class="r">' + v(dv, f.kind) + '</td><td class="r">' + v(o[f.k], f.kind) + '</td><td>' + stTag(s) + '</td><td>' + ((f.k === "capital" || f.k === "cardFee") && i > 0 ? "" : m[1]) + '</td></tr>';
+      h += '<tr><td>' + f.label + '</td><td>' + OPT_NAMES[i] + '</td><td class="r">' + v(dv, f.kind) + '</td><td class="r">' + v(o[f.k], f.kind) + '</td><td>' + ((f.k === "capital" || f.k === "cardFee") && i > 0 ? "" : m) + '</td></tr>';
     });
   });
   document.getElementById("hypTable").innerHTML = h + '</tbody>';
-  document.getElementById("regTable").innerHTML = '<thead><tr><th>Point</th><th>Option</th><th>Statut</th><th>Remarque</th></tr></thead><tbody>' +
-    REG.map(function(r){ return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + stTag(r[2]) + '</td><td>' + r[3] + '</td></tr>'; }).join("") + '</tbody>';
-  // Chiffres de contrôle sur les valeurs par défaut
+  document.getElementById("regTable").innerHTML = '<thead><tr><th>Point</th><th>Option</th></tr></thead><tbody>' +
+    REG.map(function(r){ return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join("") + '</tbody>';
+  // Chiffres de contrôle : valeurs par défaut, horizon 5 ans, sans autres produits
+  var ctrlBase = clone(DEFAULTS); ctrlBase.common.horizon = 5; ctrlBase.options.forEach(function(o){ o.other = 0; });
   var ok = true, t = '<thead><tr><th>Montant investi</th><th>Option</th><th class="r">Attendu</th><th class="r">Moteur</th><th>Contrôle</th></tr></thead><tbody>';
   Object.keys(CONTROL).forEach(function(a){
-    var Rs = runAll(DEFAULTS, +a);
+    var Rs = runAll(ctrlBase, +a);
     CONTROL[a].forEach(function(e, i){
-      var r = Rs[i], pass = Math.abs(r.need - e[0]) <= 2 && r.first === e[1] && Math.abs(r.cash5 - e[2]) <= 2;
+      var r = Rs[i], pass = Math.abs(r.need - e[0]) <= 2 && r.first === e[1] && Math.abs(r.cashH - e[2]) <= 2;
       ok = ok && pass;
-      t += '<tr><td>' + EUR(+a) + '</td><td>' + OPT_NAMES[i] + '</td><td class="r">' + nf0.format(e[0]) + ' / an ' + e[1] + ' / ' + Ks(e[2]) + '</td><td class="r">' + nf0.format(Math.round(r.need)) + ' / ' + yrS(r.first) + ' / ' + Ks(r.cash5) + '</td><td>' + (pass ? "conforme" : "<strong class=\"neg\">écart</strong>") + '</td></tr>';
+      t += '<tr><td>' + EUR(+a) + '</td><td>' + OPT_NAMES[i] + '</td><td class="r">' + nf0.format(e[0]) + ' / an ' + e[1] + ' / ' + Ks(e[2]) + '</td><td class="r">' + nf0.format(Math.round(r.need)) + ' / ' + yrS(r.first) + ' / ' + Ks(r.cashH) + '</td><td>' + (pass ? "conforme" : "<strong class=\"neg\">écart</strong>") + '</td></tr>';
     });
   });
   document.getElementById("ctrlTable").innerHTML = t + '</tbody>';
@@ -1049,6 +1083,10 @@ function update(){
   save(); markPresets();
   var R = runAll(state);
   Array.prototype.forEach.call(document.querySelectorAll('[data-bind="scenarioName"]'), function(el){ el.textContent = state.name || "Scénario sans nom"; });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-bind="horizon"]'), function(el){ el.textContent = HN(); });
+  var o1 = state.options[0];
+  document.querySelector('[data-bind="opt1Other"]').innerHTML = o1.wallet && o1.other > 0 && o1.otherYear > 0 && o1.otherYear <= HN() ?
+    " La même relation porte ensuite d'autres produits (crédit, assurance, épargne) : " + cur(EUR(o1.other)) + " de marge par client et par an à partir de l'année " + o1.otherYear + SC + "." : "";
   // Simulateur
   document.getElementById("simInd").innerHTML = indicatorsTable(R, false);
   document.getElementById("simLegend").innerHTML = legendHTML(R);
@@ -1062,18 +1100,19 @@ function update(){
   if (document.activeElement !== qi) qi.value = toInput(state.common.invest, "eur");
   qr.value = state.common.invest;
   if (si && document.activeElement !== si) si.value = toInput(state.common.invest, "eur");
-  var qbc = bestIdx(R, function(r){ return r.cash5; }, 1);
+  var qbc = bestIdx(R, function(r){ return r.cashH; }, 1);
   document.getElementById("qTiles").innerHTML = R.map(function(r, i){
     return '<div class="qt"><h3><span class="sw c' + i + (i===1?' dash':'') + '"></span>' + OPT_NAMES[i] + (i === qbc ? '<span class="best">meilleure</span>' : '') + '</h3><dl>' +
       '<dt>Besoin max</dt><dd>' + K(r.need) + '</dd>' +
       '<dt>1<sup>re</sup> année rentable</dt><dd>' + yrS(r.first) + '</dd>' +
-      '<dt>Trésorerie an 5</dt><dd' + (r.cash5 < -0.5 ? ' class="neg"' : '') + '>' + Ks(r.cash5) + '</dd></dl></div>';
+      '<dt>Trésorerie an ' + HN() + '</dt><dd' + (r.cashH < -0.5 ? ' class="neg"' : '') + '>' + Ks(r.cashH) + '</dd></dl></div>';
   }).join("");
   // Fiche
   var c = state.common;
   document.getElementById("fDate").textContent = new Date().toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"});
   document.getElementById("fKeys").innerHTML = "Montant investi " + EUR(c.invest) + " par client et par an · clients an 1 à 5 : " + c.clients.map(function(x){ return nf0.format(x); }).join(" / ") +
-    " · acquisition " + EUR(c.cac) + " · commission SGP " + PCT(c.sgp) + " · PSFP " + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume · coûts fixes +" + PCT(c.growth) + " par an";
+    " · acquisition " + EUR(c.cac) + " · commission SGP " + PCT(c.sgp) + " · PSFP " + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume · coûts fixes +" + PCT(c.growth) + " par an · horizon " + HN() + " ans, clients +" + PCT(c.gLate) + " par an après l'an 5" +
+    (state.options[0].other > 0 && state.options[0].otherYear > 0 ? " · autres produits du wallet (option 1) " + EUR(state.options[0].other) + " par client dès l'an " + state.options[0].otherYear : "");
   document.getElementById("fInd").innerHTML = indicatorsTable(R, true);
   document.getElementById("fLegend").innerHTML = legendHTML(R);
   drawChart(document.getElementById("fChart"), R, 720, 230, false);

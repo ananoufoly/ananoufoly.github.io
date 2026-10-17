@@ -7,7 +7,7 @@ Quatre onglets :
 - **Les options** : texte de la note d'analyse ; chaque chiffre cité est lu dans le modèle pour le scénario courant.
 - **Simulateur** : hypothèses modifiables, indicateurs, courbe de trésorerie cumulée, détail annuel, lecture automatique, sensibilité au montant investi.
 - **Fiche** : synthèse d'une page du scénario courant ; « Exporter en PDF » ouvre la fenêtre d'impression (A4, une page).
-- **Hypothèses et méthode** : statut de chaque hypothèse (Vérifié, Hypothèse, À faire valider), formules, chiffres de contrôle recalculés à l'ouverture.
+- **Hypothèses et méthode** : valeurs par défaut et valeurs courantes de chaque paramètre, cadre réglementaire, formules, chiffres de contrôle recalculés à l'ouverture.
 
 ## Ouvrir la page
 
@@ -17,11 +17,7 @@ En ligne : https://ananoufoly.github.io/cika-diaspora/ (page non indexée, sans 
 
 Les valeurs par défaut sont dans l'objet `DEFAULTS`, en tête du script de `index.html` :
 
-- `DEFAULTS.common` : hypothèses communes (clients par année, montant investi, coût d'acquisition, commissions, etc.). Les pourcentages s'écrivent en fraction (`0.015` pour 1,5 %).
-- `DEFAULTS.options` : un objet par option, dans l'ordre 1, 2, 3, 3 + PSFP (délai en mois, coûts en K€, année d'activation de la PSFP, etc.).
+- `DEFAULTS.common` : paramètres communs (horizon de simulation, clients des années 1 à 5 puis croissance annuelle, montant investi, coût d'acquisition, commissions, etc.). Les pourcentages s'écrivent en fraction (`0.015` pour 1,5 %).
+- `DEFAULTS.options` : un objet par option, dans l'ordre 1, 2, 3, 3 + PSFP (délai en mois, coûts en K€, année d'activation de la PSFP, marge des autres produits du wallet et leur année de lancement, etc.).
 
-Après modification, l'onglet « Hypothèses et méthode » indique si les chiffres de contrôle (calculés sur les valeurs par défaut) sont toujours retrouvés. Changer les valeurs par défaut fait apparaître des écarts attendus : mettre alors à jour l'objet `CONTROL`.
-
-## Avertissement
-
-Toutes les valeurs sont des hypothèses à remplacer par des devis et des tests de marché réels. Les points réglementaires marqués « À faire valider » doivent être confirmés par un avocat.
+Après modification, l'onglet « Hypothèses et méthode » indique si les chiffres de contrôle (valeurs par défaut, horizon de 5 ans, sans autres produits du wallet) sont toujours retrouvés. Changer les valeurs par défaut fait apparaître des écarts attendus : mettre alors à jour l'objet `CONTROL`.
