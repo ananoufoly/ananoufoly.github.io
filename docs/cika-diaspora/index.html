@@ -712,6 +712,13 @@ function markPresets(){
   });
 }
 
+// Tant que le nom du scénario est un nom automatique (« Central 3 000 € », « Montant 1 000 € »),
+// il suit le montant investi ; un nom saisi à la main est conservé.
+function autoName(){
+  if (!/^((Central|Montant) )?[\d\s  ]+ ?€$/.test(state.name.trim()) && state.name.trim() !== "") return;
+  state.name = state.common.invest === 3000 ? "Central 3 000 €" : "Montant " + EUR(state.common.invest).replace(/ /g, " ");
+  var el = document.getElementById("scName"); if (el && document.activeElement !== el) el.value = state.name;
+}
 function onInput(e){
   var t = e.target;
   if (t.id === "scName"){ state.name = t.value; update(); return; }
@@ -721,7 +728,7 @@ function onInput(e){
     if (val !== null){ state.common.clients[+t.dataset.cl] = val; update(); }
   } else if (t.dataset.c){
     val = parseIn(t.value, t.dataset.kind); t.classList.toggle("bad", val === null);
-    if (val !== null){ state.common[t.dataset.c] = val; update(); }
+    if (val !== null){ state.common[t.dataset.c] = val; if (t.dataset.c === "invest") autoName(); update(); }
   } else if (t.dataset.o != null){
     var o = state.options[+t.dataset.o];
     if (t.type === "checkbox"){ o[t.dataset.k] = t.checked; update(); return; }
@@ -1236,7 +1243,7 @@ function update(){
   // Fiche : toujours le cas complet
   var c = state.common, stF = withMode(state, "complet"), RF = runAll(stF);
   document.getElementById("fDate").textContent = new Date().toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"});
-  document.getElementById("fKeys").innerHTML = "Montant investi " + EUR(c.invest) + " par client et par an · clients an 1 à 5 : " + c.clients.map(function(x){ return nf0.format(x); }).join(" / ") +
+  document.getElementById("fKeys").innerHTML = "<strong>Montant investi " + EUR(c.invest) + "</strong>" + " par client et par an · investisseurs an 1 à 5 : " + c.clients.map(function(x){ return nf0.format(x); }).join(" / ") +
     " · acquisition " + state.options.map(function(o){ return fmtN(o.cac); }).join(" / ") + " € par client (options 1 / 2 / 3 / 3 + PSFP)" +
     (" · cas complet : " + fmtN(state.options[0].ratioStart, 1) + " puis " + fmtN(state.options[0].ratioCruise, 1) + " clients actifs par investisseur (option 1), " + fmtN(state.options[1].ratioStart, 1) + " puis " + fmtN(state.options[1].ratioCruise, 1) + " (option 2)") + " · commission SGP " + PCT(c.sgp) + " · PSFP " + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume · coûts fixes +" + PCT(c.growth) + " par an · horizon " + HN() + " ans, clients +" + PCT(c.gLate) + " par an après l'an 5" +
     (state.options[0].other > 0 && state.options[0].otherYear > 0 ? " · autres produits du wallet (option 1) " + EUR(state.options[0].other) + " par client dès l'an " + state.options[0].otherYear : "");
@@ -1294,7 +1301,7 @@ function onQuick(e){
   var v = parseIn(e.target.value, "eur"), bad = v === null || v <= 0;
   if (e.target.id === "qInvest") e.target.classList.toggle("bad", bad);
   if (bad) return;
-  state.common.invest = v; update();
+  state.common.invest = v; autoName(); update();
 }
 document.getElementById("qInvest").addEventListener("input", onQuick);
 document.getElementById("qRange").addEventListener("input", onQuick);
