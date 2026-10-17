@@ -297,6 +297,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <h3>Résultats sur <span data-bind="horizon"></span> ans</h3>
     <p id="txtResIntro"></p>
     <div class="tbl-wrap"><table id="txtRes"></table></div>
+    <p id="txtResNote"></p>
     <h3>Lecture</h3>
     <ul id="txtLecture"></ul>
 
@@ -354,6 +355,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <div class="results">
       <h2>Indicateurs sur <span data-bind="horizon"></span> ans <span class="cur-note">K€ · <span data-bind="scenarioName"></span></span></h2>
       <div class="tbl-wrap"><table id="simInd"></table></div>
+      <p class="hint">Mise de départ : capital réglementaire, mise en place et coûts fixes engagés avant le premier client ; elle ne dépend pas du nombre d'investisseurs. Besoin max : point bas de la trésorerie cumulée, soit la mise de départ plus les pertes d'exploitation jusqu'au point mort, qui baissent quand le volume investi augmente.</p>
 
       <h2>Trésorerie cumulée <span class="cur-note">K€, de l'année 0 à l'année <span data-bind="horizon"></span></span></h2>
       <div class="legend" id="simLegend"></div>
@@ -385,6 +387,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <div class="keys" id="fKeys"></div>
     <h2>Indicateurs</h2>
     <div class="tbl-wrap"><table id="fInd"></table></div>
+    <p class="hint" style="margin:2px 0 0">Mise de départ : capital, mise en place et coûts fixes avant le premier client, indépendants du nombre d'investisseurs. Besoin max : mise de départ plus pertes d'exploitation jusqu'au point mort.</p>
     <h2>Trésorerie cumulée (K€)</h2>
     <div class="legend" id="fLegend"></div>
     <div class="chart" id="fChart"></div>
@@ -417,7 +420,8 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
       <li><strong>Revenu du wallet</strong> (options avec wallet) = clients moyens × (dépenses carte × commission carte + solde moyen × rendement + abonnement × 12 + montant envoyé × frais de transfert) + clients moyens × autres produits (à partir de leur année de lancement).</li>
       <li><strong>Coûts</strong> = coûts fixes × (1 + hausse)<sup>y − 1</sup> + mise en place (année 1) + coût PSFP (si active) + nouveaux clients × coût d'acquisition + clients moyens × frais BaaS × 12. Les coûts fixes courent dès l'année 1, y compris avant le premier client.</li>
       <li><strong>Résultat</strong> = revenus − coûts. <strong>Trésorerie cumulée</strong> : départ à − capital immobilisé (année 0), puis ajout de chaque résultat.</li>
-      <li><strong>Besoin de financement max</strong> = − min(trésorerie cumulée, départ compris). <strong>Première année rentable</strong> : première année au résultat positif.</li>
+      <li><strong>Mise de départ</strong> = capital immobilisé + mise en place + coûts fixes engagés avant le premier client (part de chaque année antérieure au lancement). Elle ne dépend ni du nombre de clients ni du montant investi.</li>
+      <li><strong>Besoin de financement max</strong> = − min(trésorerie cumulée, départ compris) : mise de départ plus pertes d'exploitation jusqu'au point bas de trésorerie. <strong>Première année rentable</strong> : première année au résultat positif.</li>
     </ul>
     <p>Le modèle ne prend en compte ni impôt, ni besoin en fonds de roulement, ni actualisation. Les fonds propres proportionnels aux fonds détenus pour les clients (option 1) ne sont pas modélisés.</p>
     <h3>Chiffres de contrôle</h3>
@@ -486,7 +490,7 @@ function runOption(c, o){
     var k = Math.floor(t), f = t - k, a = k === 0 ? 0 : cl[k-1], b = cl[k];
     return a + (b - a) * f;
   }
-  var prev = 0, cash = -o.capital, minCash = cash, first = null, rows = [];
+  var prev = 0, cash = -o.capital, minCash = cash, first = null, rows = [], preFixed = 0;
   var walletPerClient = o.wallet ? (c.card*o.cardFee + c.balance*o.yield + o.sub*12 + c.remit*c.remitFee) : 0; // €/client/an, hors autres produits
   for (var y = 1; y <= N; y++){
     var u = D(y - o.delay/12), avg = (prev + u)/2, nw = Math.max(u - prev, 0);
@@ -496,6 +500,7 @@ function runOption(c, o){
     var other = o.wallet && o.otherYear > 0 && y >= o.otherYear ? (o.other || 0) : 0;
     var revW = avg * (walletPerClient + other) / 1000;
     var fixed = o.fixed * Math.pow(1 + c.growth, y - 1);
+    preFixed += fixed * Math.max(0, Math.min(1, o.delay/12 - (y - 1))); // coûts fixes engagés avant le premier client
     var cost = fixed + (y === 1 ? o.setup : 0) + (psfp ? o.psfpCost : 0) + nw*c.cac/1000 + avg*o.baas*12/1000;
     var res = revInv + revW - cost;
     cash += res; minCash = Math.min(minCash, cash);
@@ -503,7 +508,8 @@ function runOption(c, o){
     rows.push({y:y, clients:u, avg:avg, vol:vol, revInv:revInv, revW:revW, rev:revInv+revW, cost:cost, res:res, cash:cash, psfp:psfp});
     prev = u;
   }
-  return {need:-minCash, first:first, cash0:-o.capital, cashH:cash, rows:rows, yH:rows[N-1],
+  var initial = o.capital + o.setup + preFixed;
+  return {need:-minCash, initial:initial, preFixed:preFixed, opLoss:Math.max(0, -minCash - initial), first:first, cash0:-o.capital, cashH:cash, rows:rows, yH:rows[N-1],
           walletPerClient:walletPerClient, baasPerClient:o.baas*12};
 }
 // Marge des autres produits (par client et par an) à partir de laquelle l'option 1
@@ -685,7 +691,7 @@ function readingSentences(R){
   var bn = bestIdx(R, function(r){ return r.need; }, -1);
   var wn = bestIdx(R, function(r){ return r.need; }, 1);
   var t2 = "Le besoin de financement le plus faible est celui de l'" + lc(bn) + " (" + K(R[bn].need) + "), contre " + K(R[wn].need) + " pour l'" + lc(wn);
-  if (st.options[wn].capital > 0) t2 += ", capital immobilisé de " + K(st.options[wn].capital) + " compris";
+  t2 += ". La mise de départ, indépendante du nombre d'investisseurs, va de " + K(Math.min.apply(null, R.map(function(r){ return r.initial; }))) + " à " + K(Math.max.apply(null, R.map(function(r){ return r.initial; }))) + " ; le reste couvre les pertes d'exploitation jusqu'au point mort";
   s.push(t2 + ".");
   // 3. Première année rentable
   var groups = {};
@@ -736,11 +742,12 @@ function parcoursHTML(R){
    ================================================================ */
 function indicatorsTable(R, compact){
   var bc = bestIdx(R, function(r){ return r.cashH; }, 1), bn = bestIdx(R, function(r){ return r.need; }, -1);
-  var h = '<thead><tr><th>Option</th><th class="r">Besoin max</th><th class="r">1<sup>re</sup> année rentable</th><th class="r">CA an ' + HN() + '</th><th class="r">Résultat an ' + HN() + '</th><th class="r">Trésorerie an ' + HN() + '</th>' +
+  var h = '<thead><tr><th>Option</th><th class="r">Mise de départ</th><th class="r">Besoin max</th><th class="r">1<sup>re</sup> année rentable</th><th class="r">CA an ' + HN() + '</th><th class="r">Résultat an ' + HN() + '</th><th class="r">Trésorerie an ' + HN() + '</th>' +
     (compact ? '' : '<th class="r">Wallet / client / an</th><th class="r">Frais BaaS / client / an</th>') + '</tr></thead><tbody>';
   R.forEach(function(r, i){
     var o = state.options[i];
     h += '<tr><td><span class="sw c'+i+(i===1?' dash':'')+'"></span>' + OPT_NAMES[i] + '</td>' +
+      '<td class="r">' + K(r.initial) + '</td>' +
       '<td class="r">' + K(r.need) + (i === bn ? '<span class="best">plus faible</span>' : '') + '</td>' +
       '<td class="r">' + yrS(r.first) + '</td>' +
       '<td class="r">' + K(r.yH.rev) + '</td>' +
@@ -920,16 +927,17 @@ function renderText(R){
     intro += ".";
   }
   document.getElementById("txtResIntro").innerHTML = intro;
-  var rt = '<thead><tr><th>Option</th><th class="r">Besoin de financement max</th><th class="r">Première année rentable</th><th class="r">Chiffre d\'affaires année ' + HN() + '</th><th class="r">Résultat année ' + HN() + '</th></tr></thead><tbody>';
+  var rt = '<thead><tr><th>Option</th><th class="r">Mise de départ</th><th class="r">Besoin de financement max</th><th class="r">Première année rentable</th><th class="r">Chiffre d\'affaires année ' + HN() + '</th><th class="r">Résultat année ' + HN() + '</th></tr></thead><tbody>';
   var longN = [
     "1. Endogène EME" + (O[0].psfpYear > 0 && O[0].psfpYear <= HN() ? " (puis PSFP en année " + O[0].psfpYear + ")" : ""),
     "2. BaaS + SGP", "3. Distribution sans wallet",
     "3. + PSFP propre" + (O[3].psfpYear > 0 && O[3].psfpYear <= HN() ? " en année " + O[3].psfpYear : "")
   ];
   R.forEach(function(r, i){
-    rt += '<tr><td>' + longN[i] + '</td><td class="r">' + M(r.need) + (O[i].capital > 0 ? ' (capital inclus)' : '') + '</td><td class="r">' + yr(r.first).replace(/^a/, "A") + '</td><td class="r">' + M(r.yH.rev, 2) + '</td><td' + cls(r.yH.res) + '>' + Ms(r.yH.res) + '</td></tr>';
+    rt += '<tr><td>' + longN[i] + '</td><td class="r">' + M(r.initial, 2) + '</td><td class="r">' + M(r.need) + (O[i].capital > 0 ? ' (capital inclus)' : '') + '</td><td class="r">' + yr(r.first).replace(/^a/, "A") + '</td><td class="r">' + M(r.yH.rev, 2) + '</td><td' + cls(r.yH.res) + '>' + Ms(r.yH.res) + '</td></tr>';
   });
   document.getElementById("txtRes").innerHTML = rt + '</tbody>';
+  document.getElementById("txtResNote").innerHTML = "La mise de départ (capital réglementaire, mise en place et coûts fixes engagés avant le premier client) ne dépend pas du nombre d'investisseurs : " + listJoin(R.map(function(r, i){ return cur(K(r.initial)) + " pour l'" + lc(i); })) + ". Le besoin de financement max y ajoute les pertes d'exploitation jusqu'au point mort ; c'est cette seconde part qui varie avec le montant investi par client.";
 
   // Lecture (note)
   var costH = R.map(function(r){ return r.yH.cost; });
@@ -979,7 +987,7 @@ function renderText(R){
   D.push("<strong>Option 2 (BaaS + SGP)</strong> : " + (o2worse ? "elle n'est pas justifiée pour ce business. " : "elle n'est pas dominée par l'option 3 dans le scénario courant. ") +
     "Besoin de " + cur(K(R[1].need)) + " contre " + cur(K(R[2].need)) + " pour l'option 3, à commission d'investissement égale (" + PCT(c.sgp) + "), et son wallet " + (R[1].walletPerClient < R[1].baasPerClient ? "ne couvre pas" : "couvre") + " ses propres frais par client (" + EUR(R[1].walletPerClient, 1) + " contre " + EUR(R[1].baasPerClient, 1) + " par an). Seule réserve : elle achète six à neuf mois d'avance sur un wallet, ce qui n'a de valeur que si l'usage bancaire quotidien est un objectif en soi.</li>");
   var be1 = otherBreakEven(st);
-  D.push("<strong>Option 1 (endogène)</strong> : elle demande environ " + cur(M(R[0].need)) + " de financement, capital réglementaire compris. Sur " + HN() + " ans, sa trésorerie de fin de période est de " + cur(Ks(R[0].cashH)) + ", contre " + cur(Ks(R[3].cashH)) + " pour l'option 3 + PSFP" + SC + ". " +
+  D.push("<strong>Option 1 (endogène)</strong> : elle demande environ " + cur(M(R[0].need)) + " de financement, dont " + cur(K(R[0].initial)) + " de mise de départ (capital réglementaire, mise en place, coûts fixes avant lancement). Sur " + HN() + " ans, sa trésorerie de fin de période est de " + cur(Ks(R[0].cashH)) + ", contre " + cur(Ks(R[3].cashH)) + " pour l'option 3 + PSFP" + SC + ". " +
     (be1.already ? "Avec les autres produits du wallet du scénario courant (" + EUR(O[0].other) + " par client et par an à partir de l'année " + O[0].otherYear + "), elle finit devant." :
      be1.none ? "Sur cet horizon, les autres produits du wallet ne suffisent pas à la faire passer devant." :
      "Elle passe devant si les autres produits du wallet (crédit, assurance, épargne) dégagent au moins " + cur(EUR(be1.x)) + " par client et par an à partir de l'année " + be1.y0 + " (scénario courant : " + EUR(O[0].other) + ").") +
@@ -1103,6 +1111,7 @@ function update(){
   var qbc = bestIdx(R, function(r){ return r.cashH; }, 1);
   document.getElementById("qTiles").innerHTML = R.map(function(r, i){
     return '<div class="qt"><h3><span class="sw c' + i + (i===1?' dash':'') + '"></span>' + OPT_NAMES[i] + (i === qbc ? '<span class="best">meilleure</span>' : '') + '</h3><dl>' +
+      '<dt>Mise de départ</dt><dd>' + K(r.initial) + '</dd>' +
       '<dt>Besoin max</dt><dd>' + K(r.need) + '</dd>' +
       '<dt>1<sup>re</sup> année rentable</dt><dd>' + yrS(r.first) + '</dd>' +
       '<dt>Trésorerie an ' + HN() + '</dt><dd' + (r.cashH < -0.5 ? ' class="neg"' : '') + '>' + Ks(r.cashH) + '</dd></dl></div>';
