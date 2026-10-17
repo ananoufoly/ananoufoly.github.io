@@ -37,3 +37,8 @@ planner_apps_script.gs
 # Real transaction data — borrower PII, never publish
 flowra-transactions.json
 docs/**/flowra-transactions.json
+
+# Local-only diaspora-simulator encryption tool + plaintext source.
+# Only docs/cika-diaspora/diaspora.enc (ciphertext) should ever be committed.
+encrypt_diaspora.py
+cika-diaspora-src/
