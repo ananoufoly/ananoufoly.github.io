@@ -179,6 +179,9 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
 .sheet .reading{padding:8px 12px;margin:4px 0 6px}
 .sheet .reading p{margin:0 0 .3em}
 .sheet ul{margin:0 0 4px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;align-items:start}
+.fgrid>*{min-width:0}
+@media (max-width:640px){.fgrid{grid-template-columns:1fr}}
 .warnline{font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:6px;margin-top:10px}
 
 .foot{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding:14px 0 30px}
@@ -198,26 +201,36 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
 /* ================================================================
    Impression : la fiche seule, une page A4, toujours en clair.
    ================================================================ */
-@page{size:A4;margin:12mm 13mm}
+/* Marges de page nulles : le navigateur n'imprime ni en-tête ni pied de page ;
+   la marge est portée par la fiche elle-même. */
+@page{size:A4;margin:0}
 @media print{
   :root,:root[data-theme="dark"],:root:not([data-theme="light"]){
     --bg:#fff;--surface:#f4f4f2;--ink:#111;--ink-2:#3a3a38;--muted:#6a6a66;--line:#d9d9d4;--line-2:#bdbdb8;
     --accent:#1d39c4;--accent-soft:#e9edfb;--s1:#555552;--s2:#9a9a95;--s3:#6f86e6;--s4:#1d39c4;--neg:#9b2c2c;
-    color-scheme:light}
-  body{background:#fff;font-size:11px}
+    color-scheme:light;padding:0}
+  body{background:#fff;font-size:9pt}
   .top,.foot,.fiche-bar,.panel:not(#tab-fiche){display:none!important}
   #tab-fiche{display:block!important}
   main{padding:0}.wrap{max-width:none;padding:0}
-  .sheet{border:0;padding:0;max-width:none}
-  .sheet h1{font-size:16px}
-  .sheet .keys{font-size:10px}
-  .sheet h2{font-size:10px;margin:7px 0 3px}
-  .sheet table{font-size:10px}.sheet th,.sheet td{padding:2.5px 5px}
-  .sheet p,.sheet li{font-size:10.3px;line-height:1.32}
-  .sheet .legend{font-size:10px}
-  .sheet .chart svg{max-height:50mm}
-  .warnline{font-size:9.5px}
-  .tbl-wrap{overflow:visible;margin:4px 0 6px}
+  .sheet{border:0;padding:11mm 12mm 9mm;max-width:none;width:210mm}
+  .sheet h1{font-size:13pt}
+  .sheet .meta{font-size:8.5pt;margin:1px 0 6px}
+  .sheet .keys{font-size:8pt;padding:4px 0;margin-bottom:6px}
+  .sheet h2{font-size:8pt;margin:7px 0 3px}
+  .sheet table{font-size:8.5pt}.sheet th,.sheet td{padding:2px 5px}
+  .sheet p,.sheet li{font-size:9pt;line-height:1.3}
+  .sheet .hint{font-size:7.5pt}
+  .sheet .legend{font-size:8pt;gap:2px 10px}
+  .sheet .reading{padding:6px 9px}
+  .sheet .reading p{margin:0 0 .35em}
+  .sheet ul{padding-left:1.1em}
+  .fgrid{grid-template-columns:1fr 1fr;gap:0 7mm}
+  #fInd td:first-child{white-space:nowrap}
+  .sheet .best{white-space:nowrap;margin-left:3px}
+  #fInd th{line-height:1.2}
+  .warnline{font-size:7.5pt;margin-top:6px;padding-top:4px}
+  .tbl-wrap{overflow:visible;margin:3px 0 4px}
   .sheet, .sheet *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
@@ -425,15 +438,22 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <h2>Indicateurs</h2>
     <div class="tbl-wrap"><table id="fInd"></table></div>
     <p class="hint" style="margin:2px 0 0">Mise de départ : capital, mise en place et coûts fixes avant le premier client, indépendants du nombre d'investisseurs. Besoin max : mise de départ plus pertes d'exploitation jusqu'au point mort.</p>
-    <h2>Trésorerie cumulée (K€)</h2>
-    <div class="legend" id="fLegend"></div>
-    <div class="chart" id="fChart"></div>
-    <h2>Lecture</h2>
-    <div class="reading" id="fReading"></div>
-    <p id="fCases" style="margin:4px 0 0"></p>
-    <h2>Notre recommandation</h2>
-    <ul id="fParcours"></ul>
-    <p id="fPlan" style="margin:2px 0 0"></p>
+    <div class="fgrid">
+      <div class="fcol">
+        <h2>Trésorerie cumulée (K€)</h2>
+        <div class="legend" id="fLegend"></div>
+        <div class="chart" id="fChart"></div>
+        <h2>Plan d'investissement</h2>
+        <p id="fPlan"></p>
+        <h2>Notre recommandation</h2>
+        <ul id="fParcours"></ul>
+      </div>
+      <div class="fcol">
+        <h2>Lecture</h2>
+        <div class="reading" id="fReading"></div>
+        <p id="fCases"></p>
+      </div>
+    </div>
     <p class="warnline">Projections établies sur les hypothèses du scénario indiqué en tête de fiche.</p>
   </article>
 </section>
@@ -964,7 +984,7 @@ function legendHTML(R, T){
 var SHORT5 = ["Option 1", "Option 2", "Option 3", "Option 3 + PSFP", "Trajectoire"];
 function chartSVG(R, W, H, T){
   if (T) R = R.concat([T]);
-  var ml = 46, mr = W < 520 ? 138 : 176, narrow = W < 520, mt = 10, mb = 26, iw = W - ml - mr, ih = H - mt - mb;
+  var ml = 56, mr = W < 520 ? 138 : 176, narrow = W < 520, mt = 10, mb = 26, iw = W - ml - mr, ih = H - mt - mb;
   var series = R.map(function(r){ return [r.cash0].concat(r.rows.map(function(x){ return x.cash; })); });
   var all = [].concat.apply([0], series), lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
   var span = hi - lo || 1, step = niceStep(span / 5);
@@ -1319,10 +1339,10 @@ function update(){
   var TF = runTraj(stF);
   document.getElementById("fInd").innerHTML = indicatorsTable(RF, true, TF);
   document.getElementById("fLegend").innerHTML = legendHTML(RF, TF);
-  drawChart(document.getElementById("fChart"), RF, 720, 230, false, TF);
+  drawChart(document.getElementById("fChart"), RF, 440, 270, false, TF);
   var trF = planData(TF), partsF = [];
   trF.forEach(function(v, k){ if (v >= 1) partsF.push("an " + (k + 1) + " : " + K(v)); });
-  document.getElementById("fPlan").innerHTML = "<strong>Plan d'investissement</strong> : " + M(TF.need) + " de financement" + (partsF.length > 1 ? " en " + partsF.length + " tranches (" + partsF.join(" ; ") + ")" : "") +
+  document.getElementById("fPlan").innerHTML = M(TF.need) + " de financement" + (partsF.length > 1 ? " en " + partsF.length + " tranches (" + partsF.join(" ; ") + ")" : "") +
     ", retour à l'équilibre en " + (TF.payback ? "année " + TF.payback : "fin de période") + ", trésorerie de " + Ks(TF.cashH) + " en fin d'année " + HN() + ".";
   document.getElementById("fReading").innerHTML = readingSentences(RF, stF).map(function(x){ return "<p>" + x + "</p>"; }).join("");
   document.getElementById("fParcours").innerHTML = parcoursHTML(RF);
