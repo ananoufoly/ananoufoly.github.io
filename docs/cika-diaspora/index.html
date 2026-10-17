@@ -291,6 +291,8 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <h3>Coûts par option (K€)</h3>
     <div class="tbl-wrap"><table id="txtCosts"></table></div>
     <p class="hint" id="txtCostsNote"></p>
+    <h3>Mise de départ et retour sur mise (K€)</h3>
+    <div class="tbl-wrap"><table id="txtInit"></table></div>
     <h3>Évolution vers la plateforme PSFP propre</h3>
     <ul id="txtPsfp"></ul>
 
@@ -300,6 +302,10 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <p id="txtResNote"></p>
     <h3>Lecture</h3>
     <ul id="txtLecture"></ul>
+
+    <h3>À long terme</h3>
+    <p id="txtLong"></p>
+    <div class="tbl-wrap"><table id="txtLongTbl"></table></div>
 
     <h3>Sensibilité au montant investi par client</h3>
     <p id="txtSensIntro"></p>
@@ -357,12 +363,20 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
       <div class="tbl-wrap"><table id="simInd"></table></div>
       <p class="hint">Mise de départ : capital réglementaire, mise en place et coûts fixes engagés avant le premier client ; elle ne dépend pas du nombre d'investisseurs. Besoin max : point bas de la trésorerie cumulée, soit la mise de départ plus les pertes d'exploitation jusqu'au point mort, qui baissent quand le volume investi augmente.</p>
 
+      <h2>Mise de départ et retour sur mise <span class="cur-note">K€</span></h2>
+      <div class="tbl-wrap"><table id="simInit"></table></div>
+      <p class="hint">Retour à l'équilibre : année où la trésorerie cumulée redevient positive, c'est-à-dire où la mise de départ et les pertes des premières années sont remboursées.</p>
+
       <h2>Trésorerie cumulée <span class="cur-note">K€, de l'année 0 à l'année <span data-bind="horizon"></span></span></h2>
       <div class="legend" id="simLegend"></div>
       <div class="chart" id="simChart"></div>
 
       <h2>Lecture</h2>
       <div class="reading" id="simReading"></div>
+
+      <h2>Long terme <span class="cur-note">calcul sur 15 ans, autres hypothèses du scénario courant</span></h2>
+      <p id="simLong"></p>
+      <div class="tbl-wrap"><table id="simLongTbl"></table></div>
 
       <h2>Sensibilité au montant investi <span class="cur-note">autres hypothèses du scénario courant</span></h2>
       <div class="tbl-wrap"><table id="simSens"></table></div>
@@ -413,15 +427,16 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <h2>Méthode</h2>
     <p>Horizon de <i>N</i> ans (de 5 à 15, <span data-bind="horizon"></span> dans le scénario courant), montants en K€ sauf mention contraire. Pour chaque option et chaque année <i>y</i> = 1 à <i>N</i> :</p>
     <ul>
-      <li><strong>Clients en fin d'année</strong> : u(y) = D(y − délai / 12), où D(t) = 0 si t ≤ 0, D(k) = clients de l'année k pour k entier de 1 à 5, interpolation linéaire entre deux entiers (D(0) = 0). Au-delà de l'année 5, les clients de l'année k valent ceux de l'année k − 1 × (1 + croissance après l'année 5).</li>
+      <li><strong>Clients en fin d'année</strong> : u(y) = part captée × D(y − délai / 12), où D(t) = 0 si t ≤ 0, D(k) = clients de l'année k pour k entier de 1 à 5, interpolation linéaire entre deux entiers (D(0) = 0). Au-delà de l'année 5, les clients de l'année k valent ceux de l'année k − 1 × (1 + croissance après l'année 5).</li>
       <li><strong>Clients moyens</strong> : (u(y − 1) + u(y)) / 2, avec u(0) = 0. <strong>Nouveaux clients</strong> : max(u(y) − u(y − 1), 0).</li>
       <li><strong>Volume investi</strong> = clients moyens × montant investi par client.</li>
       <li><strong>Revenu d'investissement</strong> = volume × commission SGP ; si la PSFP est active (y ≥ année PSFP &gt; 0) : volume × (1 − part PSFP) × commission SGP + volume × part PSFP × commission PSFP.</li>
       <li><strong>Revenu du wallet</strong> (options avec wallet) = clients moyens × (dépenses carte × commission carte + solde moyen × rendement + abonnement × 12 + montant envoyé × frais de transfert) + clients moyens × autres produits (à partir de leur année de lancement).</li>
-      <li><strong>Coûts</strong> = coûts fixes × (1 + hausse)<sup>y − 1</sup> + mise en place (année 1) + coût PSFP (si active) + nouveaux clients × coût d'acquisition + clients moyens × frais BaaS × 12. Les coûts fixes courent dès l'année 1, y compris avant le premier client.</li>
+      <li><strong>Coûts</strong> = coûts fixes × (1 + hausse)<sup>y − 1</sup> + mise en place (année 1) + coût PSFP (si active) + nouveaux clients × coût d'acquisition de l'option + clients moyens × frais BaaS × 12. Les coûts fixes courent dès l'année 1, y compris avant le premier client.</li>
       <li><strong>Résultat</strong> = revenus − coûts. <strong>Trésorerie cumulée</strong> : départ à − capital immobilisé (année 0), puis ajout de chaque résultat.</li>
       <li><strong>Mise de départ</strong> = capital immobilisé + mise en place + coûts fixes engagés avant le premier client (part de chaque année antérieure au lancement). Elle ne dépend ni du nombre de clients ni du montant investi.</li>
-      <li><strong>Besoin de financement max</strong> = − min(trésorerie cumulée, départ compris) : mise de départ plus pertes d'exploitation jusqu'au point bas de trésorerie. <strong>Première année rentable</strong> : première année au résultat positif.</li>
+      <li><strong>Besoin de financement max</strong> = − min(trésorerie cumulée, départ compris) : mise de départ plus pertes d'exploitation jusqu'au point bas de trésorerie. <strong>Première année rentable</strong> : première année au résultat positif. <strong>Retour à l'équilibre</strong> : première année où la trésorerie cumulée redevient positive.</li>
+      <li><strong>Long terme</strong> : les mêmes formules sont prolongées sur 15 ans, quel que soit l'horizon affiché ; on repère l'année à partir de laquelle le résultat annuel, puis la trésorerie cumulée, de l'option 1 restent au-dessus de ceux de toutes les autres options.</li>
     </ul>
     <p>Le modèle ne prend en compte ni impôt, ni besoin en fonds de roulement, ni actualisation. Les fonds propres proportionnels aux fonds détenus pour les clients (option 1) ne sont pas modélisés.</p>
     <h3>Chiffres de contrôle</h3>
@@ -447,7 +462,6 @@ var DEFAULTS = {
     clients: [2000, 6000, 12000, 20000, 30000], // clients actifs fin d'année, marché lancé (années 1 à 5)
     gLate: 0.20,       // croissance annuelle des clients après l'année " + HN() + "
     invest: 3000,      // € investis par client et par an
-    cac: 25,           // € par nouveau client
     sgp: 0.015,        // commission SGP sur montants investis
     growth: 0.10,      // hausse annuelle des coûts fixes
     psfpShare: 0.5,    // part du volume passant par la PSFP propre
@@ -458,10 +472,10 @@ var DEFAULTS = {
     remitFee: 0        // frais de transfert prélevés (non modélisé par défaut)
   },
   options: [
-    {wallet:true,  delay:12, fixed:704, setup:240, capital:350, cardFee:0.002, yield:0.02, sub:0.6, baas:0, psfpYear:4, psfpCost:150, other:30, otherYear:6},
-    {wallet:true,  delay:6,  fixed:344, setup:140, capital:0,   cardFee:0.001, yield:0,    sub:0.6, baas:1, psfpYear:0, psfpCost:0, other:10, otherYear:6},
-    {wallet:false, delay:0,  fixed:174, setup:110, capital:0,   cardFee:0,     yield:0,    sub:0,   baas:0, psfpYear:0, psfpCost:0, other:0, otherYear:0},
-    {wallet:false, delay:0,  fixed:174, setup:110, capital:0,   cardFee:0,     yield:0,    sub:0,   baas:0, psfpYear:3, psfpCost:250, other:0, otherYear:0}
+    {wallet:true,  delay:12, fixed:704, setup:240, capital:350, cardFee:0.002, yield:0.02, cac:25, mult:1, sub:0.6, baas:0, psfpYear:4, psfpCost:150, other:30, otherYear:6},
+    {wallet:true,  delay:6,  fixed:344, setup:140, capital:0,   cardFee:0.001, yield:0,    cac:25, mult:1, sub:0.6, baas:1, psfpYear:0, psfpCost:0, other:10, otherYear:6},
+    {wallet:false, delay:0,  fixed:174, setup:110, capital:0,   cardFee:0,     yield:0,    cac:25, mult:1, sub:0,   baas:0, psfpYear:0, psfpCost:0, other:0, otherYear:0},
+    {wallet:false, delay:0,  fixed:174, setup:110, capital:0,   cardFee:0,     yield:0,    cac:25, mult:1, sub:0,   baas:0, psfpYear:3, psfpCost:250, other:0, otherYear:0}
   ]
 };
 var OPT_NAMES = ["1. Endogène EME", "2. BaaS + SGP", "3. Distribution", "3. + PSFP propre"];
@@ -482,7 +496,7 @@ function clone(o){ return JSON.parse(JSON.stringify(o)); }
 function hz(c){ return Math.max(5, Math.min(15, Math.round(c.horizon || 5))); }
 function HN(){ return hz(state.common); }
 function runOption(c, o){
-  var N = hz(c), cl = c.clients.slice(0, 5);
+  var N = hz(c), cl = c.clients.slice(0, 5), mult = o.mult == null ? 1 : o.mult, cac = o.cac == null ? 25 : o.cac;
   while (cl.length < N) cl.push(cl[cl.length - 1] * (1 + (c.gLate || 0)));
   function D(t){
     if (t <= 0) return 0;
@@ -490,10 +504,10 @@ function runOption(c, o){
     var k = Math.floor(t), f = t - k, a = k === 0 ? 0 : cl[k-1], b = cl[k];
     return a + (b - a) * f;
   }
-  var prev = 0, cash = -o.capital, minCash = cash, first = null, rows = [], preFixed = 0;
+  var prev = 0, cash = -o.capital, minCash = cash, first = null, payback = null, rows = [], preFixed = 0;
   var walletPerClient = o.wallet ? (c.card*o.cardFee + c.balance*o.yield + o.sub*12 + c.remit*c.remitFee) : 0; // €/client/an, hors autres produits
   for (var y = 1; y <= N; y++){
-    var u = D(y - o.delay/12), avg = (prev + u)/2, nw = Math.max(u - prev, 0);
+    var u = D(y - o.delay/12) * mult, avg = (prev + u)/2, nw = Math.max(u - prev, 0);
     var vol = avg * c.invest / 1000;
     var psfp = o.psfpYear > 0 && y >= o.psfpYear;
     var revInv = psfp ? vol*(1-c.psfpShare)*c.sgp + vol*c.psfpShare*c.psfpFee : vol*c.sgp;
@@ -501,16 +515,30 @@ function runOption(c, o){
     var revW = avg * (walletPerClient + other) / 1000;
     var fixed = o.fixed * Math.pow(1 + c.growth, y - 1);
     preFixed += fixed * Math.max(0, Math.min(1, o.delay/12 - (y - 1))); // coûts fixes engagés avant le premier client
-    var cost = fixed + (y === 1 ? o.setup : 0) + (psfp ? o.psfpCost : 0) + nw*c.cac/1000 + avg*o.baas*12/1000;
+    var cost = fixed + (y === 1 ? o.setup : 0) + (psfp ? o.psfpCost : 0) + nw*cac/1000 + avg*o.baas*12/1000;
     var res = revInv + revW - cost;
     cash += res; minCash = Math.min(minCash, cash);
     if (first === null && res > 0) first = y;
+    if (payback === null && minCash < 0 && cash >= 0) payback = y;
     rows.push({y:y, clients:u, avg:avg, vol:vol, revInv:revInv, revW:revW, rev:revInv+revW, cost:cost, res:res, cash:cash, psfp:psfp});
     prev = u;
   }
   var initial = o.capital + o.setup + preFixed;
-  return {need:-minCash, initial:initial, preFixed:preFixed, opLoss:Math.max(0, -minCash - initial), first:first, cash0:-o.capital, cashH:cash, rows:rows, yH:rows[N-1],
+  if (payback === null && minCash >= 0) payback = 1;
+  return {need:-minCash, initial:initial, preFixed:preFixed, opLoss:Math.max(0, -minCash - initial), first:first, payback:payback, cash0:-o.capital, cashH:cash, rows:rows, yH:rows[N-1],
           walletPerClient:walletPerClient, baasPerClient:o.baas*12};
+}
+var LONG_N = 15;
+function longRun(st){
+  var s2 = clone(st); s2.common.horizon = LONG_N;
+  var R = runAll(s2);
+  // première année à partir de laquelle la condition reste vraie jusqu'à la fin
+  function from(f){ var y0 = null; for (var y = LONG_N; y >= 1; y--){ if (f(y - 1)) y0 = y; else break; } return y0; }
+  var others = [1, 2, 3];
+  var resY = from(function(k){ return others.every(function(j){ return R[0].rows[k].res > R[j].rows[k].res; }); });
+  var cashY = from(function(k){ return others.every(function(j){ return R[0].rows[k].cash > R[j].rows[k].cash; }); });
+  var rival = bestIdx(R.slice(1), function(r){ return r.cashH; }, 1) + 1;
+  return {R:R, resY:resY, cashY:cashY, rival:rival};
 }
 // Marge des autres produits (par client et par an) à partir de laquelle l'option 1
 // égale l'option 3 + PSFP en trésorerie de fin d'horizon.
@@ -586,7 +614,6 @@ var COMMON_FIELDS = [
   {k:"horizon", label:"Horizon de simulation", unit:"années (5 à 15)", kind:"int"},
   {k:"gLate", label:"Croissance des clients après l'année 5", unit:"% par an", kind:"pct"},
   {k:"invest", label:"Montant investi par client et par an", unit:"€", kind:"eur"},
-  {k:"cac", label:"Coût d'acquisition d'un client", unit:"€", kind:"eur"},
   {k:"sgp", label:"Commission versée par la SGP", unit:"% des montants investis", kind:"pct"},
   {k:"growth", label:"Hausse annuelle des coûts fixes", unit:"%", kind:"pct"},
   {k:"psfpShare", label:"Part du volume via la PSFP propre", unit:"% une fois active", kind:"pct"},
@@ -599,6 +626,8 @@ var COMMON_FIELDS = [
 var OPT_FIELDS = [
   {k:"wallet", label:"Wallet", kind:"bool"},
   {k:"delay", label:"Délai de lancement (mois)", kind:"int"},
+  {k:"mult", label:"Clients captés (% du marché de référence)", kind:"pct"},
+  {k:"cac", label:"Coût d'acquisition (€/nouveau client)", kind:"num"},
   {k:"fixed", label:"Coûts fixes année 1 (K€)", kind:"num"},
   {k:"setup", label:"Mise en place, année 1 (K€)", kind:"num"},
   {k:"capital", label:"Capital immobilisé (K€)", kind:"num"},
@@ -693,27 +722,15 @@ function readingSentences(R){
   var t2 = "Le besoin de financement le plus faible est celui de l'" + lc(bn) + " (" + K(R[bn].need) + "), contre " + K(R[wn].need) + " pour l'" + lc(wn);
   t2 += ". La mise de départ, indépendante du nombre d'investisseurs, va de " + K(Math.min.apply(null, R.map(function(r){ return r.initial; }))) + " à " + K(Math.max.apply(null, R.map(function(r){ return r.initial; }))) + " ; le reste couvre les pertes d'exploitation jusqu'au point mort";
   s.push(t2 + ".");
-  // 3. Première année rentable
+  // 3. Retour à l'équilibre de trésorerie
   var groups = {};
-  R.forEach(function(r, i){ var k = r.first == null ? "jamais" : r.first; (groups[k] = groups[k] || []).push(lc(i)); });
+  R.forEach(function(r, i){ var k = r.payback == null ? "jamais" : r.payback; (groups[k] = groups[k] || []).push(lc(i)); });
   var keys = Object.keys(groups).sort(function(a, b){ return (a === "jamais" ? 99 : +a) - (b === "jamais" ? 99 : +b); });
-  s.push("Premier résultat annuel positif : " + keys.map(function(k){
-    return (k === "jamais" ? "aucun sur " + HN() + " ans" : "année " + k) + " pour " + listJoin(groups[k]);
+  s.push("La trésorerie cumulée redevient positive, mise de départ remboursée, " + keys.map(function(k){
+    return (k === "jamais" ? "après l'année " + HN() : "en année " + k) + " pour " + listJoin(groups[k]);
   }).join(" ; ") + ".");
-  // 4. Wallet par client
-  var w = [];
-  R.forEach(function(r, i){
-    if (!st.options[i].wallet) return;
-    var txt = "le wallet de l'" + lc(i) + " rapporte " + EUR(r.walletPerClient, 1) + " par client et par an";
-    var oo = st.options[i];
-    if (oo.other > 0 && oo.otherYear > 0 && oo.otherYear <= HN()) txt += ", plus " + EUR(oo.other) + " d'autres produits à partir de l'année " + oo.otherYear;
-    if (r.baasPerClient > 0) txt += ", pour " + EUR(r.baasPerClient, 1) + " de frais BaaS";
-    w.push(txt);
-  });
-  var be = otherBreakEven(st);
-  if (st.options[0].wallet && !be.none) w.push(be.already ? "avec ces hypothèses, l'option 1 finit devant l'option 3 + PSFP sur " + HN() + " ans"
-    : "l'option 1 passe devant l'option 3 + PSFP sur " + HN() + " ans si ses autres produits dégagent au moins " + EUR(be.x) + " par client et par an à partir de l'année " + be.y0);
-  if (w.length){ var tw = w.join(" ; "); s.push(tw.charAt(0).toUpperCase() + tw.slice(1) + "."); }
+  // 4. Long terme : l'option 1 face aux autres
+  s.push(longSentence(longRun(st)));
   // 5. Effet de la PSFP propre (option 3)
   var p = st.options[3].psfpYear;
   if (p > 0 && p <= HN()){
@@ -742,7 +759,7 @@ function parcoursHTML(R){
    ================================================================ */
 function indicatorsTable(R, compact){
   var bc = bestIdx(R, function(r){ return r.cashH; }, 1), bn = bestIdx(R, function(r){ return r.need; }, -1);
-  var h = '<thead><tr><th>Option</th><th class="r">Mise de départ</th><th class="r">Besoin max</th><th class="r">1<sup>re</sup> année rentable</th><th class="r">CA an ' + HN() + '</th><th class="r">Résultat an ' + HN() + '</th><th class="r">Trésorerie an ' + HN() + '</th>' +
+  var h = '<thead><tr><th>Option</th><th class="r">Mise de départ</th><th class="r">Besoin max</th><th class="r">1<sup>re</sup> année rentable</th><th class="r">Retour à l\'équilibre</th><th class="r">CA an ' + HN() + '</th><th class="r">Résultat an ' + HN() + '</th><th class="r">Trésorerie an ' + HN() + '</th>' +
     (compact ? '' : '<th class="r">Wallet / client / an</th><th class="r">Frais BaaS / client / an</th>') + '</tr></thead><tbody>';
   R.forEach(function(r, i){
     var o = state.options[i];
@@ -750,6 +767,7 @@ function indicatorsTable(R, compact){
       '<td class="r">' + K(r.initial) + '</td>' +
       '<td class="r">' + K(r.need) + (i === bn ? '<span class="best">plus faible</span>' : '') + '</td>' +
       '<td class="r">' + yrS(r.first) + '</td>' +
+      '<td class="r">' + yrS(r.payback) + '</td>' +
       '<td class="r">' + K(r.yH.rev) + '</td>' +
       '<td' + cls(r.yH.res) + '>' + Ks(r.yH.res) + '</td>' +
       '<td' + cls(r.cashH) + '>' + Ks(r.cashH) + (i === bc ? '<span class="best">meilleure</span>' : '') + '</td>' +
@@ -757,6 +775,35 @@ function indicatorsTable(R, compact){
       '</tr>';
   });
   return h + '</tbody>';
+}
+function initTable(R){
+  var O = state.options;
+  var h = '<thead><tr><th>Option</th><th class="r">Capital réglementaire</th><th class="r">Mise en place</th><th class="r">Coûts fixes avant lancement</th><th class="r">Mise de départ</th><th class="r">Pertes jusqu\'au point bas</th><th class="r">Besoin max</th><th class="r">1<sup>re</sup> année rentable</th><th class="r">Retour à l\'équilibre</th></tr></thead><tbody>';
+  R.forEach(function(r, i){
+    h += '<tr><td><span class="sw c' + i + (i===1?' dash':'') + '"></span>' + OPT_NAMES[i] + '</td><td class="r">' + K(O[i].capital) + '</td><td class="r">' + K(O[i].setup) + '</td><td class="r">' + K(r.preFixed) +
+      (O[i].delay > 0 ? ' <span class="cur-note">(' + fmtN(O[i].delay) + ' mois)</span>' : '') + '</td><td class="r"><strong>' + K(r.initial) + '</strong></td><td class="r">' + K(r.opLoss) + '</td><td class="r">' + K(r.need) +
+      '</td><td class="r">' + yrS(r.first) + '</td><td class="r">' + yrS(r.payback) + '</td></tr>';
+  });
+  return h + '</tbody>';
+}
+function longTable(L){
+  var ys = [5, 10, LONG_N];
+  var h = '<thead><tr><th>Option</th>' + ys.map(function(y){ return '<th class="r">Résultat an ' + y + '</th>'; }).join("") + '<th class="r">Trésorerie an ' + LONG_N + '</th></tr></thead><tbody>';
+  var bc = bestIdx(L.R, function(r){ return r.cashH; }, 1);
+  L.R.forEach(function(r, i){
+    var br = ys.map(function(y){ return bestIdx(L.R, function(x){ return x.rows[y-1].res; }, 1); });
+    h += '<tr><td><span class="sw c' + i + (i===1?' dash':'') + '"></span>' + OPT_NAMES[i] + '</td>' + ys.map(function(y, k){ var v = r.rows[y-1].res; return '<td' + cls(v) + '>' + Ks(v) + (br[k] === i ? '<span class="best">le plus élevé</span>' : '') + '</td>'; }).join("") +
+      '<td' + cls(r.cashH) + '>' + Ks(r.cashH) + (i === bc ? '<span class="best">meilleure</span>' : '') + '</td></tr>';
+  });
+  return h + '</tbody>';
+}
+function longSentence(L){
+  var t;
+  if (L.resY) t = "À long terme, l'option 1 dégage le résultat annuel le plus élevé de toutes les options à partir de l'année " + L.resY;
+  else t = "Sur " + LONG_N + " ans, l'option 1 ne dégage pas durablement le résultat annuel le plus élevé";
+  if (L.cashY) t += (L.resY ? ", et sa trésorerie cumulée dépasse celle de toutes les autres à partir de l'année " : " ; sa trésorerie cumulée dépasse toutefois celle de toutes les autres à partir de l'année ") + L.cashY + ".";
+  else t += (L.resY ? ", mais" : " ; elle") + " reste derrière l'" + lc(L.rival) + " en trésorerie cumulée sur " + LONG_N + " ans (" + Ks(L.R[0].cashH) + " contre " + Ks(L.R[L.rival].cashH) + ") : sa mise de départ et son retard de lancement ne sont pas encore rattrapés.";
+  return t;
 }
 function sensTable(st, mode){
   var h = '<thead><tr><th>Montant investi</th>' + OPT_NAMES.map(function(n){ return '<th class="r">' + n + '</th>'; }).join("") + '</tr></thead><tbody>';
@@ -872,7 +919,8 @@ function renderText(R){
     '<tr><td>Clients actifs en fin d\'année, marché lancé</td><td class="num">' + c.clients.map(function(v){ return nf0.format(v); }).join(" / ") + ' (années 1 à 5)</td></tr>' +
     '<tr><td>Décalage selon le délai de lancement</td><td>' + delays.charAt(0).toUpperCase() + delays.slice(1) + '</td></tr>' +
     '<tr><td>Montant investi par client et par an</td><td>' + EUR(c.invest) + ' (scénario courant ; ' + SENS_AMOUNTS.filter(function(a){ return a !== c.invest; }).map(function(a){ return nf0.format(a); }).join(", ") + ' € en sensibilité)</td></tr>' +
-    '<tr><td>Coût d\'acquisition d\'un client</td><td>' + EUR(c.cac) + '</td></tr>' +
+    '<tr><td>Coût d\'acquisition d\'un nouveau client</td><td>' + O.map(function(o, i){ return OPT_SHORT[i] + " : " + EUR(o.cac); }).join(" ; ") + '</td></tr>' +
+    (O.some(function(o){ return Math.abs(o.mult - 1) > 1e-9; }) ? '<tr><td>Clients captés, en % du marché de référence</td><td>' + O.map(function(o, i){ return OPT_SHORT[i] + " : " + PCT(o.mult); }).join(" ; ") + '</td></tr>' : '') +
     '<tr><td>Commission versée par la SGP sur les montants investis</td><td>' + PCT(c.sgp) + '</td></tr>' +
     '<tr><td>Hausse annuelle des coûts fixes</td><td>' + PCT(c.growth) + '</td></tr></tbody>';
   // Revenus du wallet
@@ -991,7 +1039,7 @@ function renderText(R){
     (be1.already ? "Avec les autres produits du wallet du scénario courant (" + EUR(O[0].other) + " par client et par an à partir de l'année " + O[0].otherYear + "), elle finit devant." :
      be1.none ? "Sur cet horizon, les autres produits du wallet ne suffisent pas à la faire passer devant." :
      "Elle passe devant si les autres produits du wallet (crédit, assurance, épargne) dégagent au moins " + cur(EUR(be1.x)) + " par client et par an à partir de l'année " + be1.y0 + " (scénario courant : " + EUR(O[0].other) + ").") +
-    " Elle apporte en outre un agrément propre et une relation bancaire complète avec la diaspora.</li>");
+    " " + longSentence(longRun(st)) + " Elle apporte en outre un agrément propre et une relation bancaire complète avec la diaspora.</li>");
   var psfpGain = c.invest * c.psfpShare * (c.psfpFee - c.sgp);
   var w1 = R[0].walletPerClient + (O[0].otherYear > 0 && O[0].otherYear <= HN() ? O[0].other : 0);
   D.push("<strong>" + (psfpGain > w1 ? "La valeur est dans la commission sur les projets." : "Deux leviers de valeur : la commission sur les projets et les produits du wallet.") + "</strong> Passer d'une rétrocession de SGP (" + PCT(c.sgp) + ") à une plateforme PSFP propre (" + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume) rapporte " + cur(EUR(psfpGain, 1)) + " de plus par client et par an, " +
@@ -1001,7 +1049,7 @@ function renderText(R){
   // Seuils d'arrêt
   document.getElementById("txtStops").innerHTML =
     "<li>Montant investi moyen inférieur à 2 000 € par client et par an <span class=\"cur-note\">(scénario courant : " + EUR(c.invest) + ")</span>.</li>" +
-    "<li>Coût d'acquisition supérieur à 50 € par client, sans tendance à la baisse <span class=\"cur-note\">(scénario courant : " + EUR(c.cac) + ")</span>.</li>" +
+    "<li>Coût d'acquisition supérieur à 50 € par client, sans tendance à la baisse <span class=\"cur-note\">(scénario courant, option 3 : " + EUR(O[2].cac) + ")</span>.</li>" +
     "<li>Aucune SGP prête à verser une commission d'au moins 1 % sur les montants apportés <span class=\"cur-note\">(scénario courant : " + PCT(c.sgp) + ")</span>.</li>";
 
   var w2 = document.querySelector('[data-bind="opt2WalletNote"]');
@@ -1016,7 +1064,6 @@ var HYP_META = {
   clients:"Courbe de marché commune aux options, décalée selon le délai de lancement.",
   gLate:"Appliquée aux clients de l'année 5 et des suivantes.",
   invest:"Principal déterminant du résultat ; mesuré dès l'année 1.",
-  cac:"Seuil d'arrêt : 50 €.",
   sgp:"Négociée avec la SGP (seuil d'arrêt : 1 %).",
   growth:"",
   psfpShare:"Une fois la PSFP propre active.",
@@ -1028,6 +1075,8 @@ var HYP_META = {
 };
 var OPT_META = {
   wallet:"Structure de l'option.",
+  mult:"100 % = courbe de marché de référence ; une offre bancaire complète (carte, compte, transferts) peut capter davantage de clients.",
+  cac:"Coût marketing et commercial par nouveau client (seuil d'arrêt : 50 €).",
   delay:"12 à 18 mois (option 1), 6 à 9 mois (option 2) ; le modèle retient la borne basse.",
   fixed:"Décomposition par poste dans l'onglet « Les options ».",
   setup:"Dont création de la filiale : 90 K€.",
@@ -1097,6 +1146,13 @@ function update(){
     " La même relation porte ensuite d'autres produits (crédit, assurance, épargne) : " + cur(EUR(o1.other)) + " de marge par client et par an à partir de l'année " + o1.otherYear + SC + "." : "";
   // Simulateur
   document.getElementById("simInd").innerHTML = indicatorsTable(R, false);
+  document.getElementById("simInit").innerHTML = initTable(R);
+  document.getElementById("txtInit").innerHTML = initTable(R);
+  var LR = longRun(state), lsent = longSentence(LR);
+  document.getElementById("simLong").textContent = lsent;
+  document.getElementById("txtLong").innerHTML = lsent + SC;
+  document.getElementById("simLongTbl").innerHTML = longTable(LR);
+  document.getElementById("txtLongTbl").innerHTML = longTable(LR);
   document.getElementById("simLegend").innerHTML = legendHTML(R);
   drawChart(document.getElementById("simChart"), R, 720, 300, true);
   var rd = readingSentences(R).map(function(x){ return "<p>" + x + "</p>"; }).join("");
@@ -1114,13 +1170,15 @@ function update(){
       '<dt>Mise de départ</dt><dd>' + K(r.initial) + '</dd>' +
       '<dt>Besoin max</dt><dd>' + K(r.need) + '</dd>' +
       '<dt>1<sup>re</sup> année rentable</dt><dd>' + yrS(r.first) + '</dd>' +
+      '<dt>Retour à l\'équilibre</dt><dd>' + yrS(r.payback) + '</dd>' +
       '<dt>Trésorerie an ' + HN() + '</dt><dd' + (r.cashH < -0.5 ? ' class="neg"' : '') + '>' + Ks(r.cashH) + '</dd></dl></div>';
   }).join("");
   // Fiche
   var c = state.common;
   document.getElementById("fDate").textContent = new Date().toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"});
   document.getElementById("fKeys").innerHTML = "Montant investi " + EUR(c.invest) + " par client et par an · clients an 1 à 5 : " + c.clients.map(function(x){ return nf0.format(x); }).join(" / ") +
-    " · acquisition " + EUR(c.cac) + " · commission SGP " + PCT(c.sgp) + " · PSFP " + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume · coûts fixes +" + PCT(c.growth) + " par an · horizon " + HN() + " ans, clients +" + PCT(c.gLate) + " par an après l'an 5" +
+    " · acquisition " + state.options.map(function(o){ return fmtN(o.cac); }).join(" / ") + " € par client (options 1 / 2 / 3 / 3 + PSFP)" +
+    (state.options.some(function(o){ return Math.abs(o.mult - 1) > 1e-9; }) ? " · clients captés " + state.options.map(function(o){ return PCT(o.mult); }).join(" / ") : "") + " · commission SGP " + PCT(c.sgp) + " · PSFP " + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume · coûts fixes +" + PCT(c.growth) + " par an · horizon " + HN() + " ans, clients +" + PCT(c.gLate) + " par an après l'an 5" +
     (state.options[0].other > 0 && state.options[0].otherYear > 0 ? " · autres produits du wallet (option 1) " + EUR(state.options[0].other) + " par client dès l'an " + state.options[0].otherYear : "");
   document.getElementById("fInd").innerHTML = indicatorsTable(R, true);
   document.getElementById("fLegend").innerHTML = legendHTML(R);
