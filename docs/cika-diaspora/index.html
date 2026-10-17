@@ -319,13 +319,9 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <div class="tbl-wrap"><table id="txtSens"></table></div>
     <p id="txtTransfer"></p>
 
-    <h2>Ce que les chiffres démontrent et recommandation</h2>
+    <h2>Ce que les chiffres démontrent</h2>
     <h3>Ce qui est démontré <span class="cur-note">(dans le scénario courant)</span></h3>
     <ul id="txtDemo"></ul>
-    <h3>Parcours recommandé (proposition CRO)</h3>
-    <ul class="parcours"></ul>
-    <h3>Seuils d'arrêt à la fin de l'année 1 (proposition)</h3>
-    <ul id="txtStops"></ul>
   </div>
 </section>
 
@@ -424,8 +420,6 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <h2>Lecture</h2>
     <div class="reading" id="fReading"></div>
     <p id="fCases" style="margin:4px 0 0"></p>
-    <h2>Parcours recommandé (proposition CRO)</h2>
-    <ul class="parcours"></ul>
     <p class="warnline">Projections établies sur les hypothèses du scénario indiqué en tête de fiche.</p>
   </article>
 </section>
@@ -774,17 +768,6 @@ function readingSentences(R){
   return s;
 }
 
-function parcoursHTML(R){
-  var n3 = R[2].need, n3p = R[3].need, lo = Math.min(n3, n3p), hi = Math.max(n3, n3p);
-  var need3 = Math.abs(hi - lo) < 5 ? M(hi) : M(lo) + " à " + M(hi);
-  var o3 = runOption(state.common, state.options[2]);
-  var vol3 = o3.rows[2].vol;
-  return [
-    "<li><strong>Années 1 et 2 : option 3.</strong> Filiale européenne légère, distribution des offres d'une SGP partenaire, sans wallet. Besoin de financement : " + cur(need3) + SC + ". Objectif : mesurer le montant investi par client, le coût d'acquisition et la rétention.</li>",
-    "<li><strong>Année 3 : plateforme PSFP propre</strong>, si le volume collecté dépasse une dizaine de millions d'euros par an (volume modélisé de l'option 3 en année 3 : " + cur(M(vol3)) + ")" + SC + ".</li>",
-    "<li><strong>Wallet endogène (option 1 ou 4)</strong> seulement si la diaspora demande un usage quotidien (carte, transferts vers l'Afrique) et qu'une levée de l'ordre de " + cur(M(R[0].need)) + SC + " est sécurisée. Les raccourcis de l'option 4 (rachat, passeport) sont à étudier à ce moment-là.</li>"
-  ].join("");
-}
 
 /* ================================================================
    Tableaux
@@ -1097,12 +1080,6 @@ function renderText(R){
     (psfpGain > w1 ? "plus que" : "moins que") + " ce que le wallet de l'option 1 rapporte" + (w1 > R[0].walletPerClient ? " une fois ses autres produits lancés" : "") + " (" + cur(EUR(w1, 1)) + ")" + SC + ".</li>");
   document.getElementById("txtDemo").innerHTML = D.map(function(x){ return "<li>" + x; }).join("");
 
-  // Seuils d'arrêt
-  document.getElementById("txtStops").innerHTML =
-    "<li>Montant investi moyen inférieur à 2 000 € par client et par an <span class=\"cur-note\">(scénario courant : " + EUR(c.invest) + ")</span>.</li>" +
-    "<li>Coût d'acquisition supérieur à 50 € par client, sans tendance à la baisse <span class=\"cur-note\">(scénario courant, option 3 : " + EUR(O[2].cac) + ")</span>.</li>" +
-    "<li>Aucune SGP prête à verser une commission d'au moins 1 % sur les montants apportés <span class=\"cur-note\">(scénario courant : " + PCT(c.sgp) + ")</span>.</li>";
-
   var w2 = document.querySelector('[data-bind="opt2WalletNote"]');
   w2.innerHTML = "Revenu du wallet de l'option 2 : " + EUR(R[1].walletPerClient, 1) + " par client et par an, pour " + EUR(R[1].baasPerClient, 1) + " de frais Treezor" + " (dans le scénario courant).";
 }
@@ -1114,8 +1091,8 @@ var HYP_META = {
   horizon:"Années simulées.",
   clients:"Courbe de marché commune aux options, décalée selon le délai de lancement.",
   gLate:"Appliquée aux clients de l'année 5 et des suivantes.",
-  invest:"Principal déterminant du résultat ; mesuré dès l'année 1.",
-  sgp:"Négociée avec la SGP (seuil d'arrêt : 1 %).",
+  invest:"Principal déterminant du résultat.",
+  sgp:"Négociée avec la SGP.",
   growth:"",
   psfpShare:"Une fois la PSFP propre active.",
   psfpFee:"Payée par les porteurs de projets.",
@@ -1129,7 +1106,7 @@ var OPT_META = {
   ratioStart:"Cas complet : clients du wallet (carte, compte, transferts) qui n'investissent pas, en plus des investisseurs ; 1 = investisseurs seuls.",
   ratioCruise:"Cas complet : multiple atteint en rythme de croisière.",
   ratioYears:"Années après le lancement de l'option.",
-  cac:"Coût marketing et commercial par nouveau client (seuil d'arrêt : 50 €).",
+  cac:"Coût marketing et commercial par nouveau client.",
   delay:"12 à 18 mois (option 1), 6 à 9 mois (option 2) ; le modèle retient la borne basse.",
   fixed:"Décomposition par poste dans l'onglet « Les options ».",
   setup:"Dont création de la filiale : 90 K€.",
@@ -1251,8 +1228,6 @@ function update(){
   document.getElementById("fLegend").innerHTML = legendHTML(R);
   drawChart(document.getElementById("fChart"), R, 720, 230, false);
   document.getElementById("fReading").innerHTML = rd;
-  var pc = parcoursHTML(R);
-  Array.prototype.forEach.call(document.querySelectorAll(".parcours"), function(el){ el.innerHTML = pc; });
   // Textes et hypothèses
   renderText(R);
   renderHyp();
