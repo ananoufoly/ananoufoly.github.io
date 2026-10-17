@@ -90,6 +90,7 @@ th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;verti
 thead th{font-weight:600;color:var(--ink-2);border-bottom:1px solid var(--line-2);font-size:12.5px}
 td.r,th.r{text-align:right}
 tr.total td{font-weight:600;border-top:1px solid var(--line-2)}
+tr.traj td{font-weight:600;border-top:1px solid var(--line-2)}
 .neg{color:var(--neg)}
 .best{display:inline-block;font-size:10.5px;font-weight:600;color:var(--accent);border:1px solid var(--accent);
   border-radius:3px;padding:0 4px;margin-left:5px;vertical-align:1px}
@@ -156,9 +157,10 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
 .lbl{font-size:11.5px;fill:var(--ink)}
 .lbl .v{fill:var(--ink-2)}
 .c0{stroke:var(--s1);color:var(--s1)} .c1{stroke:var(--s2);color:var(--s2)}
-.c2{stroke:var(--s3);color:var(--s3)} .c3{stroke:var(--s4);color:var(--s4)}
+.c2{stroke:var(--s3);color:var(--s3)} .c3{stroke:var(--s4);color:var(--s4)} .c4{stroke:var(--ink);color:var(--ink)}
+.ln.c4{stroke-width:3}.sw.c4{border-top-width:3.5px}
 .dot{stroke:var(--bg);stroke-width:2}
-.dot.c0{fill:var(--s1)}.dot.c1{fill:var(--s2)}.dot.c2{fill:var(--s3)}.dot.c3{fill:var(--s4)}
+.dot.c4{fill:var(--ink)}.dot.c0{fill:var(--s1)}.dot.c1{fill:var(--s2)}.dot.c2{fill:var(--s3)}.dot.c3{fill:var(--s4)}
 .xh{stroke:var(--line-2);stroke-width:1}
 .tip{position:absolute;pointer-events:none;background:var(--bg);border:1px solid var(--line-2);border-radius:4px;
   padding:7px 10px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.12);white-space:nowrap;z-index:2}
@@ -324,6 +326,9 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <ul id="txtDemo"></ul>
     <h3>Notre recommandation</h3>
     <ul class="parcours"></ul>
+    <h3>Plan d'investissement de la trajectoire recommandée (K€)</h3>
+    <p id="txtPlanTxt"></p>
+    <div class="tbl-wrap"><table id="txtPlan"></table></div>
   </div>
 </section>
 
@@ -372,6 +377,10 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
       <h2>Indicateurs sur <span data-bind="horizon"></span> ans <span class="cur-note">K€ · <span data-bind="scenarioName"></span> · <span data-bind="mode"></span></span></h2>
       <div class="tbl-wrap"><table id="simInd"></table></div>
       <p class="hint">Mise de départ : capital réglementaire, mise en place et coûts fixes engagés avant le premier client ; elle ne dépend pas du nombre d'investisseurs. Besoin max : point bas de la trésorerie cumulée, soit la mise de départ plus les pertes d'exploitation jusqu'au point mort, qui baissent quand le volume investi augmente.</p>
+
+      <h2>Notre trajectoire : plan d'investissement <span class="cur-note">K€ sauf clients</span></h2>
+      <p id="simPlanTxt"></p>
+      <div class="tbl-wrap"><table id="simPlan"></table></div>
 
       <h2>Cas comparatif et cas complet <span class="cur-note">K€ sauf clients</span></h2>
       <div class="tbl-wrap"><table id="simCases"></table></div>
@@ -424,6 +433,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
     <p id="fCases" style="margin:4px 0 0"></p>
     <h2>Notre recommandation</h2>
     <ul id="fParcours"></ul>
+    <p id="fPlan" style="margin:2px 0 0"></p>
     <p class="warnline">Projections établies sur les hypothèses du scénario indiqué en tête de fiche.</p>
   </article>
 </section>
@@ -452,6 +462,7 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
       <li><strong>Résultat</strong> = revenus − coûts. <strong>Trésorerie cumulée</strong> : départ à − capital immobilisé (année 0), puis ajout de chaque résultat.</li>
       <li><strong>Mise de départ</strong> = capital immobilisé + mise en place + coûts fixes engagés avant le premier client (part de chaque année antérieure au lancement). Elle ne dépend ni du nombre de clients ni du montant investi.</li>
       <li><strong>Besoin de financement max</strong> = − min(trésorerie cumulée, départ compris) : mise de départ plus pertes d'exploitation jusqu'au point bas de trésorerie. <strong>Première année rentable</strong> : première année au résultat positif. <strong>Retour à l'équilibre</strong> : première année où la trésorerie cumulée redevient positive.</li>
+      <li><strong>Trajectoire recommandée</strong> : une seule base d'investisseurs, sans délai. Distribution et commission SGP dès l'année 1 ; PSFP propre à partir de l'année de l'option 3 + PSFP, au coût de l'option 1 ; wallet EME lancé l'année indiquée, avec les paramètres de l'option 1 (revenus, clients bancaires par investisseur, autres produits). Avant le lancement, les coûts fixes sont ceux de la construction ; ensuite, ceux de l'option 1. Le capital réglementaire est versé l'année précédant le lancement. Le financement à lever chaque année est la hausse du déficit de trésorerie cumulée par rapport à son plus bas précédent.</li>
       <li><strong>Long terme</strong> : les mêmes formules sont prolongées sur 15 ans, quel que soit l'horizon affiché ; on repère l'année à partir de laquelle le résultat annuel, puis la trésorerie cumulée, de l'option 1 restent au-dessus de ceux de toutes les autres options.</li>
     </ul>
     <p>Le modèle ne prend en compte ni impôt, ni besoin en fonds de roulement, ni actualisation. Les fonds propres proportionnels aux fonds détenus pour les clients (option 1) ne sont pas modélisés.</p>
@@ -486,7 +497,10 @@ var DEFAULTS = {
     card: 3600,        // € dépensés par carte et par client et par an
     balance: 500,      // € de solde moyen sur le wallet
     remit: 2400,       // € envoyés en Afrique par client et par an
-    remitFee: 0        // frais de transfert prélevés (non modélisé par défaut)
+    remitFee: 0,       // frais de transfert prélevés (non modélisé par défaut)
+    trajWallet: 3,     // trajectoire recommandée : année de lancement du wallet EME
+    trajBuild: 464,    // coûts fixes pendant la construction du wallet (équipe technique, conformité, filiale, infrastructure de distribution)
+    trajSetup: 260     // mise en place de la trajectoire (EME, filiale comprise, + intégration de la distribution)
   },
   options: [
     {wallet:true,  delay:12, fixed:704, setup:240, capital:350, cardFee:0.002, yield:0.02, cac:25, ratioStart:1.1, ratioCruise:1.5, ratioYears:5, sub:0.6, baas:0, psfpYear:4, psfpCost:150, other:30, otherYear:6},
@@ -529,31 +543,43 @@ function runOption(c, o){
     var k = Math.floor(t), f = t - k, a = k === 0 ? 0 : cl[k-1], b = cl[k];
     return a + (b - a) * f;
   }
-  var prev = 0, prevI = 0, cash = -o.capital, minCash = cash, first = null, payback = null, rows = [], preFixed = 0;
+  var prev = 0, prevI = 0, cash = o.capYear ? 0 : -o.capital, minCash = cash, first = null, payback = null, rows = [], preFixed = 0;
   var walletPerClient = o.wallet ? (c.card*o.cardFee + c.balance*o.yield + o.sub*12 + c.remit*c.remitFee) : 0; // €/client/an, hors autres produits
   for (var y = 1; y <= N; y++){
-    var t = y - o.delay/12, ui = D(t), u = ui * actRatio(c, o, t);
+    var wy = o.walletYear || 0, wOn = o.wallet && y >= wy;
+    var t = y - o.delay/12, ui = D(t), u = ui * (wOn ? actRatio(c, o, wy > 0 ? y - (wy - 1) : t) : 1);
     var avgI = (prevI + ui)/2, avg = (prev + u)/2, nw = Math.max(u - prev, 0);
     var vol = avgI * c.invest / 1000; // seuls les investisseurs investissent
     var psfp = o.psfpYear > 0 && y >= o.psfpYear;
     var revInv = psfp ? vol*(1-c.psfpShare)*c.sgp + vol*c.psfpShare*c.psfpFee : vol*c.sgp;
-    var other = o.wallet && o.otherYear > 0 && y >= o.otherYear ? (o.other || 0) : 0;
-    var revW = avg * (walletPerClient + other) / 1000;
-    var fixed = o.fixed * Math.pow(1 + c.growth, y - 1);
+    var other = wOn && o.otherYear > 0 && y >= o.otherYear ? (o.other || 0) : 0;
+    var revW = wOn ? avg * (walletPerClient + other) / 1000 : 0;
+    var fixed = (wy > 0 && y < wy && o.buildFixed != null ? o.buildFixed : o.fixed) * Math.pow(1 + c.growth, y - 1);
     preFixed += fixed * Math.max(0, Math.min(1, o.delay/12 - (y - 1))); // coûts fixes engagés avant le premier client
     var cost = fixed + (y === 1 ? o.setup : 0) + (psfp ? o.psfpCost : 0) + nw*cac/1000 + avg*o.baas*12/1000;
     var res = revInv + revW - cost;
-    cash += res; minCash = Math.min(minCash, cash);
+    var capY = o.capYear === y ? o.capital : 0;
+    cash += res - capY; minCash = Math.min(minCash, cash);
     if (first === null && res > 0) first = y;
     if (payback === null && minCash < 0 && cash >= 0) payback = y;
-    rows.push({y:y, clients:u, inv:ui, avg:avg, vol:vol, revInv:revInv, revW:revW, rev:revInv+revW, cost:cost, res:res, cash:cash, psfp:psfp});
+    rows.push({y:y, setupY:(y === 1 ? o.setup : 0), capY:capY, clients:u, inv:ui, avg:avg, vol:vol, revInv:revInv, revW:revW, rev:revInv+revW, cost:cost, res:res, cash:cash, psfp:psfp});
     prev = u; prevI = ui;
   }
   var initial = o.capital + o.setup + preFixed;
   if (payback === null && minCash >= 0) payback = 1;
-  return {need:-minCash, initial:initial, preFixed:preFixed, opLoss:Math.max(0, -minCash - initial), first:first, payback:payback, cash0:-o.capital, cashH:cash, rows:rows, yH:rows[N-1],
+  return {need:-minCash, initial:initial, preFixed:preFixed, opLoss:Math.max(0, -minCash - initial), first:first, payback:payback, cash0:(o.capYear ? 0 : -o.capital), cashH:cash, rows:rows, yH:rows[N-1],
           walletPerClient:walletPerClient, baasPerClient:o.baas*12};
 }
+// Trajectoire recommandée : distribution dès l'année 1, PSFP propre, wallet EME construit
+// pendant les premières années puis lancé ; une seule base d'investisseurs.
+var NAME_T = "Trajectoire recommandée";
+function trajOption(st){
+  var O = st.options, c = st.common, o = clone(O[0]);
+  o.delay = 0; o.walletYear = Math.max(1, Math.round(c.trajWallet || 1)); o.buildFixed = c.trajBuild; o.setup = c.trajSetup;
+  o.capYear = Math.max(1, o.walletYear - 1); o.psfpYear = O[3].psfpYear; o.psfpCost = O[0].psfpCost; o.baas = 0;
+  return o;
+}
+function runTraj(st, inv){ var c = st.common; if (inv != null){ c = clone(c); c.invest = inv; } return runOption(c, trajOption(st)); }
 var LONG_N = 15;
 var MODE_LBL = {complet:"cas complet", comparatif:"cas comparatif, mêmes clients actifs"};
 function withMode(st, m){ var s2 = clone(st); s2.common.mode = m; return s2; }
@@ -649,7 +675,10 @@ var COMMON_FIELDS = [
   {k:"card", label:"Dépenses par carte et par client", unit:"€ par an", kind:"eur"},
   {k:"balance", label:"Solde moyen sur le wallet", unit:"€", kind:"eur"},
   {k:"remit", label:"Montant envoyé en Afrique par client", unit:"€ par an", kind:"eur"},
-  {k:"remitFee", label:"Frais de transfert prélevés", unit:"%", kind:"pct"}
+  {k:"remitFee", label:"Frais de transfert prélevés", unit:"%", kind:"pct"},
+  {k:"trajWallet", label:"Trajectoire : lancement du wallet EME", unit:"année", kind:"int"},
+  {k:"trajBuild", label:"Trajectoire : coûts fixes pendant la construction", unit:"K€ par an, avant lancement du wallet", kind:"num"},
+  {k:"trajSetup", label:"Trajectoire : mise en place", unit:"K€, année 1", kind:"num"}
 ];
 var OPT_FIELDS = [
   {k:"wallet", label:"Wallet", kind:"bool"},
@@ -786,7 +815,7 @@ function parcoursHTML(R){
   var o3 = runOption(state.common, state.options[2]);
   var vol3 = o3.rows[2].vol;
   return [
-    "<li><strong>Années 1 et 2 : option 3.</strong> Filiale européenne légère, distribution des offres d'une SGP partenaire, sans wallet. Besoin de financement : " + cur(need3) + SC + ". Objectif : mesurer le montant investi par client, le coût d'acquisition et la rétention.</li>",
+    "<li><strong>Années 1 et 2 : option 3.</strong> Filiale européenne légère, distribution des offres d'une SGP partenaire, sans wallet. Besoin de financement de la distribution seule : " + cur(need3) + SC + " ; avec la préparation du wallet en parallèle, voir le plan d'investissement. Objectif : mesurer le montant investi par client, le coût d'acquisition et la rétention.</li>",
     "<li><strong>Année 3 : plateforme PSFP propre</strong>, si le volume collecté dépasse une dizaine de millions d'euros par an (volume modélisé de l'option 3 en année 3 : " + cur(M(vol3)) + ")" + SC + ".</li>",
     "<li><strong>Wallet endogène</strong> (en cours de préparation et déployé en année 3 au plus tard).</li>"
   ].join("");
@@ -795,13 +824,14 @@ function parcoursHTML(R){
 /* ================================================================
    Tableaux
    ================================================================ */
-function indicatorsTable(R, compact){
-  var bc = bestIdx(R, function(r){ return r.cashH; }, 1), bn = bestIdx(R, function(r){ return r.need; }, -1);
+function indicatorsTable(R, compact, T){
+  var RR = T ? R.concat([T]) : R;
+  var bc = bestIdx(RR, function(r){ return r.cashH; }, 1), bn = bestIdx(RR, function(r){ return r.need; }, -1);
   var h = '<thead><tr><th>Option</th><th class="r">Mise de départ</th><th class="r">Besoin max</th><th class="r">1<sup>re</sup> année rentable</th><th class="r">Retour à l\'équilibre</th><th class="r">CA an ' + HN() + '</th><th class="r">Résultat an ' + HN() + '</th><th class="r">Trésorerie an ' + HN() + '</th>' +
     (compact ? '' : '<th class="r">Wallet / client / an</th><th class="r">Frais BaaS / client / an</th>') + '</tr></thead><tbody>';
-  R.forEach(function(r, i){
-    var o = state.options[i];
-    h += '<tr><td><span class="sw c'+i+(i===1?' dash':'')+'"></span>' + OPT_NAMES[i] + '</td>' +
+  RR.forEach(function(r, i){
+    var o = i < 4 ? state.options[i] : trajOption(state);
+    h += '<tr' + (i === 4 ? ' class="traj"' : '') + '><td><span class="sw c'+i+(i===1?' dash':'')+'"></span>' + (i < 4 ? OPT_NAMES[i] : NAME_T) + '</td>' +
       '<td class="r">' + K(r.initial) + '</td>' +
       '<td class="r">' + K(r.need) + (i === bn ? '<span class="best">plus faible</span>' : '') + '</td>' +
       '<td class="r">' + yrS(r.first) + '</td>' +
@@ -813,6 +843,33 @@ function indicatorsTable(R, compact){
       '</tr>';
   });
   return h + '</tbody>';
+}
+function planData(T){
+  var maxDef = 0, tr = [];
+  T.rows.forEach(function(x){ var def = Math.max(0, -x.cash), add = Math.max(0, def - maxDef); maxDef = Math.max(maxDef, def); tr.push(add); });
+  return tr;
+}
+function planTable(T){
+  var tr = planData(T), rows = T.rows;
+  var h = '<thead><tr><th></th>' + rows.map(function(x){ return '<th class="r">An ' + x.y + '</th>'; }).join("") + '</tr></thead><tbody>';
+  function line(lbl, f, signed, bold){ return '<tr' + (bold ? ' class="total"' : '') + '><td>' + lbl + '</td>' + rows.map(function(x, k){ var v = f(x, k); return '<td' + (signed ? cls(v) : ' class="r"') + '>' + (signed ? Ks(v) : (Math.abs(v) < 0.5 ? '—' : nf0.format(Math.round(v)))) + '</td>'; }).join("") + '</tr>'; }
+  h += line("Investisseurs fin d'année", function(x){ return x.inv; });
+  h += line("Clients actifs fin d'année", function(x){ return x.clients; });
+  h += line("Mise en place et capital", function(x){ return x.setupY + x.capY; });
+  h += line("Résultat d'exploitation, hors mise en place", function(x){ return x.res + x.setupY; }, true);
+  h += line("Trésorerie cumulée", function(x){ return x.cash; }, true);
+  h += line("Financement à lever dans l'année", function(x, k){ return tr[k]; }, false, true);
+  return h + '</tbody>';
+}
+function planSentence(T, R){
+  var tr = planData(T), parts = [];
+  tr.forEach(function(v, k){ if (v >= 1) parts.push("année " + (k + 1) + " : " + K(v)); });
+  var o = trajOption(state);
+  return "Notre trajectoire lance la distribution dès l'année 1, la PSFP propre en année " + o.psfpYear + " et le wallet EME en année " + o.walletYear +
+    ", après " + (o.walletYear - 1) + (o.walletYear - 1 > 1 ? " années" : " année") + " de construction ; le capital réglementaire est versé en année " + o.capYear + ". " +
+    "Elle demande " + cur(M(T.need)) + " de financement" + (parts.length > 1 ? ", en " + parts.length + " tranches (" + parts.join(" ; ") + ")" : "") +
+    ". La trésorerie cumulée redevient positive en " + (T.payback ? "année " + T.payback : "fin de période") + " et atteint " + cur(Ks(T.cashH)) + " en fin d'année " + HN() +
+    ", contre " + Ks(R[0].cashH) + " pour l'option 1 seule et " + Ks(R[3].cashH) + " pour l'option 3 + PSFP.";
 }
 function initTable(R){
   var O = state.options;
@@ -900,10 +957,13 @@ function detailHTML(R){
 /* ================================================================
    Graphique de trésorerie cumulée (SVG)
    ================================================================ */
-function legendHTML(R){
-  return R.map(function(r, i){ return '<span><span class="sw c'+i+(i===1?' dash':'')+'"></span>' + OPT_NAMES[i] + '</span>'; }).join("");
+function legendHTML(R, T){
+  return R.map(function(r, i){ return '<span><span class="sw c'+i+(i===1?' dash':'')+'"></span>' + OPT_NAMES[i] + '</span>'; }).join("") +
+    (T ? '<span><span class="sw c4"></span>' + NAME_T + '</span>' : '');
 }
-function chartSVG(R, W, H){
+var SHORT5 = ["Option 1", "Option 2", "Option 3", "Option 3 + PSFP", "Trajectoire"];
+function chartSVG(R, W, H, T){
+  if (T) R = R.concat([T]);
   var ml = 46, mr = W < 520 ? 138 : 176, narrow = W < 520, mt = 10, mb = 26, iw = W - ml - mr, ih = H - mt - mb;
   var series = R.map(function(r){ return [r.cash0].concat(r.rows.map(function(x){ return x.cash; })); });
   var all = [].concat.apply([0], series), lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
@@ -920,7 +980,7 @@ function chartSVG(R, W, H){
   for (var i = 0; i <= n; i++) if (n <= 8 || (W >= 520 && n <= 12) || i % 2 === 0) g += '<text x="' + X(i) + '" y="' + (H - 7) + '" text-anchor="middle">An ' + i + '</text>';
   g += '</g><line class="zero" x1="' + ml + '" x2="' + (ml + iw) + '" y1="' + Y(0) + '" y2="' + Y(0) + '"/>';
   // Ordre de tracé : gris d'abord, accent au-dessus.
-  [1, 0, 2, 3].forEach(function(k){
+  (T ? [1, 0, 2, 3, 4] : [1, 0, 2, 3]).forEach(function(k){
     var d = series[k].map(function(v, j){ return (j ? "L" : "M") + X(j).toFixed(1) + " " + Y(v).toFixed(1); }).join("");
     g += '<path class="ln c' + k + '" d="' + d + '"' + (k === 1 ? ' stroke-dasharray="5 4"' : '') + '/>';
   });
@@ -932,7 +992,7 @@ function chartSVG(R, W, H){
   if (over > 0) labs.forEach(function(l){ l.y -= over; });
   labs.forEach(function(l){
     g += '<circle class="dot c' + l.k + '" cx="' + X(n) + '" cy="' + Y(l.v) + '" r="3.5"/>';
-    g += '<text class="lbl" x="' + (X(n) + 8) + '" y="' + (l.y + 4) + '">' + ['Opt. 1','Opt. 2','Opt. 3','Opt. 3 + PSFP'][l.k] + ' <tspan class="v">' + (narrow ? Ks(l.v).replace(/\u00a0K€$/, '') : Ks(l.v)) + '</tspan></text>';
+    g += '<text class="lbl" x="' + (X(n) + 8) + '" y="' + (l.y + 4) + '">' + ['Opt. 1','Opt. 2','Opt. 3','Opt. 3 + PSFP','Trajectoire'][l.k] + ' <tspan class="v">' + (narrow ? Ks(l.v).replace(/\u00a0K€$/, '') : Ks(l.v)) + '</tspan></text>';
   });
   g += '<g class="hover"></g></svg>';
   g = g.replace(/\u202f/g, '\u00a0');
@@ -940,9 +1000,9 @@ function chartSVG(R, W, H){
 }
 function niceStep(x){ var p = Math.pow(10, Math.floor(Math.log10(x))), m = x / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; }
 
-function drawChart(el, R, W, H, interactive){
+function drawChart(el, R, W, H, interactive, T){
   if (interactive){ W = Math.max(320, Math.min(860, el.clientWidth || W)); H = W < 520 ? 260 : H; }
-  var c = chartSVG(R, W, H);
+  var c = chartSVG(R, W, H, T);
   el.innerHTML = c.svg + (interactive ? '<div class="tip" hidden></div>' : '');
   if (!interactive) return;
   var svg = el.querySelector("svg"), hov = svg.querySelector(".hover"), tip = el.querySelector(".tip");
@@ -951,7 +1011,7 @@ function drawChart(el, R, W, H, interactive){
     var j = Math.max(0, Math.min(c.n, Math.round((sx - c.ml) / c.iw * c.n)));
     hov.innerHTML = '<line class="xh" x1="' + c.X(j) + '" x2="' + c.X(j) + '" y1="10" y2="' + (H - 26) + '"/>' +
       c.series.map(function(s, k){ return '<circle class="dot c' + k + '" cx="' + c.X(j) + '" cy="' + c.Y(s[j]) + '" r="4"/>'; }).join("");
-    tip.innerHTML = '<b>Année ' + j + '</b>' + c.series.map(function(s, k){ return '<div class="row"><span><span class="sw c' + k + (k===1?' dash':'') + '"></span>' + OPT_SHORT[k] + '</span><span>' + Ks(s[j]) + '</span></div>'; }).join("");
+    tip.innerHTML = '<b>Année ' + j + '</b>' + c.series.map(function(s, k){ return '<div class="row"><span><span class="sw c' + k + (k===1?' dash':'') + '"></span>' + SHORT5[k] + '</span><span>' + Ks(s[j]) + '</span></div>'; }).join("");
     tip.hidden = false;
     var px = c.X(j) / c.W * b.width, tw = tip.offsetWidth;
     tip.style.left = Math.max(0, Math.min(b.width - tw, px + (px > b.width / 2 ? -tw - 12 : 12))) + "px";
@@ -1122,7 +1182,10 @@ var HYP_META = {
   card:"Options avec wallet.",
   balance:"Options avec wallet.",
   remit:"Options avec wallet.",
-  remitFee:"Via un opérateur de transfert habilité."
+  remitFee:"Via un opérateur de transfert habilité.",
+  trajWallet:"Le capital réglementaire est versé l'année précédente, avec le dossier d'agrément.",
+  trajBuild:"Équipe technique, conformité, filiale et infrastructure de distribution ; opérations, support, processeur de cartes et audit démarrent au lancement.",
+  trajSetup:"Mise en place EME, création de la filiale comprise, plus l'intégration de la distribution."
 };
 var OPT_META = {
   wallet:"Structure de l'option.",
@@ -1199,7 +1262,12 @@ function update(){
   document.querySelector('[data-bind="opt1Other"]').innerHTML = o1.wallet && o1.other > 0 && o1.otherYear > 0 && o1.otherYear <= HN() ?
     " La même relation porte ensuite d'autres produits (crédit, assurance, épargne) : " + cur(EUR(o1.other)) + " de marge par client et par an à partir de l'année " + o1.otherYear + SC + "." : "";
   // Simulateur
-  document.getElementById("simInd").innerHTML = indicatorsTable(R, false);
+  var T = runTraj(state);
+  document.getElementById("simInd").innerHTML = indicatorsTable(R, false, T);
+  document.getElementById("simPlan").innerHTML = planTable(T);
+  document.getElementById("txtPlan").innerHTML = planTable(T);
+  document.getElementById("simPlanTxt").innerHTML = planSentence(T, R);
+  document.getElementById("txtPlanTxt").innerHTML = planSentence(T, R) + SC;
   Array.prototype.forEach.call(document.querySelectorAll('[data-bind="mode"]'), function(el){ el.textContent = MODE_LBL[state.common.mode]; });
   Array.prototype.forEach.call(document.querySelectorAll(".mode"), function(b){ b.classList.toggle("active", b.dataset.mode === state.common.mode); });
   var o1r = state.options[0], o2r = state.options[1];
@@ -1220,8 +1288,8 @@ function update(){
   document.getElementById("txtLong").innerHTML = lsent + SC;
   document.getElementById("simLongTbl").innerHTML = longTable(LR);
   document.getElementById("txtLongTbl").innerHTML = longTable(LR);
-  document.getElementById("simLegend").innerHTML = legendHTML(R);
-  drawChart(document.getElementById("simChart"), R, 720, 300, true);
+  document.getElementById("simLegend").innerHTML = legendHTML(R, T);
+  drawChart(document.getElementById("simChart"), R, 720, 300, true, T);
   var rd = readingSentences(R).map(function(x){ return "<p>" + x + "</p>"; }).join("");
   document.getElementById("simReading").innerHTML = rd;
   document.getElementById("simSens").innerHTML = sensTable(state, "sim");
@@ -1232,8 +1300,9 @@ function update(){
   qr.value = state.common.invest;
   if (si && document.activeElement !== si) si.value = toInput(state.common.invest, "eur");
   var qbc = bestIdx(R, function(r){ return r.cashH; }, 1);
-  document.getElementById("qTiles").innerHTML = R.map(function(r, i){
-    return '<div class="qt"><h3><span class="sw c' + i + (i===1?' dash':'') + '"></span>' + OPT_NAMES[i] + (i === qbc ? '<span class="best">meilleure</span>' : '') + '</h3><dl>' +
+  var RQ = R.concat([T]); qbc = bestIdx(RQ, function(r){ return r.cashH; }, 1);
+  document.getElementById("qTiles").innerHTML = RQ.map(function(r, i){
+    return '<div class="qt"><h3><span class="sw c' + i + (i===1?' dash':'') + '"></span>' + (i < 4 ? OPT_NAMES[i] : NAME_T) + (i === qbc ? '<span class="best">meilleure</span>' : '') + '</h3><dl>' +
       '<dt>Mise de départ</dt><dd>' + K(r.initial) + '</dd>' +
       '<dt>Besoin max</dt><dd>' + K(r.need) + '</dd>' +
       '<dt>1<sup>re</sup> année rentable</dt><dd>' + yrS(r.first) + '</dd>' +
@@ -1247,9 +1316,14 @@ function update(){
     " · acquisition " + state.options.map(function(o){ return fmtN(o.cac); }).join(" / ") + " € par client (options 1 / 2 / 3 / 3 + PSFP)" +
     (" · cas complet : " + fmtN(state.options[0].ratioStart, 1) + " puis " + fmtN(state.options[0].ratioCruise, 1) + " clients actifs par investisseur (option 1), " + fmtN(state.options[1].ratioStart, 1) + " puis " + fmtN(state.options[1].ratioCruise, 1) + " (option 2)") + " · commission SGP " + PCT(c.sgp) + " · PSFP " + PCT(c.psfpFee) + " sur " + PCT(c.psfpShare) + " du volume · coûts fixes +" + PCT(c.growth) + " par an · horizon " + HN() + " ans, clients +" + PCT(c.gLate) + " par an après l'an 5" +
     (state.options[0].other > 0 && state.options[0].otherYear > 0 ? " · autres produits du wallet (option 1) " + EUR(state.options[0].other) + " par client dès l'an " + state.options[0].otherYear : "");
-  document.getElementById("fInd").innerHTML = indicatorsTable(RF, true);
-  document.getElementById("fLegend").innerHTML = legendHTML(RF);
-  drawChart(document.getElementById("fChart"), RF, 720, 230, false);
+  var TF = runTraj(stF);
+  document.getElementById("fInd").innerHTML = indicatorsTable(RF, true, TF);
+  document.getElementById("fLegend").innerHTML = legendHTML(RF, TF);
+  drawChart(document.getElementById("fChart"), RF, 720, 230, false, TF);
+  var trF = planData(TF), partsF = [];
+  trF.forEach(function(v, k){ if (v >= 1) partsF.push("an " + (k + 1) + " : " + K(v)); });
+  document.getElementById("fPlan").innerHTML = "<strong>Plan d'investissement</strong> : " + M(TF.need) + " de financement" + (partsF.length > 1 ? " en " + partsF.length + " tranches (" + partsF.join(" ; ") + ")" : "") +
+    ", retour à l'équilibre en " + (TF.payback ? "année " + TF.payback : "fin de période") + ", trésorerie de " + Ks(TF.cashH) + " en fin d'année " + HN() + ".";
   document.getElementById("fReading").innerHTML = readingSentences(RF, stF).map(function(x){ return "<p>" + x + "</p>"; }).join("");
   document.getElementById("fParcours").innerHTML = parcoursHTML(RF);
   var pc = parcoursHTML(R);
@@ -1264,7 +1338,7 @@ function showTab(name){
   Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function(b){ b.setAttribute("aria-selected", b.dataset.tab === name ? "true" : "false"); });
   ["options","sim","fiche","hyp"].forEach(function(t){ document.getElementById("tab-" + t).hidden = t !== name; });
   try { window.localStorage.setItem(STORE_KEY + "-tab", name); } catch(e){}
-  if (name === "sim") drawChart(document.getElementById("simChart"), runAll(state), 720, 300, true);
+  if (name === "sim") drawChart(document.getElementById("simChart"), runAll(state), 720, 300, true, runTraj(state));
 }
 document.querySelector(".tabs").addEventListener("click", function(e){ var b = e.target.closest("button"); if (b) showTab(b.dataset.tab); });
 
@@ -1306,7 +1380,7 @@ function onQuick(e){
 document.getElementById("qInvest").addEventListener("input", onQuick);
 document.getElementById("qRange").addEventListener("input", onQuick);
 document.getElementById("resetBtn").addEventListener("click", function(){ state = clone(DEFAULTS); buildInputs(); update(); });
-var rT; window.addEventListener("resize", function(){ clearTimeout(rT); rT = setTimeout(function(){ drawChart(document.getElementById("simChart"), runAll(state), 720, 300, true); }, 150); });
+var rT; window.addEventListener("resize", function(){ clearTimeout(rT); rT = setTimeout(function(){ drawChart(document.getElementById("simChart"), runAll(state), 720, 300, true, runTraj(state)); }, 150); });
 document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
 
 load();
