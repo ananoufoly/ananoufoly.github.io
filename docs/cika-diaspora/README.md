@@ -1,21 +1,27 @@
-# Simulateur des options : canal diaspora
+# CIKA · Canal diaspora Europe : simulateur des options
 
-Page de travail à accès restreint. Elle présente les options de réalisation étudiées, permet de les simuler en changeant les hypothèses et produit une fiche de synthèse d'une page, exportable en PDF.
+Page de travail qui présente et chiffre les trois options de réalisation du canal diaspora proposé par LPF (développement endogène EME, marque blanche BaaS + SGP, distribution sans wallet), avec la variante « option 3 + PSFP propre ».
 
-Ce dossier ne contient que la version **chiffrée** de la page (`diaspora.enc`, AES-256-GCM, clé dérivée du mot de passe par PBKDF2-SHA256) et la page d'accès (`index.html`). Le contenu en clair n'est jamais publié.
+Quatre onglets :
+
+- **Les options** : texte de la note d'analyse ; chaque chiffre cité est lu dans le modèle pour le scénario courant.
+- **Simulateur** : hypothèses modifiables, indicateurs, courbe de trésorerie cumulée, détail annuel, lecture automatique, sensibilité au montant investi.
+- **Fiche** : synthèse d'une page du scénario courant ; « Exporter en PDF » ouvre la fenêtre d'impression (A4, une page).
+- **Hypothèses et méthode** : statut de chaque hypothèse (Vérifié, Hypothèse, À faire valider), formules, chiffres de contrôle recalculés à l'ouverture.
 
 ## Ouvrir la page
 
-Ouvrir `/cika-diaspora/` sur le site et saisir le mot de passe communiqué. Une fois déchiffrée, la page fonctionne sans connexion supplémentaire. Les hypothèses saisies sont mémorisées dans le navigateur ; le bouton « Réinitialiser » rétablit les valeurs par défaut.
+En ligne : https://ananoufoly.github.io/cika-diaspora/ (page non indexée, sans lien depuis le reste du site). En local : ouvrir `index.html` dans un navigateur. Un seul fichier, sans dépendance externe ; la page fonctionne hors ligne. Les hypothèses saisies sont mémorisées dans le navigateur (`localStorage`) ; le bouton « Réinitialiser » rétablit les valeurs par défaut.
 
 ## Modifier les hypothèses par défaut
 
-1. Dans la source en clair (locale, hors dépôt : `cika-diaspora-src/index.html`), modifier l'objet `DEFAULTS` en tête du script :
-   - `DEFAULTS.common` : hypothèses communes ; les pourcentages s'écrivent en fraction (`0.015` pour 1,5 %) ;
-   - `DEFAULTS.options` : un objet par option, dans l'ordre d'affichage.
-2. Vérifier dans l'onglet « Hypothèses et méthode » que les chiffres de contrôle sont toujours retrouvés ; s'ils ont changé volontairement, mettre à jour l'objet `CONTROL`.
-3. Rechiffrer avec l'outil local : `python encrypt_diaspora.py` (le mot de passe est demandé, jamais stocké), puis committer `diaspora.enc`.
+Les valeurs par défaut sont dans l'objet `DEFAULTS`, en tête du script de `index.html` :
+
+- `DEFAULTS.common` : hypothèses communes (clients par année, montant investi, coût d'acquisition, commissions, etc.). Les pourcentages s'écrivent en fraction (`0.015` pour 1,5 %).
+- `DEFAULTS.options` : un objet par option, dans l'ordre 1, 2, 3, 3 + PSFP (délai en mois, coûts en K€, année d'activation de la PSFP, etc.).
+
+Après modification, l'onglet « Hypothèses et méthode » indique si les chiffres de contrôle (calculés sur les valeurs par défaut) sont toujours retrouvés. Changer les valeurs par défaut fait apparaître des écarts attendus : mettre alors à jour l'objet `CONTROL`.
 
 ## Avertissement
 
-Toutes les valeurs sont des hypothèses à remplacer par des devis et des tests de marché réels.
+Toutes les valeurs sont des hypothèses à remplacer par des devis et des tests de marché réels. Les points réglementaires marqués « À faire valider » doivent être confirmés par un avocat.
