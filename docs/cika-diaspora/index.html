@@ -96,6 +96,19 @@ tr.total td{font-weight:600;border-top:1px solid var(--line-2)}
 .sw{display:inline-block;width:18px;height:0;border-top:2.5px solid;vertical-align:4px;margin-right:7px}
 .sw.dash{border-top-style:dashed}
 
+/* Montant rapide */
+.quick{border-bottom:1px solid var(--line);padding:0 0 18px;margin-bottom:22px}
+.quick label{display:block;font-weight:600;font-size:15px;margin-bottom:8px}
+.qrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.qrow .qin{display:flex;align-items:center;gap:6px}
+.qrow input[type=text]{width:120px;font-size:18px;font-weight:600;padding:6px 9px}
+.qrow input[type=range]{flex:1;min-width:200px;accent-color:var(--accent)}
+.qtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0 22px;margin-top:14px}
+.qt{border-top:1px solid var(--line);padding:8px 0 6px}
+.qt h3{font-size:13.5px;font-weight:600;margin:0 0 4px}
+.qt dl{display:grid;grid-template-columns:auto 1fr;gap:1px 12px;margin:0;font-size:13px}
+.qt dt{color:var(--muted)}.qt dd{margin:0;text-align:right;font-weight:600}
+
 /* Simulateur */
 .sim>*{min-width:0}
 .sim{display:grid;grid-template-columns:400px 1fr;gap:32px;align-items:start}
@@ -306,6 +319,15 @@ details.yr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
      2. SIMULATEUR
      ============================================================ -->
 <section class="panel" id="tab-sim" hidden>
+  <div class="quick">
+    <label for="qInvest">Montant investi par client et par an</label>
+    <div class="qrow">
+      <span class="qin"><input type="text" id="qInvest" inputmode="numeric" autocomplete="off"><span>€</span></span>
+      <input type="range" id="qRange" min="500" max="20000" step="100" aria-label="Montant investi par client et par an">
+    </div>
+    <div class="qtiles" id="qTiles"></div>
+    <p class="hint" style="margin:8px 0 0">Les autres hypothèses sont celles du panneau ci-dessous. Montants en K€.</p>
+  </div>
   <div class="sim">
     <aside class="side" aria-label="Hypothèses">
       <div class="field" style="grid-template-columns:1fr"><label for="scName">Nom du scénario</label></div>
@@ -703,7 +725,8 @@ function indicatorsTable(R, compact){
 }
 function sensTable(st, mode){
   var h = '<thead><tr><th>Montant investi</th>' + OPT_NAMES.map(function(n){ return '<th class="r">' + n + '</th>'; }).join("") + '</tr></thead><tbody>';
-  SENS_AMOUNTS.forEach(function(a){
+  var amts = SENS_AMOUNTS.indexOf(st.common.invest) < 0 ? SENS_AMOUNTS.concat([st.common.invest]).sort(function(x, y){ return x - y; }) : SENS_AMOUNTS;
+  amts.forEach(function(a){
     var R = runAll(st, a), isCur = a === st.common.invest;
     var lab = EUR(a) + (isCur ? ' <span class="cur-note">(courant)</span>' : '');
     if (mode === "txt"){
@@ -1034,6 +1057,18 @@ function update(){
   document.getElementById("simReading").innerHTML = rd;
   document.getElementById("simSens").innerHTML = sensTable(state, "sim");
   document.getElementById("simDetail").innerHTML = detailHTML(R);
+  // Montant rapide
+  var qi = document.getElementById("qInvest"), qr = document.getElementById("qRange"), si = document.getElementById("c_invest");
+  if (document.activeElement !== qi) qi.value = toInput(state.common.invest, "eur");
+  qr.value = state.common.invest;
+  if (si && document.activeElement !== si) si.value = toInput(state.common.invest, "eur");
+  var qbc = bestIdx(R, function(r){ return r.cash5; }, 1);
+  document.getElementById("qTiles").innerHTML = R.map(function(r, i){
+    return '<div class="qt"><h3><span class="sw c' + i + (i===1?' dash':'') + '"></span>' + OPT_NAMES[i] + (i === qbc ? '<span class="best">meilleure</span>' : '') + '</h3><dl>' +
+      '<dt>Besoin max</dt><dd>' + K(r.need) + '</dd>' +
+      '<dt>1<sup>re</sup> année rentable</dt><dd>' + yrS(r.first) + '</dd>' +
+      '<dt>Trésorerie an 5</dt><dd' + (r.cash5 < -0.5 ? ' class="neg"' : '') + '>' + Ks(r.cash5) + '</dd></dl></div>';
+  }).join("");
   // Fiche
   var c = state.common;
   document.getElementById("fDate").textContent = new Date().toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"});
@@ -1085,6 +1120,14 @@ Array.prototype.forEach.call(document.querySelectorAll(".preset"), function(b){
     buildInputs(); update();
   });
 });
+function onQuick(e){
+  var v = parseIn(e.target.value, "eur"), bad = v === null || v <= 0;
+  if (e.target.id === "qInvest") e.target.classList.toggle("bad", bad);
+  if (bad) return;
+  state.common.invest = v; update();
+}
+document.getElementById("qInvest").addEventListener("input", onQuick);
+document.getElementById("qRange").addEventListener("input", onQuick);
 document.getElementById("resetBtn").addEventListener("click", function(){ state = clone(DEFAULTS); buildInputs(); update(); });
 var rT; window.addEventListener("resize", function(){ clearTimeout(rT); rT = setTimeout(function(){ drawChart(document.getElementById("simChart"), runAll(state), 720, 300, true); }, 150); });
 document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
