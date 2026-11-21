@@ -2,3 +2,4 @@ User-agent: *
 Disallow: /agenda/
 Disallow: /cika-invest.html
 Disallow: /cika-diaspora/
+Disallow: /luka/

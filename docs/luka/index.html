@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Page d'invitation : non indexée, sans lien depuis le reste du site. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#fff7ec">
+<title>Anniversaire de Luka — Choix des menus</title>
+<meta property="og:title" content="Luka fête ses 2 ans !">
+<meta property="og:description" content="Dimanche 29 novembre, 12 h – 16 h · Choisissez vos plats avant le lundi 23 novembre au soir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff7ec; --card:#fffdf9; --ink:#3b2f2a; --ink-2:#6e5f57; --line:#f0e1d2;
+  --coral:#f06f5a; --coral-dark:#d9533e; --coral-soft:#fde2dc;
+  --mint:#d4f0e4; --mint-ink:#2f7a5c; --lav:#e7defa; --sky:#d9ecfb; --butter:#fff0bf; --peach:#ffe4d2;
+  --radius:18px; --shadow:0 2px 0 rgba(59,47,42,.04), 0 8px 24px rgba(240,111,90,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.5 Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background-image:radial-gradient(circle at 8% 4%,var(--butter) 0 7px,transparent 8px),radial-gradient(circle at 92% 7%,var(--sky) 0 10px,transparent 11px),
+  radial-gradient(circle at 80% 1.5%,var(--mint) 0 5px,transparent 6px),radial-gradient(circle at 18% 12%,var(--lav) 0 6px,transparent 7px);
+  background-repeat:no-repeat;background-size:100% 900px}
+.wrap{max-width:560px;margin:0 auto;padding:28px 16px calc(40px + env(safe-area-inset-bottom))}
+h1,h2,h3{font-family:Fredoka,Nunito,sans-serif;font-weight:600;line-height:1.15;margin:0}
+.hero{text-align:center;padding:8px 0 18px}
+.hero .kicker{font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:13px;color:var(--ink-2)}
+.hero h1{color:var(--coral);font-size:clamp(38px,11vw,54px);margin:6px 0 4px}
+.hero .sub{color:var(--ink-2);font-size:16px}
+.balloons{font-size:30px;letter-spacing:6px;margin-bottom:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin:14px 0}
+.event{display:grid;gap:10px}
+.event div{display:flex;gap:12px;align-items:flex-start}
+.event .ic{flex:0 0 36px;height:36px;border-radius:12px;display:grid;place-items:center;font-size:18px}
+.event b{display:block}
+.event a{color:var(--coral-dark);font-weight:700}
+.notice{background:var(--butter);border-radius:14px;padding:12px 14px;font-weight:700;text-align:center;margin:0 0 4px}
+.menu h2{font-size:22px;margin-bottom:10px}
+.menu dl{margin:0;display:grid;gap:8px}
+.menu dt{font-weight:800}
+.menu dd{margin:0 0 4px;color:var(--ink-2)}
+.price{display:inline-block;background:var(--coral-soft);color:var(--coral-dark);border-radius:999px;padding:1px 10px;font-weight:800;font-size:14px;margin-left:6px}
+.muted{color:var(--ink-2);font-size:15px}
+label.field{display:block;font-weight:800;margin-bottom:6px}
+.opt{font-weight:600;color:var(--ink-2);font-size:14px}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;outline:none}
+input[type=text]:focus,textarea:focus{border-color:var(--coral)}
+textarea{min-height:92px;resize:vertical}
+.invalid input[type=text]{border-color:var(--coral-dark)}
+.err{color:var(--coral-dark);font-weight:700;font-size:14px;margin-top:6px;display:none}
+.invalid > .err{display:block}
+.counters{display:grid;gap:12px}
+.counter{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.counter .lbl b{display:block}
+.stepper{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.stepper button{width:48px;height:48px;border-radius:50%;border:0;font:700 26px/1 Nunito,sans-serif;color:var(--coral-dark);background:var(--coral-soft);cursor:pointer}
+.stepper button:disabled{opacity:.35;cursor:default}
+.stepper output{min-width:40px;text-align:center;font:600 26px Fredoka,sans-serif}
+.adult h3{font-size:20px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.adult h3 .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--lav);font-size:16px}
+.group{margin-top:14px;border:0;padding:0;min-width:0}
+.group legend{font-weight:800;margin-bottom:8px;padding:0}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;inset:0;pointer-events:none}
+.choice span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:56px;padding:8px 10px;border-radius:14px;border:2px solid var(--line);background:#fff;font-weight:700;cursor:pointer;transition:background .12s,border-color .12s,transform .08s}
+.choice span:active{transform:scale(.98)}
+.choice input:checked + span{background:var(--mint);border-color:var(--mint-ink);color:#1f5a43}
+.choice input:checked + span::before{content:"✓";margin-right:6px}
+.choice input:focus-visible + span{outline:3px solid var(--coral);outline-offset:2px}
+.group.invalid .choice span{border-color:#f3b3a7}
+.group .err{margin-top:6px}
+.group.invalid .err{display:block}
+.kids{background:var(--sky);border-color:transparent}
+.kids h3{font-size:19px;margin-bottom:4px}
+.estimate{background:var(--peach);border-color:transparent;text-align:center}
+.estimate .calc{color:var(--ink-2);font-size:15px}
+.estimate .total{font:600 34px Fredoka,sans-serif;color:var(--coral-dark);margin:2px 0}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:58px;border:0;border-radius:16px;font:800 18px Nunito,sans-serif;cursor:pointer;text-decoration:none}
+.btn-main{background:var(--coral);color:#fff;box-shadow:0 6px 16px rgba(240,111,90,.35)}
+.btn-main:active{background:var(--coral-dark)}
+.btn-main:disabled{opacity:.7;cursor:progress}
+.btn-ghost{background:transparent;color:var(--coral-dark);border:2px solid var(--coral-soft);margin-top:10px}
+.btn-wa{background:#25d366;color:#fff;margin-top:14px}
+.form-error{display:none;color:var(--coral-dark);font-weight:700;text-align:center;margin:10px 0 0}
+.screen{display:none;text-align:center}
+.screen h2{color:var(--coral);font-size:30px;margin:8px 0}
+.screen .big{font-size:48px}
+.summary{text-align:left;white-space:pre-wrap;background:#fff;border:1px dashed var(--line);border-radius:14px;padding:14px;margin:14px 0;font-size:15px}
+.hidden{display:none !important}
+footer{text-align:center;color:var(--ink-2);font-size:13px;margin-top:24px}
+@media (min-width:420px){.choices.four{grid-template-columns:repeat(4,1fr)}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="hero">
+    <div class="balloons" aria-hidden="true">🎈🎂🎈</div>
+    <div class="kicker">Anniversaire</div>
+    <h1>Luka a 2 ans !</h1>
+    <div class="sub">On a hâte de fêter ça avec vous</div>
+  </header>
+
+  <section class="card event" aria-label="Infos pratiques">
+    <div><span class="ic" style="background:var(--lav)" aria-hidden="true">📅</span><span><b>Dimanche 29 novembre 2026</b>de 12 h à 16 h</span></div>
+    <div><span class="ic" style="background:var(--mint)" aria-hidden="true">📍</span><span><b>Pat's Afro Cuisine</b>3 rue de la Mairie, 92320 Châtillon<br>
+      <a href="https://www.google.com/maps/search/?api=1&query=Pat%27s+Afro+Cuisine+3+rue+de+la+Mairie+92320+Ch%C3%A2tillon" target="_blank" rel="noopener">Voir sur la carte</a></span></div>
+  </section>
+
+  <div id="form-screen">
+    <section class="card menu" aria-labelledby="menu-title">
+      <h2 id="menu-title">Le menu</h2>
+      <dl>
+        <dt>Formule adulte <span class="price">30 €</span></dt>
+        <dd>Une entrée, un plat et un accompagnement au choix.</dd>
+        <dt>Formule enfant <span class="price">12 €</span></dt>
+        <dd>Menu fixe : riz et poulet braisé, sirop de grenadine, compote.</dd>
+      </dl>
+      <p class="muted" style="margin:10px 0 0">Boissons non incluses.</p>
+    </section>
+
+    <form id="form" class="card" novalidate>
+      <p class="notice">Merci de répondre au plus tard le lundi 23 novembre au soir.</p>
+
+      <div id="f-nom" style="margin-top:16px">
+        <label class="field" for="nom">Votre nom ou nom de famille</label>
+        <input type="text" id="nom" name="nom" maxlength="80" autocomplete="family-name" placeholder="Ex. Famille Mensah">
+        <div class="err">Indiquez votre nom.</div>
+      </div>
+
+      <div class="counters" style="margin-top:20px">
+        <div class="counter">
+          <div class="lbl"><b>Adultes</b><span class="muted">formule à 30 €</span></div>
+          <div class="stepper">
+            <button type="button" data-step="adultes" data-d="-1" aria-label="Un adulte de moins">−</button>
+            <output id="nb-adultes" aria-live="polite">1</output>
+            <button type="button" data-step="adultes" data-d="1" aria-label="Un adulte de plus">+</button>
+          </div>
+        </div>
+        <div class="counter">
+          <div class="lbl"><b>Enfants</b><span class="muted">menu enfant à 12 €</span></div>
+          <div class="stepper">
+            <button type="button" data-step="enfants" data-d="-1" aria-label="Un enfant de moins">−</button>
+            <output id="nb-enfants" aria-live="polite">0</output>
+            <button type="button" data-step="enfants" data-d="1" aria-label="Un enfant de plus">+</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div id="adults"></div>
+
+    <section class="card kids hidden" id="kids">
+      <h3 id="kids-title">Menu enfant</h3>
+      <p class="muted" style="margin:0">Riz et poulet braisé, sirop de grenadine, compote. Rien à choisir.</p>
+    </section>
+
+    <section class="card">
+      <label class="field" for="remarques">Allergies et remarques <span class="opt">(facultatif)</span></label>
+      <textarea id="remarques" maxlength="500" placeholder="Allergie, régime, chaise haute…"></textarea>
+    </section>
+
+    <section class="card estimate" aria-live="polite">
+      <div class="muted">Estimation</div>
+      <div class="total" id="total">30 €</div>
+      <div class="calc" id="calc">1 adulte × 30 €</div>
+      <div class="calc">hors boissons</div>
+    </section>
+
+    <button type="button" class="btn btn-main" id="send">Envoyer mes choix</button>
+    <p class="form-error" id="form-error">Il manque quelques choix : ils sont signalés en rouge.</p>
+  </div>
+
+  <section class="card screen" id="ok-screen" aria-live="polite">
+    <div class="big" aria-hidden="true">🎉</div>
+    <h2>Merci, c'est enregistré !</h2>
+    <p class="muted" id="ok-note">À dimanche 29 novembre !</p>
+    <div class="summary" id="ok-summary"></div>
+    <p class="muted">Un changement ? Renvoyez le formulaire avec le même nom : la nouvelle réponse remplace l'ancienne.</p>
+    <button type="button" class="btn btn-ghost" data-back>Modifier ma réponse</button>
+  </section>
+
+  <section class="card screen" id="fail-screen" aria-live="polite">
+    <div class="big" aria-hidden="true">📨</div>
+    <h2>L'envoi n'a pas abouti</h2>
+    <p class="muted" id="fail-note">Pas d'inquiétude : envoyez vos choix par WhatsApp, le message est déjà rempli.</p>
+    <div class="summary" id="fail-summary"></div>
+    <a class="btn btn-wa" id="wa" href="#" target="_blank" rel="noopener">Envoyer par WhatsApp</a>
+    <button type="button" class="btn btn-ghost" id="retry">Réessayer l'envoi</button>
+    <button type="button" class="btn btn-ghost" data-back>Revenir au formulaire</button>
+  </section>
+
+  <footer>Pour Luka, avec amour 💛</footer>
+</main>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+// URL /exec du déploiement Apps Script (voir luka_apps_script.gs à la racine du dépôt).
+const API_URL = '';
+const WHATSAPP = '33650396244';
+
+const PRIX_ADULTE = 30, PRIX_ENFANT = 12;
+const MENU = {
+  entree: { label: 'Entrée', items: ['Pastels', 'Avocat aux crevettes'] },
+  plat: { label: 'Plat', items: ['Pintade', 'Poisson'] },
+  accompagnement: { label: 'Accompagnement', items: ['Alloco', 'Attiéké', 'Riz', 'Ablo'] },
+};
+const LIMITS = { adultes: [1, 12], enfants: [0, 12] };
+
+const state = { adultes: 1, enfants: 0, people: [blank()] };
+const $ = id => document.getElementById(id);
+
+function blank() { return { prenom: '', entree: '', plat: '', accompagnement: '' }; }
+function euros(n) { return n.toLocaleString('fr-FR') + ' €'; }
+function plural(n, one, many) { return n + ' ' + (n > 1 ? many : one); }
+
+// ─── Rendu ────────────────────────────────────────────────────────────────────
+function renderAdults() {
+  while (state.people.length < state.adultes) state.people.push(blank());
+  const box = $('adults');
+  box.innerHTML = '';
+  for (let i = 0; i < state.adultes; i++) {
+    const p = state.people[i];
+    const card = document.createElement('section');
+    card.className = 'card adult';
+    card.innerHTML = `<h3><span class="n">${i + 1}</span>Adulte ${i + 1}</h3>
+      <label class="field" for="prenom-${i}">Prénom <span class="opt">(facultatif)</span></label>
+      <input type="text" id="prenom-${i}" maxlength="40" autocomplete="off">`;
+    const input = card.querySelector('input');
+    input.value = p.prenom;
+    input.addEventListener('input', () => { p.prenom = input.value; });
+    for (const [key, { label, items }] of Object.entries(MENU)) {
+      const fs = document.createElement('fieldset');
+      fs.className = 'group';
+      fs.dataset.person = i;
+      fs.dataset.key = key;
+      fs.innerHTML = `<legend>${label}</legend><div class="choices${items.length === 4 ? ' four' : ''}"></div><div class="err">Choisissez ${key === 'entree' ? 'une entrée' : key === 'plat' ? 'un plat' : 'un accompagnement'}.</div>`;
+      const grid = fs.querySelector('.choices');
+      for (const item of items) {
+        const l = document.createElement('label');
+        l.className = 'choice';
+        l.innerHTML = `<input type="radio" name="${key}-${i}"><span></span>`;
+        const radio = l.querySelector('input');
+        radio.value = item;
+        radio.checked = p[key] === item;
+        l.querySelector('span').textContent = item;
+        radio.addEventListener('change', () => { p[key] = item; fs.classList.remove('invalid'); });
+        grid.appendChild(l);
+      }
+      card.appendChild(fs);
+    }
+    box.appendChild(card);
+  }
+}
+
+function renderCounts() {
+  $('nb-adultes').textContent = state.adultes;
+  $('nb-enfants').textContent = state.enfants;
+  document.querySelectorAll('[data-step]').forEach(b => {
+    const [min, max] = LIMITS[b.dataset.step];
+    const v = state[b.dataset.step], d = +b.dataset.d;
+    b.disabled = d < 0 ? v <= min : v >= max;
+  });
+  $('kids').classList.toggle('hidden', state.enfants === 0);
+  $('kids-title').textContent = state.enfants > 1 ? `Menu enfant × ${state.enfants}` : 'Menu enfant';
+  const total = state.adultes * PRIX_ADULTE + state.enfants * PRIX_ENFANT;
+  $('total').textContent = euros(total);
+  $('calc').textContent = `${plural(state.adultes, 'adulte', 'adultes')} × 30 €`
+    + (state.enfants ? ` + ${plural(state.enfants, 'enfant', 'enfants')} × 12 €` : '');
+}
+
+document.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.step, [min, max] = LIMITS[k];
+  const next = Math.min(max, Math.max(min, state[k] + +b.dataset.d));
+  if (next === state[k]) return;
+  state[k] = next;
+  if (k === 'adultes') renderAdults();
+  renderCounts();
+}));
+
+$('nom').addEventListener('input', () => $('f-nom').classList.remove('invalid'));
+
+// ─── Validation et envoi ──────────────────────────────────────────────────────
+function validate() {
+  let first = null;
+  if (!$('nom').value.trim()) { $('f-nom').classList.add('invalid'); first = $('f-nom'); }
+  document.querySelectorAll('#adults .group').forEach(fs => {
+    const ok = !!state.people[fs.dataset.person][fs.dataset.key];
+    fs.classList.toggle('invalid', !ok);
+    if (!ok && !first) first = fs;
+  });
+  $('form-error').style.display = first ? 'block' : 'none';
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  return !first;
+}
+
+function payload() {
+  return {
+    nom: $('nom').value.trim(),
+    nbAdultes: state.adultes,
+    nbEnfants: state.enfants,
+    adultes: state.people.slice(0, state.adultes).map(p => ({
+      prenom: p.prenom.trim(), entree: p.entree, plat: p.plat, accompagnement: p.accompagnement,
+    })),
+    remarques: $('remarques').value.trim(),
+  };
+}
+
+function summary(d) {
+  const lines = [`Famille : ${d.nom}`, `${plural(d.nbAdultes, 'adulte', 'adultes')}, ${plural(d.nbEnfants, 'enfant', 'enfants')}`, ''];
+  d.adultes.forEach((a, i) => {
+    lines.push(`• ${a.prenom || 'Adulte ' + (i + 1)} : ${a.entree} / ${a.plat} / ${a.accompagnement}`);
+  });
+  if (d.nbEnfants) lines.push(`• ${plural(d.nbEnfants, 'menu enfant', 'menus enfant')} (riz et poulet braisé, sirop de grenadine, compote)`);
+  if (d.remarques) lines.push('', `Remarques : ${d.remarques}`);
+  const total = d.nbAdultes * PRIX_ADULTE + d.nbEnfants * PRIX_ENFANT;
+  lines.push('', `Total estimé : ${euros(total)} (hors boissons)`);
+  return lines.join('\n');
+}
+
+function show(id) {
+  ['form-screen', 'ok-screen', 'fail-screen'].forEach(s => { $(s).style.display = s === id ? 'block' : 'none'; });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function send() {
+  if (!validate()) return;
+  const data = payload();
+  const btn = $('send');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+  let error = 'Pas d\'inquiétude : envoyez vos choix par WhatsApp, le message est déjà rempli.';
+  try {
+    if (!API_URL) throw new Error('API_URL manquante');
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25000);
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data),
+      signal: ctrl.signal,
+    });
+    clearTimeout(timer);
+    const out = await res.json();
+    if (!out.ok) {
+      if (out.error) error = `${out.error} Vous pouvez aussi envoyer vos choix par WhatsApp, le message est déjà rempli.`;
+      throw new Error(out.error || 'refus');
+    }
+    $('ok-note').textContent = out.remplace ? 'Votre réponse précédente a été remplacée. À dimanche 29 novembre !' : 'À dimanche 29 novembre !';
+    $('ok-summary').textContent = summary(data);
+    show('ok-screen');
+  } catch (e) {
+    console.error('Envoi échoué :', e);
+    const text = `Anniversaire de Luka — choix des menus\n\n${summary(data)}`;
+    $('fail-note').textContent = error;
+    $('fail-summary').textContent = summary(data);
+    $('wa').href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+    show('fail-screen');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Envoyer mes choix';
+  }
+}
+
+$('form').addEventListener('submit', e => { e.preventDefault(); send(); });
+$('send').addEventListener('click', send);
+$('retry').addEventListener('click', () => { show('form-screen'); send(); });
+document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => show('form-screen')));
+
+renderAdults();
+renderCounts();
+</script>
+</body>
+</html>
