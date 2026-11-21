@@ -85,7 +85,6 @@ textarea{min-height:92px;resize:vertical}
 .btn-main:active{background:var(--coral-dark)}
 .btn-main:disabled{opacity:.7;cursor:progress}
 .btn-ghost{background:transparent;color:var(--coral-dark);border:2px solid var(--coral-soft);margin-top:10px}
-.btn-wa{background:#25d366;color:#fff;margin-top:14px}
 .form-error{display:none;color:var(--coral-dark);font-weight:700;text-align:center;margin:10px 0 0}
 .screen{display:none;text-align:center}
 .screen h2{color:var(--coral);font-size:30px;margin:8px 0}
@@ -189,10 +188,9 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;margin-top:24px}
   <section class="card screen" id="fail-screen" aria-live="polite">
     <div class="big" aria-hidden="true">📨</div>
     <h2>L'envoi n'a pas abouti</h2>
-    <p class="muted" id="fail-note">Pas d'inquiétude : envoyez vos choix par WhatsApp, le message est déjà rempli.</p>
+    <p class="muted" id="fail-note">Vos choix sont conservés : vérifiez votre connexion puis réessayez.</p>
     <div class="summary" id="fail-summary"></div>
-    <a class="btn btn-wa" id="wa" href="#" target="_blank" rel="noopener">Envoyer par WhatsApp</a>
-    <button type="button" class="btn btn-ghost" id="retry">Réessayer l'envoi</button>
+    <button type="button" class="btn btn-main" id="retry">Réessayer l'envoi</button>
     <button type="button" class="btn btn-ghost" data-back>Revenir au formulaire</button>
   </section>
 
@@ -203,7 +201,6 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;margin-top:24px}
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
 // URL /exec du déploiement Apps Script (voir luka_apps_script.gs à la racine du dépôt).
 const API_URL = 'https://script.google.com/macros/s/AKfycbwdV9e9gyqj8Kv0g1Mn62ZMJxkEHl-pIOi7TADtn9n2EBhf4cbf3TvFoGRKp9oAoKA/exec';
-const WHATSAPP = '33650396244';
 
 const PRIX_ADULTE = 30, PRIX_ENFANT = 12;
 const MENU = {
@@ -335,7 +332,7 @@ async function send() {
   const btn = $('send');
   btn.disabled = true;
   btn.textContent = 'Envoi en cours…';
-  let error = 'Pas d\'inquiétude : envoyez vos choix par WhatsApp, le message est déjà rempli.';
+  let error = 'Vos choix sont conservés : vérifiez votre connexion puis réessayez.';
   try {
     if (!API_URL) throw new Error('API_URL manquante');
     const ctrl = new AbortController();
@@ -349,7 +346,7 @@ async function send() {
     clearTimeout(timer);
     const out = await res.json();
     if (!out.ok) {
-      if (out.error) error = `${out.error} Vous pouvez aussi envoyer vos choix par WhatsApp, le message est déjà rempli.`;
+      if (out.error) error = out.error;
       throw new Error(out.error || 'refus');
     }
     $('ok-note').textContent = out.remplace ? 'Votre réponse précédente a été remplacée. À dimanche 29 novembre !' : 'À dimanche 29 novembre !';
@@ -357,10 +354,8 @@ async function send() {
     show('ok-screen');
   } catch (e) {
     console.error('Envoi échoué :', e);
-    const text = `Anniversaire de Luka — choix des menus\n\n${summary(data)}`;
     $('fail-note').textContent = error;
     $('fail-summary').textContent = summary(data);
-    $('wa').href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
     show('fail-screen');
   } finally {
     btn.disabled = false;
