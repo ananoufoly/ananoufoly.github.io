@@ -82,7 +82,14 @@ function setup() {
   MENU.plat.forEach(v => rows.push([v, countif_('D', v)]));
   rows.push(['', ''], ['Accompagnements', '']);
   MENU.accompagnement.forEach(v => rows.push([v, countif_('E', v)]));
-  recap.getRange(1, 1, rows.length, 2).setValues(rows);
+  // setFormula lit toujours la syntaxe anglaise (virgule) ; setValues suivrait la
+  // langue de la Sheet, et COUNTIF(…,"…") casserait dans une Sheet en français.
+  rows.forEach(([label, value], i) => {
+    recap.getRange(i + 1, 1).setValue(label);
+    const cell = recap.getRange(i + 1, 2);
+    if (typeof value === 'string' && value.charAt(0) === '=') cell.setFormula(value);
+    else cell.setValue(value);
+  });
   recap.getRange('A1').setFontSize(14);
   ['A1', 'A10', 'A14', 'A18'].forEach(a => recap.getRange(a).setFontWeight('bold'));
   recap.setColumnWidth(1, 240);
