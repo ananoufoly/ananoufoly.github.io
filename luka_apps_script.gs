@@ -77,13 +77,11 @@ function setup() {
     ['', ''],
     ['Entrées', ''],
   ];
-  MENU.entree.forEach(v => rows.push([v, countif_('C', v)]));
+  MENU.entree.forEach(v => rows.push([v, compte_('C', rows.length + 1)]));
   rows.push(['', ''], ['Plats', '']);
-  MENU.plat.forEach(v => rows.push([v, countif_('D', v)]));
+  MENU.plat.forEach(v => rows.push([v, compte_('D', rows.length + 1)]));
   rows.push(['', ''], ['Accompagnements', '']);
-  MENU.accompagnement.forEach(v => rows.push([v, countif_('E', v)]));
-  // setFormula lit toujours la syntaxe anglaise (virgule) ; setValues suivrait la
-  // langue de la Sheet, et COUNTIF(…,"…") casserait dans une Sheet en français.
+  MENU.accompagnement.forEach(v => rows.push([v, compte_('E', rows.length + 1)]));
   rows.forEach(([label, value], i) => {
     recap.getRange(i + 1, 1).setValue(label);
     const cell = recap.getRange(i + 1, 2);
@@ -112,8 +110,13 @@ function getOrCreate_(ss, name) {
   return ss.getSheetByName(name) || ss.insertSheet(name);
 }
 
-function countif_(col, value) {
-  return '=COUNTIF(Plats!' + col + '2:' + col + ',"' + value + '")';
+/**
+ * Compte les lignes de Plats égales au libellé de la colonne A de cette ligne.
+ * Formule sans séparateur d'arguments : COUNTIF(…,"…") donnait #ERROR! dans
+ * une Sheet en français, qui attend « ; ».
+ */
+function compte_(col, row) {
+  return '=SUMPRODUCT(--(Plats!' + col + '2:' + col + '=A' + row + '))';
 }
 
 function sheet_() {
