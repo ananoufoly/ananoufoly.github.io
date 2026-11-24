@@ -39,8 +39,10 @@ but is weaker at judging uncertain matches.
 
 ## One-time setup
 
-1. Settings → Secrets and variables → Actions → **New repository secret**
+1. Install the Claude GitHub app on this repository: https://github.com/apps/claude
+   (Configure → Only select repositories → `ananoufoly.github.io`).
+2. Settings → Secrets and variables → Actions → **New repository secret**
    `ANTHROPIC_API_KEY` = a key from console.anthropic.com (API keys).
-2. Settings → Actions → General → Workflow permissions → tick
+3. Settings → Actions → General → Workflow permissions → tick
    **Allow GitHub Actions to create and approve pull requests**.
-3. Actions → *Update portfolio* → *Run workflow* (leave *item* empty) to test.
+4. Actions → *Update portfolio* → *Run workflow* (leave *item* empty) to test.
