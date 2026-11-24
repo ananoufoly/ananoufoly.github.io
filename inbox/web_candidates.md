@@ -94,3 +94,16 @@ Evidence per row is in the entry's `source` field. Identity markers: L'Afrique d
 - Co-author on the Financial Afrik piece is bylined "Dr. Gloglo Beringer"; the site shows *Beringer Gloglo* (given name first, matching how the same byline writes "Ananou Foly"). Swap if wrong.
 - *Exploring the dynamic of the tax gap in Africa* (with G.V. Houngbonon, PSE & Orange, 2015) comes from Scholar only; no online copy found. Add a URL if one exists.
 - Tags were assigned from title keywords; adjust freely.
+
+## Media search, 2016–2026 (re-run 2026-11-24, exact name "Foly Ananou")
+
+Searches covered: TV5MONDE (site and programmes), France 24, Africa 24, Africa Radio, BBC Afrique,
+VOA Afrique, RFI, Le Point Afrique, YouTube, and the general press (FR + EN).
+
+| Title | Outlet | Date | URL | Type | Confidence + evidence | On site? |
+|---|---|---|---|---|---|---|
+| Accusation de Giorgia Meloni contre la France : le franc CFA à l’origine des migrations ? | TV5MONDE Info | 2022-11-23 | https://information.tv5monde.com/afrique/accusation-de-giorgia-meloni-contre-la-france-le-franc-cfa-lorigine-des-migrations-1454301 | TV | high: video captions name "Foly Ananou, économiste du think tank de l’Afrique des Idées" | yes (added earlier) |
+| Le franc CFA à l’origine des migrations ? (republication of the TV5MONDE piece) | SenePlus | 2022-11-26 | https://www.seneplus.com/international/le-franc-cfa-lorigine-des-migrations (now 404; Web Archive copy exists) | press (republication) | high: same text and quotes | no: duplicate of the TV5MONDE item; suggest skip |
+| Faut-il abolir le Franc CFA ? L’analyse choc de Foly Ananou, statisticien-économiste | Direct Infos Gabon | 2017-09-03 | https://directinfosgabon.com/faut-abolir-franc-cfa-lanalyse-choc-de-foly-ananou-statisticien-economiste/ | press (republication of the JA column) | high: byline and bio "directeur des publications du think tank L’Afrique Des Idées", source "Jeune Afrique" | **no: awaiting approval** |
+
+Nothing else new for 2016–2026. Interview, panel and conference searches returned only the known items or other people.

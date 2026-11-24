@@ -24,7 +24,11 @@ Pages from **`/docs` on `main`**, built by Jekyll (no theme). Content lives in
 5. **Work in progress is opt-in.** Local drafts become entries only via a PR that the owner
    merges; even then only title + ≤3-line abstract + status. Never the draft, never target
    journals, data sources, or internal notes. *Dakar days* (book draft) stays off the site.
-6. **No personal or family details** beyond what `docs/_data/profile.yml` already shows.
+6. **There is no CV page.** The homepage is the CV (bio, Selected, Latest, About with
+   positions, education, languages); `/cv.html` only redirects to `/`. CV facts live in
+   `docs/_data/profile.yml` and come from the owner's CVs — never add positions, degrees or
+   dates that are not in those sources; list doubts in `inbox/open_questions.md`.
+7. **No personal or family details** beyond what `docs/_data/profile.yml` already shows.
    The agent never edits `profile.yml`.
 
 ## Data files (`docs/_data/`)
@@ -59,7 +63,15 @@ Pages from **`/docs` on `main`**, built by Jekyll (no theme). Content lives in
   status: published              # published|forthcoming|under_review|working_paper|in_progress
   source: "…"                    # where it was found/verified — REQUIRED, never empty
   verified: true                 # false = kept in data but NOT rendered on the site
+  # optional:
+  featured: true                 # pinned in the homepage "Selected" block (keep to 2–3)
+  earlier_title: "…"             # previous titles of the same work (e.g. SSRN versions)
+  note: "…"                      # short factual note (e.g. institutions behind a working paper)
+  related: ananou2026jfs         # id of a related entry (e.g. the paper an award was for)
 ```
+
+Dates display as "Mon YYYY" when a month is known, "YYYY" otherwise; add the month whenever
+the source gives one. Titles use typographic apostrophes (’) and quotes (“ ” in English, « » in French).
 
 Only `verified: true` entries are rendered (pages, `/feed.xml`, `/items.json`).
 Group versions of the same work (SSRN preprint → journal article): keep one entry, the

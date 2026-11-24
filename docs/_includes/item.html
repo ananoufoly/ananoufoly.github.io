@@ -1,5 +1,6 @@
 {%- comment -%}
-  Renders one entry. Params: item, show_kind (bool).
+  Renders one entry. Params: item, show_kind (bool), anchor (bool: give the <li> an id).
+  Dates: "Mon YYYY" when a month is known, "YYYY" otherwise.
 {%- endcomment -%}
 {%- assign it = include.item -%}
 {%- assign status_labels = "published:Published|forthcoming:Forthcoming|under_review:Under review|working_paper:Working paper|in_progress:In progress" | split: "|" -%}
@@ -7,8 +8,11 @@
 {%- assign kind_labels = "article:Article|chapter:Book chapter|thesis:Thesis|working_paper:Working paper|policy_note:Policy note|oped:Op-ed|blog:Blog|think_tank:Think tank|interview:Interview|quote:Quoted|podcast:Podcast|tv:TV|radio:Radio|press:Press|talk:Talk|seminar:Seminar|panel:Panel|dataset:Dataset|tool:Tool|app:App|award:Award|wip:Work in progress" | split: "|" -%}
 {%- assign kind_label = it.type | replace: "_", " " -%}
 {%- for pair in kind_labels -%}{%- assign kv = pair | split: ":" -%}{%- if kv[0] == it.type -%}{%- assign kind_label = kv[1] -%}{%- endif -%}{%- endfor -%}
+{%- assign dparts = it.date | split: "-" -%}
+{%- assign months = "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec" | split: "," -%}
+{%- if dparts.size > 1 -%}{%- assign mi = dparts[1] | plus: 0 | minus: 1 -%}{%- capture date_label -%}{{ months[mi] }} {{ dparts[0] }}{%- endcapture -%}{%- else -%}{%- assign date_label = dparts[0] -%}{%- endif -%}
 {%- for pair in status_labels -%}{%- assign kv = pair | split: ":" -%}{%- if kv[0] == it.status -%}{%- assign status_label = kv[1] -%}{%- endif -%}{%- endfor -%}
-<li class="pub-entry" data-type="{{ it.type }}" data-tags="{{ it.tags | join: '|' | downcase }}">
+<li class="pub-entry"{% if include.anchor %} id="{{ it.id }}"{% endif %} data-type="{{ it.type }}" data-tags="{{ it.tags | join: '|' | downcase }}">
   <div class="pub-header">
     {%- if include.show_kind %}<span class="badge badge-kind">{{ kind_label }}</span>{% endif %}
     {%- if it.status and it.status != "published" and it.status != it.type %}<span class="badge badge-{{ it.status }}">{{ status_label }}</span>{% endif %}
@@ -19,9 +23,11 @@
   <div class="pub-meta">
     {%- if coauthors.size > 0 %}w/ {{ coauthors | join: ", " }} &middot; {% endif -%}
     {%- if it.venue_or_outlet != "" %}<em>{{ it.venue_or_outlet }}</em> &middot; {% endif -%}
-    {{ it.date | slice: 0, 4 }}
+    {{ date_label }}
     {%- if it.doi != "" and it.doi %} &middot; <a href="https://doi.org/{{ it.doi }}" target="_blank" rel="noopener">doi</a>{% endif -%}
     {%- if it.pdf != "" and it.pdf %} &middot; <a href="{{ it.pdf }}">pdf</a>{% endif -%}
   </div>
+  {%- if it.earlier_title %}<div class="pub-note">Earlier title: {{ it.earlier_title }}</div>{% endif %}
+  {%- if it.note %}<div class="pub-note">{{ it.note }}{% if it.related %} &middot; <a href="/research.html#{{ it.related }}">see the paper</a>{% endif %}</div>{% endif %}
   {%- if it.abstract != "" and it.abstract %}<div class="pub-abstract">{{ it.abstract }}</div>{% endif %}
 </li>

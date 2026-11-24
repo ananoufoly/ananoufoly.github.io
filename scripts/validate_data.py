@@ -11,7 +11,8 @@ FIELDS = ["id", "title", "type", "date", "language", "authors", "venue_or_outlet
 STATUS = {"published", "forthcoming", "under_review", "working_paper", "in_progress"}
 DATE = re.compile(r"^\d{4}(-\d{2}(-\d{2})?)?$")
 
-errors, ids, n = [], set(), 0
+OPTIONAL = {"featured": bool, "earlier_title": str, "note": str, "related": str}
+errors, ids, n, related = [], set(), 0, []
 for name in LISTS:
     items = yaml.safe_load((DATA / f"{name}.yml").read_text(encoding="utf-8")) or []
     if not isinstance(items, list):
@@ -32,7 +33,13 @@ for name in LISTS:
         if not isinstance(it.get("authors", []), list) or not isinstance(it.get("tags", []), list):
             errors.append(f"{where}: authors and tags must be lists")
         if len(str(it.get("abstract", ""))) > 400: errors.append(f"{where}: abstract over ~3 lines")
+        for k in set(it) - set(FIELDS):
+            if k not in OPTIONAL: errors.append(f"{where}: unknown field '{k}'")
+            elif not isinstance(it[k], OPTIONAL[k]): errors.append(f"{where}: '{k}' must be {OPTIONAL[k].__name__}")
+        if it.get("related"): related.append((where, it["related"]))
         if str(it.get("doi", "")).startswith("http"): errors.append(f"{where}: doi must be bare (10.xxx)")
+for where, rid in related:
+    if rid not in ids: errors.append(f"{where}: related id '{rid}' not found")
 for extra in ("profile", "meta"):
     yaml.safe_load((DATA / f"{extra}.yml").read_text(encoding="utf-8"))
 

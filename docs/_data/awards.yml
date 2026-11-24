@@ -1,50 +1,54 @@
-# Prizes, fellowships, scholarships. Same schema as the other files (CLAUDE.md).
-# Only verified: true entries are rendered (Research page, "Awards & honours").
+# Prizes, fellowships, scholarships. Same schema (CLAUDE.md). Only verified: true entries are rendered.
 
 - id: award-2021-afbc-best-banking-paper
-  title: "Best Paper Prize in Banking, 34th Australasian Finance and Banking Conference"
+  title: Bureau van Dijk Moody’s Analytics Prize (best paper in banking), 34th Australasian Finance and Banking
+    Conference
   type: award
-  date: "2021-12"
+  date: 2021-12
   language: en
   authors: [Foly Ananou, Dimitris K. Chronopoulos, Amine Tarazi, John O.S. Wilson]
-  venue_or_outlet: "UNSW Sydney — for “Liquidity Regulation and Bank Risk”"
-  url: "http://web.archive.org/web/20250709180443/https://www.unilim.fr/recherche/2022/01/07/prix-du-meilleur-article-bancaire-par-unsw-pour-la-publication-liquidity-regulation-and-bank-risk/"
-  doi: ""
-  pdf: ""
-  abstract: ""
+  venue_or_outlet: UNSW Sydney
+  url: http://web.archive.org/web/20211222161628/https://www.st-andrews.ac.uk/management/news/title-139898-en.php
+  doi: ''
+  pdf: ''
+  abstract: ''
   tags: [banking, liquidity regulation]
   status: published
-  source: "Université de Limoges research news, 2022-01-07 (original now 404; Web Archive copy of 2025-07-09); owner's LinkedIn lists it as Bureau van Dijk best banking paper prize, Dec 2021"
+  source: University of St Andrews news, 17 Dec 2021 (live page no longer shows the item; Web Archive copy of 2021-12-22);
+    Université de Limoges research news, 7 Jan 2022 (Web Archive copy of 2025-07-09); UNSW 34th AFBC page gives
+    dates 15–17 Dec 2021 but lists no winners
   verified: true
-
+  related: ananou2026jfs
+  note: Awarded to “Liquidity Regulation and Bank Risk”, the working-paper version of the Journal of Financial Stability
+    2026 article
+  featured: true
 - id: award-2017-doctoral-fellowship
-  title: "French Doctoral Fellowship"
+  title: French Doctoral Fellowship
   type: award
-  date: "2017-10"
+  date: 2017-10
   language: en
   authors: [Foly Ananou]
-  venue_or_outlet: "Ministère de l'Enseignement supérieur et de la Recherche"
-  url: ""
-  doi: ""
-  pdf: ""
-  abstract: ""
+  venue_or_outlet: Ministère de l'Enseignement supérieur et de la Recherche
+  url: ''
+  doi: ''
+  pdf: ''
+  abstract: ''
   tags: []
   status: published
-  source: "Owner's LinkedIn profile, Honors & awards section"
+  source: Owner's LinkedIn profile, Honors & awards section
   verified: true
-
 - id: award-2016-excellence-scholarship
-  title: "Excellence Scholarship"
+  title: Excellence Scholarship
   type: award
-  date: "2016-09"
+  date: 2016-09
   language: en
   authors: [Foly Ananou]
-  venue_or_outlet: "Université de Limoges"
-  url: ""
-  doi: ""
-  pdf: ""
-  abstract: ""
+  venue_or_outlet: Université de Limoges
+  url: ''
+  doi: ''
+  pdf: ''
+  abstract: ''
   tags: []
   status: published
-  source: "Owner's LinkedIn profile, Honors & awards section"
+  source: Owner's LinkedIn profile, Honors & awards section
   verified: true

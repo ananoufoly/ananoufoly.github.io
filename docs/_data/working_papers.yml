@@ -3,7 +3,7 @@
 - id: ananou2026waemu-transmission
   title: 'Banks and monetary transmission in the WAEMU: Separating the liquidity and rate channels'
   type: working_paper
-  date: '2026-04'
+  date: 2026-04
   language: en
   authors: [Foly Ananou]
   venue_or_outlet: SSRN
@@ -17,10 +17,26 @@
   status: working_paper
   source: Crossref record for DOI 10.2139/ssrn.6643579 (deposited 2026-04-24)
   verified: true
+- id: ananou2015taxgap
+  title: Exploring the dynamic of the tax gap in Africa
+  type: working_paper
+  date: '2015'
+  language: en
+  authors: [Foly Ananou, Georges Vivien Houngbonon]
+  venue_or_outlet: Working paper
+  url: ''
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [public finance]
+  status: working_paper
+  source: Google Scholar profile user=ux2mKAYAAAAJ (no online copy found; venue as listed by Scholar)
+  verified: true
+  note: Paris School of Economics & Orange
 - id: adi-note-2014-classe-moyenne
   title: Peut-on parler d’émergence d’une classe moyenne en Afrique ?
   type: policy_note
-  date: '2015-01-05'
+  date: 2014-11
   language: fr
   authors: [Foly Ananou]
   venue_or_outlet: L'Afrique des Idées, Note d'analyse n°3 (novembre 2014)
@@ -31,20 +47,5 @@
   tags: [middle class]
   status: published
   source: Google Scholar entry 'Note d’Analyse-ADI-N 3, Novembre 2014' + L'Afrique des Idées page (author Foly ANANOU,
-    posted 2015-01-05)
-  verified: true
-- id: ananou2015taxgap
-  title: Exploring the dynamic of the tax gap in Africa
-  type: working_paper
-  date: '2015'
-  language: en
-  authors: [Foly Ananou, Georges Vivien Houngbonon]
-  venue_or_outlet: Paris School of Economics & Orange
-  url: ''
-  doi: ''
-  pdf: ''
-  abstract: ''
-  tags: [public finance]
-  status: working_paper
-  source: Google Scholar profile user=ux2mKAYAAAAJ (no online copy found; venue as listed by Scholar)
+    posted 2015-01-05); dated November 2014 as given by the note itself (posted online 2015-01-05)
   verified: true

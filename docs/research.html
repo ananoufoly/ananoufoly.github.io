@@ -31,13 +31,13 @@ description: Research — publications and working papers by Foly Ananou.
 
     <h2 class="section-heading">Publications</h2>
     <ul class="pub-list filterable">
-      {%- for it in pubs %}{% include item.html item=it %}{% endfor %}
+      {%- for it in pubs %}{% include item.html item=it anchor=true %}{% endfor %}
     </ul>
 
     {%- if wps.size > 0 %}
     <h2 class="section-heading" style="margin-top:40px">Working papers</h2>
     <ul class="pub-list filterable">
-      {%- for it in wps %}{% include item.html item=it %}{% endfor %}
+      {%- for it in wps %}{% include item.html item=it anchor=true %}{% endfor %}
     </ul>
     {%- endif %}
 
@@ -49,9 +49,9 @@ description: Research — publications and working papers by Foly Ananou.
     {%- endif %}
     {%- assign awards = site.data.awards | where: "verified", true | sort: "date" | reverse -%}
     {%- if awards.size > 0 %}
-    <h2 class="section-heading" style="margin-top:40px">Awards &amp; honours</h2>
+    <h2 class="section-heading" id="awards" style="margin-top:40px">Awards &amp; honours</h2>
     <ul class="pub-list awards-list">
-      {%- for it in awards %}{% include item.html item=it %}{% endfor %}
+      {%- for it in awards %}{% include item.html item=it anchor=true %}{% endfor %}
     </ul>
     {%- endif %}
     <p class="feed-empty" id="no-match" hidden>Nothing matches these filters.</p>
