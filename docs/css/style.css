@@ -471,3 +471,5 @@ a:hover { text-decoration: underline; }
 @media (max-width: 600px) {
   .nav-links { flex-wrap: wrap; gap: 12px 18px; }
 }
+.year-heading { margin-top: 40px; }
+.year-heading:first-of-type { margin-top: 0; }

@@ -24,6 +24,7 @@ for name in LISTS:
         if not str(it.get("source", "")).strip(): errors.append(f"{where}: empty source")
         if it.get("id") in ids: errors.append(f"{where}: duplicate id")
         ids.add(it.get("id"))
+        if not isinstance(it.get("date"), str): errors.append(f"{where}: date must be a quoted string")
         if not DATE.match(str(it.get("date", ""))): errors.append(f"{where}: bad date {it.get('date')!r}")
         if it.get("language") not in ("fr", "en"): errors.append(f"{where}: language must be fr|en")
         if it.get("status") not in STATUS: errors.append(f"{where}: bad status {it.get('status')!r}")

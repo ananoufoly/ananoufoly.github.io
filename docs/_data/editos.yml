@@ -1,49 +1,964 @@
 # Op-eds, blog posts, think-tank pieces. Only verified: true entries are rendered.
 
+- id: adi-2026-identity-the-infrastructure-africas
+  title: 'Identity: the infrastructure Africa’s financial system is missing'
+  type: think_tank
+  date: '2026-10-01'
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/identity-the-infrastructure-africas-financial-system-is-missing/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [financial inclusion, banking]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2026-10-01'
+  verified: true
+- id: adi-2026-is-africa-ready-for-neobanks
+  title: Is Africa ready for neobanks?
+  type: think_tank
+  date: '2026-07-03'
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/is-africa-ready-for-neobanks/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [banking, mobile money, financial inclusion]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2026-07-03'
+  verified: true
 - id: fa-2026-06-senegal-benin
-  title: "Sénégal et Bénin : deux trajectoires, un même traitement"
+  title: 'Sénégal et Bénin : deux trajectoires, un même traitement'
   type: oped
-  date: "2026-06-10"
+  date: '2026-06-10'
   language: fr
   authors: [Foly Ananou, Beringer Gloglo]
   venue_or_outlet: Financial Afrik
   url: https://www.financialafrik.com/2026/06/10/senegal-et-benin-deux-trajectoires-un-meme-traitement/
-  doi: ""
-  pdf: ""
-  abstract: ""
+  doi: ''
+  pdf: ''
+  abstract: ''
   tags: [WAEMU, sovereign debt, Senegal, Benin]
   status: published
-  source: "Article page byline 'Par Dr. Ananou Foly, Économiste & Dr. Gloglo Beringer'; datePublished 2026-06-10"
+  source: Article page byline 'Par Dr. Ananou Foly, Économiste & Dr. Gloglo Beringer'; datePublished 2026-06-10
   verified: true
-
 - id: adi-2026-06-mobile-money
-  title: "Africa's mobile money revolution has outgrown its rules"
+  title: Africa's mobile money revolution has outgrown its rules
   type: think_tank
-  date: "2026-06-08"
+  date: '2026-06-08'
   language: en
   authors: [Foly Ananou]
   venue_or_outlet: L'Afrique des Idées
   url: https://lafriquedesidees.org/publications/africa-mobile-money-regulation-gaps/
-  doi: ""
-  pdf: ""
-  abstract: ""
+  doi: ''
+  pdf: ''
+  abstract: ''
   tags: [mobile money, regulation, financial inclusion]
   status: published
-  source: "Article page (author name on page); datePublished 2026-06-08"
+  source: Article page (author name on page); datePublished 2026-06-08
   verified: true
-
 - id: fa-2026-04-uemoa-paradoxe
-  title: "UEMOA : Le paradoxe du financement souverain en monnaie locale"
+  title: 'UEMOA : Le paradoxe du financement souverain en monnaie locale'
   type: oped
-  date: "2026-04-28"
+  date: '2026-04-28'
   language: fr
   authors: [Foly Ananou]
   venue_or_outlet: Financial Afrik
   url: https://www.financialafrik.com/2026/04/28/uemoa-le-paradoxe-du-financement-souverain-en-monnaie-locale/
-  doi: ""
-  pdf: ""
-  abstract: ""
+  doi: ''
+  pdf: ''
+  abstract: ''
   tags: [WAEMU, sovereign debt]
   status: published
-  source: "Article page (author name on page); datePublished 2026-04-28"
+  source: Article page (author name on page); datePublished 2026-04-28
+  verified: true
+- id: adi-2021-les-banques-africaines-a-lere-des-re
+  title: Les banques africaines à l’ère des règles prudentielles de Bâle III
+  type: think_tank
+  date: '2021-02-19'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-banques-africaines-a-lere-des-regles-prudentielles-de-bale-iii/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [banking]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2021-02-19'
+  verified: true
+- id: adi-2018-la-chine-en-afrique-un-loup-dans-la
+  title: 'La Chine en Afrique : un loup dans la bergerie ?'
+  type: think_tank
+  date: '2018-09-11'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/chine-afrique-loup-bergerie/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [China]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2018-09-11'
+  verified: true
+- id: adi-2018-la-malediction-des-matieres-premiere
+  title: 'La malédiction des matières premières en Afrique : fantasme ou réalité ?'
+  type: think_tank
+  date: '2018-07-05'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/malediction-matieres-premieres-afrique-fantasme-realite/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2018-07-05'
+  verified: true
+- id: ja-2018-zone-de-libre-echange-continentale-p
+  title: 'Zone de libre-échange continentale : pourquoi se hâter ?'
+  type: oped
+  date: '2018-04-04'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: Jeune Afrique
+  url: https://www.jeuneafrique.com/548232/economie-entreprises/zone-de-libre-echange-continentale-pourquoi-se-hater/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [trade]
+  status: published
+  source: Article page byline 'Par Foly Ananou' + author bio naming L'Afrique des Idées; datePublished 2018-04-04
+  verified: true
+- id: conversation-2018-impots-afrique
+  title: Collecte-t-on trop ou trop peu d’impôts en Afrique ?
+  type: oped
+  date: '2018-02-26'
+  language: fr
+  authors: [Foly Ananou, Georges Vivien Houngbonon]
+  venue_or_outlet: The Conversation
+  url: https://theconversation.com/collecte-t-on-trop-ou-trop-peu-dimpots-en-afrique-92131
+  doi: 10.64628/aak.qvaj9t3ue
+  pdf: ''
+  abstract: ''
+  tags: [public finance]
+  status: published
+  source: 'Article page: author ''Ananou Foly, Doctorant en Economie, Université de Limoges''; text credits Foly
+    Ananou and Georges Vivien Houngbonon; Crossref DOI 10.64628/aak.qvaj9t3ue'
+  verified: true
+- id: adi-2018-perspectives-economiques-en-afrique
+  title: 'Perspectives Economiques en Afrique : quand la Bad se réapproprie l’exercice !'
+  type: think_tank
+  date: '2018-01-29'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/perspectives-economiques-afrique-bad-se-reapproprie-lexercice/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [growth]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2018-01-29'
+  verified: true
+- id: adi-2018-une-voix-africaine
+  title: Une voix africaine !
+  type: think_tank
+  date: '2018-01-06'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/une-voix-africaine/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2018-01-06'
+  verified: true
+- id: adi-2017-collecte-t-on-trop-ou-pas-assez-dimp
+  title: Collecte-t-on trop ou pas assez d’impôts en Afrique ?
+  type: think_tank
+  date: '2017-12-10'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/collecte-t-on-assez-dimpots-afrique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [public finance]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2017-12-10'
+  verified: true
+- id: adi-2017-politisez-vous-une-invitation-a-la-c
+  title: '« Politisez-vous ! » : une invitation à la chose politique pour la jeunesse africaine'
+  type: think_tank
+  date: '2017-10-04'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/politisez-invitation-a-chose-politique-jeunesse-africaine/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2017-10-04'
+  verified: true
+- id: ja-2017-il-est-temps-de-penser-a-lapres-fran
+  title: Il est temps de penser à l’après-Franc CFA !
+  type: oped
+  date: '2017-09-01'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: Jeune Afrique
+  url: https://www.jeuneafrique.com/470194/economie-entreprises/il-est-temps-de-penser-a-lapres-franc-cfa/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [WAEMU]
+  status: published
+  source: Article page byline 'Par Foly Ananou' + author bio naming L'Afrique des Idées; datePublished 2017-09-01
+  verified: true
+- id: adi-2017-le-maroc-dans-la-cedeao
+  title: Le Maroc dans la Cédéao ?
+  type: think_tank
+  date: '2017-06-17'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/maroc-cedeao/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [trade]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2017-06-17'
+  verified: true
+- id: adi-2017-quelles-perspectives-de-croissance-p
+  title: Quelles perspectives de croissance pour l’Afrique en 2017 ?
+  type: think_tank
+  date: '2017-06-12'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/perspectives-de-croissance-lafrique-2017/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [growth]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2017-06-12'
+  verified: true
+- id: adi-2017-gambie-une-demonstration-du-loup-et
+  title: 'Gambie : une démonstration du « loup et l’agneau » de la Fontaine'
+  type: think_tank
+  date: '2017-01-21'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/gambie-demonstration-loup-de-lagneau-de-fontaine/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2017-01-21'
+  verified: true
+- id: adi-2017-lafrique-des-idees-en-2016
+  title: L’Afrique des Idées en 2016
+  type: think_tank
+  date: '2017-01-06'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/lafrique-idees-2016/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2017-01-06'
+  verified: true
+- id: adi-2016-vers-une-nouvelle-crise-de-la-dette
+  title: Vers une nouvelle crise de la dette en Afrique subsaharienne ?
+  type: think_tank
+  date: '2016-07-08'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/vers-nouvelle-crise-de-dette-afrique-subsaharienne/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [sovereign debt]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2016-07-08'
+  verified: true
+- id: adi-2016-financer-lurbanisation-en-afrique-de
+  title: 'Financer l’urbanisation en Afrique : de la nécessité d’une fiscalité locale forte !'
+  type: think_tank
+  date: '2016-05-27'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/financer-urbanisation-afrique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [public finance, infrastructure]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2016-05-27'
+  verified: true
+- id: adi-2016-poverty-in-africa
+  title: Poverty in Africa
+  type: think_tank
+  date: '2016-03-13'
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/is-africa-the-continent-of-the-poor/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [poverty]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2016-03-13'
+  verified: true
+- id: adi-2016-are-african-states-able-to-finance-t
+  title: Are African States able to finance their development ?
+  type: think_tank
+  date: '2016-01-03'
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/are-african-states-able-to-finance-the-development-of-their-country/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [public finance]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2016-01-03'
+  verified: true
+- id: adi-2015-les-etats-africains-sont-ils-capable
+  title: Les Etats africains sont-ils capables de financer le développement de leur pays ?
+  type: think_tank
+  date: '2015-10-19'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-etats-africains-sont-ils-capables-de-financer-le-developpement-de-leur-pays/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [public finance]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-10-19'
+  verified: true
+- id: adi-2015-afrique-le-continent-des-pauvres
+  title: 'Afrique : le continent des pauvres ?'
+  type: think_tank
+  date: '2015-10-17'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/afrique-le-continent-des-pauvres/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [poverty]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-10-17'
+  verified: true
+- id: adi-2015-lafrique-devrait-elle-sinquieter-du
+  title: L’Afrique devrait elle s’inquiéter du ralentissement économique en Chine ?
+  type: think_tank
+  date: '2015-09-26'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/lafrique-devrait-elle-sinquieter-du-ralentissement-economique-en-chine/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [China]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-09-26'
+  verified: true
+- id: adi-2015-pourquoi-la-cote-divoire-attire-tant
+  title: Pourquoi la Côte d’Ivoire attire tant les investisseurs ?
+  type: think_tank
+  date: '2015-09-18'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/pourquoi-la-cote-divoire-attire-tant-les-investisseurs/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-09-18'
+  verified: true
+- id: adi-2015-au-dela-de-laspect-ludique-du-sport
+  title: Au-delà de l’aspect ludique du sport
+  type: think_tank
+  date: '2015-08-31'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/au-dela-laspect-ludique-du-sport/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-08-31'
+  verified: true
+- id: adi-2015-les-strategies-de-reduction-de-la-pa
+  title: Les stratégies de réduction de la pauvreté (DSRP) ont-elles été efficaces ?
+  type: think_tank
+  date: '2015-07-31'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-strategies-de-reduction-de-la-pauvrete-dsrp-ont-elles-ete-efficaces/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [poverty]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-07-31'
+  verified: true
+- id: adi-2015-pourquoi-des-donnees-fiables-sont-el
+  title: Pourquoi des données fiables sont-elles nécessaires dans la lutte contre la pauvreté ?
+  type: think_tank
+  date: '2015-06-22'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/pourquoi-des-donnees-fiables-sont-elles-necessaires-dans-la-lutte-contre-la-pauvrete/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [poverty]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-06-22'
+  verified: true
+- id: adi-2015-quel-role-pour-letat-dans-le-finance
+  title: Quel rôle pour l’Etat dans le financement de l’économie verte ?
+  type: think_tank
+  date: '2015-05-01'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/quel-role-pour-letat-dans-le-financement-de-leconomie-verte/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-05-01'
+  verified: true
+- id: adi-2015-placer-le-secteur-financier-au-cur-d
+  title: Placer le secteur financier au cœur de la lutte contre la fuite des capitaux
+  type: think_tank
+  date: '2015-04-03'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/placer-le-secteur-financier-au-coeur-de-la-lutte-contre-la-fuite-des-capitaux/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [capital flight]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-04-03'
+  verified: true
+- id: adi-2015-le-systeme-financier-dans-les-pays-a
+  title: Le système financier dans les pays africains favorise-t-il la fuite des capitaux ?
+  type: think_tank
+  date: '2015-03-02'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/le-systeme-financier-dans-les-pays-africains-favorise-t-il-la-fuite-des-capitaux/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [capital flight]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-03-02'
+  verified: true
+- id: adi-2015-reduction-de-la-pauvrete-et-des-ineg
+  title: 'Réduction de la pauvreté et des inégalités : quelques leçons des BRICS ?'
+  type: think_tank
+  date: '2015-01-16'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/reduction-de-la-pauvrete-et-des-inegalites-quelques-lecons-des-brics/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [poverty]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2015-01-16'
+  verified: true
+- id: adi-2014-les-brics-ont-ils-reellement-reussi
+  title: Les BRICS ont-ils réellement réussi à réduire la pauvreté ?
+  type: think_tank
+  date: '2014-12-05'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-brics-ont-ils-reellement-reussi-le-pari-de-la-reduction-de-la-pauvrete/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [poverty]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-12-05'
+  verified: true
+- id: adi-2014-the-potential-economic-impact-of-ebo
+  title: The Potential Economic Impact of Ebola virus
+  type: think_tank
+  date: '2014-10-21'
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/economic-impact-of-ebola-virus/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-10-21'
+  verified: true
+- id: adi-2014-les-zones-economiques-speciales-un-o
+  title: 'Les zones économiques spéciales : un outil de développement encore mal utilisé'
+  type: think_tank
+  date: '2014-10-17'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-zones-economiques-speciales-outil-developpement-encore-mal-utilise/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [trade]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-10-17'
+  verified: true
+- id: adi-2014-quelle-serait-lincidence-economique
+  title: Quelle serait l’incidence économique du virus Ebola ?
+  type: think_tank
+  date: '2014-08-29'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/quelle-lincidence-economique-du-virus-ebola/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-08-29'
+  verified: true
+- id: adi-2014-comment-financer-les-infrastructures
+  title: Comment financer les infrastructures ?
+  type: think_tank
+  date: '2014-08-15'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/financement-infrastructures-lecon-dasie/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [infrastructure]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-08-15'
+  verified: true
+- id: adi-2014-lafrique-discute-son-developpement-s
+  title: L’Afrique discute son développement socio-économique
+  type: think_tank
+  date: '2014-06-20'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/lafrique-discute-developpement-socio-economique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-06-20'
+  verified: true
+- id: adi-2014-islamic-finance-an-opportunity-for-d
+  title: 'Islamic Finance: an opportunity for development?'
+  type: think_tank
+  date: '2014-06-18'
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/islamic-finance-an-opportunity/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [Islamic finance]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-06-18'
+  verified: true
+- id: adi-2014-repenser-la-supervision-bancaire-en
+  title: Repenser la supervision bancaire en Afrique
+  type: think_tank
+  date: '2014-05-26'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/repenser-supervision-bancaire-en-afrique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [banking]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-05-26'
+  verified: true
+- id: adi-2014-lafrique-peut-elle-sendetter-davanta
+  title: L’Afrique peut-elle s’endetter davantage ?
+  type: think_tank
+  date: '2014-05-02'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/lafrique-il-sendetter-davantage/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [sovereign debt]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-05-02'
+  verified: true
+- id: adi-2014-la-dette-handicape-t-elle-reellement
+  title: La dette handicape-t-elle réellement l’économie ?
+  type: think_tank
+  date: '2014-04-25'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/dette-handicape-t-reellement-leconomie/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [sovereign debt]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-04-25'
+  verified: true
+- id: adi-2014-finance-islamique-une-opportunite-a
+  title: 'Finance islamique : une opportunité à saisir ?'
+  type: think_tank
+  date: '2014-04-04'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/finance-islamique-opportunite-saisir/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [Islamic finance]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-04-04'
+  verified: true
+- id: adi-2014-acces-a-lenergie-pourquoi-le-secteur
+  title: 'Accès à l’énergie : Pourquoi le secteur privé est un partenaire sûr pour la valorisation des ressources
+    locales ?'
+  type: think_tank
+  date: '2014-03-29'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/acces-lenergie-secteur-prive-partenaire-valorisation-ressources-locales/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [energy]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-03-29'
+  verified: true
+- id: adi-2014-les-classes-moyennes-en-afrique-quel
+  title: 'Les classes moyennes en Afrique : quels impacts sur l’environnement socio-économique?'
+  type: think_tank
+  date: '2014-03-17'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-classes-moyennes-en-afrique-quels-impacts-sur-lenvironnement-socio-economique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-03-17'
+  verified: true
+- id: adi-2014-the-world-bank-economic-prospects-fo
+  title: 'The World Bank economic prospects for Africa in 2014: Why are we still far from perfect?'
+  type: think_tank
+  date: '2014-03-05'
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/world-bank-economic-prospects-africa-2014-still-far-perfect/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [banking, growth]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-03-05'
+  verified: true
+- id: adi-2014-les-classes-moyennes-en-afrique-qui
+  title: 'Les classes moyennes en Afrique : Qui en fait partie ?'
+  type: think_tank
+  date: '2014-03-03'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-classes-moyennes-en-afrique-de-qui-sagit-il/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-03-03'
+  verified: true
+- id: adi-2014-les-classes-moyennes-en-afrique-un-m
+  title: 'Les classes moyennes en Afrique : un moteur de développement ?'
+  type: think_tank
+  date: '2014-02-24'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-classes-moyennes-en-afrique-moteur-de-developpement/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-02-24'
+  verified: true
+- id: adi-2014-les-perspectives-economiques-de-2014
+  title: Les perspectives économiques de 2014 selon la Banque Mondiale
+  type: think_tank
+  date: '2014-02-10'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/lafrique-subsaharienne-en-2014-selon-la-banque-mondiale/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [growth]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-02-10'
+  verified: true
+- id: adi-2014-pourquoi-lagriculture-en-afrique-ne
+  title: Pourquoi l’agriculture en Afrique ne se développe t’elle pas ?
+  type: think_tank
+  date: '2014-01-13'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/pourquoi-lagriculture-en-afrique-ne-se-developpe-til-pas/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2014-01-13'
+  verified: true
+- id: adi-2013-les-subventions-a-lenergie-sont-elle
+  title: Les subventions à l’énergie sont-elles nécessaires ?
+  type: think_tank
+  date: '2013-11-25'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-subventions-lenergie-sont-ils-necessaire/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [public finance, energy]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-11-25'
+  verified: true
+- id: adi-2013-les-performances-economiques-de-lafr
+  title: 'Les performances économiques de l’Afrique : au delà des ressources naturelles'
+  type: think_tank
+  date: '2013-11-18'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-performances-economiques-de-lafrique-au-dela-ressources/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [growth]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-11-18'
+  verified: true
+- id: adi-2013-faut-il-supprimer-les-subventions-a
+  title: Faut-il supprimer les subventions à l’énergie en Afrique ?
+  type: think_tank
+  date: '2013-11-04'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/faudrait-il-supprimer-les-subventions-lenergie-en-afrique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [public finance, energy]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-11-04'
+  verified: true
+- id: adi-2013-assurer-une-croissance-inclusive-pou
+  title: 'Assurer une croissance inclusive pour l’Afrique : la vision africaine'
+  type: think_tank
+  date: '2013-10-21'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/assurer-croissance-inclusive-lafrique-vision-africaine/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [growth]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-10-21'
+  verified: true
+- id: adi-2013-le-secteur-financier-de-luemoa-serai
+  title: Le secteur financier de l’UEMOA serait-il en retard par rapport au reste de l’Afrique subsaharienne?
+  type: think_tank
+  date: '2013-10-04'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/secteur-financier-luemoa-il-en-retard-rapport-au-reste-lafrique-subsaharienne/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [WAEMU]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-10-04'
+  verified: true
+- id: adi-2013-la-percee-qatarienne-en-afrique
+  title: La percée qatarienne en Afrique
+  type: think_tank
+  date: '2013-09-02'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/percee-qatari-en-afrique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-09-02'
+  verified: true
+- id: adi-2013-optimiser-les-fonds-de-garantie-pour
+  title: Optimiser les Fonds de Garantie pour une meilleure prise en charge des PME en Afrique
+  type: think_tank
+  date: '2013-07-22'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/optimiser-les-fonds-de-garantie-pour-une-meilleure-prise-en-charge-des-pme-en-afrique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-07-22'
+  verified: true
+- id: adi-2013-les-transferts-de-fonds-contribuent
+  title: Les transferts de fonds contribuent-ils au développement économique ?
+  type: think_tank
+  date: '2013-07-01'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-transferts-de-fonds-contribuent-ils-au-developpement-economique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [remittances]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-07-01'
+  verified: true
+- id: adi-2013-les-fonds-de-garantie-une-necessite
+  title: 'Les Fonds de garantie : une nécessité pour le développement'
+  type: think_tank
+  date: '2013-06-10'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-fonds-de-garantie-une-necessite-pour-le-developpement-partie-1/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-06-10'
+  verified: true
+- id: adi-2013-les-transferts-de-fonds-laide-privee
+  title: 'Les transferts de fonds : L’Aide «privée» africaine…au développement?'
+  type: think_tank
+  date: '2013-06-07'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/les-transferts-de-fonds-laide-privee-africaineau-developpement-part-1/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [remittances]
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-06-07'
+  verified: true
+- id: adi-2013-la-facture-energetique-un-frein-pour
+  title: La facture énergétique, un frein pour une bonne performance économique de l’Afrique ?
+  type: think_tank
+  date: '2013-04-19'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/la-facture-energetique-un-frein-pour-une-bonne-performance-economique-de-lafrique/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-04-19'
+  verified: true
+- id: adi-2013-linde-un-partenaire-qui-nous-aime
+  title: 'L’Inde : un partenaire qui nous aime ?'
+  type: think_tank
+  date: '2013-03-08'
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/linde-un-partenaire-qui-nous-aime/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'Article page: author ''Foly ANANOU'' (schema.org), datePublished 2013-03-08'
   verified: true
