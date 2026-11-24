@@ -6,7 +6,8 @@
 #
 # Model: repo variable PORTFOLIO_AGENT_MODEL (default claude-sonnet-5-5; e.g. claude-opus-5-5, claude-haiku-5-5)
 # Pause: Settings -> Secrets and variables -> Actions -> Variables -> PORTFOLIO_AGENT_PAUSED = true
-# Needs: repo secret ANTHROPIC_API_KEY, and Settings -> Actions -> General ->
+# Needs: repo secret CLAUDE_CODE_OAUTH_TOKEN (Pro/Max subscription, from `claude setup-token`)
+#        or ANTHROPIC_API_KEY (pay-per-use), and Settings -> Actions -> General ->
 #        "Allow GitHub Actions to create and approve pull requests" ticked.
 name: Update portfolio
 
@@ -78,7 +79,9 @@ jobs:
         if: steps.mode.outputs.mode != 'skip'
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Subscription token (claude setup-token) wins when set; otherwise the API key is used.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN == '' && secrets.ANTHROPIC_API_KEY || '' }}
           prompt: |
             Today is ${{ steps.mode.outputs.today }}.
             Read .github/agent/${{ steps.mode.outputs.mode }}.md and follow it exactly.
