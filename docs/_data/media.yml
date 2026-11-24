@@ -15,6 +15,22 @@
   status: published
   source: 'YouTube page: title names ''Foly Ananou - Économiste, Société Générale''; uploadDate 2025-03-10'
   verified: true
+- id: tv5monde-2022-11-meloni-franc-cfa
+  title: 'Accusation de Giorgia Meloni contre la France : le franc CFA à l''origine des migrations ?'
+  type: tv
+  date: '2022-11-23'
+  language: fr
+  authors: []
+  venue_or_outlet: TV5MONDE Info, Afrique (décryptage, by Benjamin Beraud)
+  url: https://information.tv5monde.com/afrique/accusation-de-giorgia-meloni-contre-la-france-le-franc-cfa-lorigine-des-migrations-1454301
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [WAEMU, monetary policy]
+  status: published
+  source: 'TV5MONDE page (via Web Archive copy of 2025-12-29): video captions ''Foly Ananou, économiste du think
+    tank de l''Afrique des Idées'', several quotes; dated 23 Nov 2022 16h35; URL supplied by owner'
+  verified: true
 - id: chinemag-2015-la-societe-africaine-peu-influen
   title: La société africaine peu influencée par la Chine
   type: interview
