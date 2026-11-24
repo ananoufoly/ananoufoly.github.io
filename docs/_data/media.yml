@@ -1,0 +1,80 @@
+# Press coverage, interviews, quotes, podcasts. Only verified: true entries are rendered.
+
+- id: podcast-2025-fdse-episode-4
+  title: '#PODCAST - Foly Ananou - Économiste, Société Générale (épisode #4)'
+  type: podcast
+  date: '2025-03-10'
+  language: fr
+  authors: []
+  venue_or_outlet: Faculté de Droit et des Sciences Économiques (YouTube)
+  url: https://www.youtube.com/watch?v=5shF667ZzE8
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: []
+  status: published
+  source: 'YouTube page: title names ''Foly Ananou - Économiste, Société Générale''; uploadDate 2025-03-10'
+  verified: true
+- id: chinemag-2015-la-societe-africaine-peu-influen
+  title: La société africaine peu influencée par la Chine
+  type: interview
+  date: '2015-10-23'
+  language: fr
+  authors: []
+  venue_or_outlet: Chine Magazine
+  url: https://www.chine-magazine.com/la-societe-africaine-peu-influencee-par-la-chine/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [China]
+  status: published
+  source: 'Article: interview with ''Foly Ananou, statisticien économiste et responsable du pôle économie du think-tank
+    l''Afrique des Idées''; dated 2015-10-23'
+  verified: true
+- id: chinemag-2015-la-chine-serait-depourvue-de-tou
+  title: La Chine serait « dépourvue de toute velléité colonialiste »
+  type: interview
+  date: '2015-10-21'
+  language: fr
+  authors: []
+  venue_or_outlet: Chine Magazine
+  url: https://www.chine-magazine.com/la-chine-serait-depourvue-de-toute-velleite-colonialiste/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [China]
+  status: published
+  source: 'Article: interview with ''Foly Ananou, statisticien économiste et responsable du pôle économie du think-tank
+    l''Afrique des Idées''; dated 2015-10-21'
+  verified: true
+- id: chinemag-2015-comprendre-les-relations-afro-ch
+  title: Comprendre les relations afro-chinoises dans le contexte actuel
+  type: interview
+  date: '2015-10-16'
+  language: fr
+  authors: []
+  venue_or_outlet: Chine Magazine
+  url: https://www.chine-magazine.com/comprendre-les-relations-afro-chinoises-dans-le-contexte-actuel/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [China]
+  status: published
+  source: 'Article: interview with ''Foly Ananou, statisticien économiste et responsable du pôle économie du think-tank
+    l''Afrique des Idées''; dated 2015-10-16'
+  verified: true
+- id: chinemag-2015-sun-shuzhong-rassure-les-dirigea
+  title: Sun Shuzhong rassure les dirigeants africains
+  type: quote
+  date: '2015-10-01'
+  language: fr
+  authors: []
+  venue_or_outlet: Chine Magazine
+  url: https://www.chine-magazine.com/sun-shuzhong-rassure-les-pays-africains/
+  doi: ''
+  pdf: ''
+  abstract: ''
+  tags: [China]
+  status: published
+  source: Article quotes 'l'économiste Foly Ananou' via Afrique Inside; dated 2015-10-01
+  verified: true

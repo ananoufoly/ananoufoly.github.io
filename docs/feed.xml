@@ -1,0 +1,28 @@
+---
+layout: null
+---
+{%- include all_items.html -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Foly Ananou — new work</title>
+  <link>{{ site.url }}/</link>
+  <atom:link href="{{ site.url }}/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>{{ site.description | xml_escape }}</description>
+  <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+  {%- for it in all_items limit: 50 %}
+  {%- assign d = it.date | append: "" -%}
+  {%- if d.size == 4 %}{% assign d = d | append: "-01-01" %}{% elsif d.size == 7 %}{% assign d = d | append: "-01" %}{% endif %}
+  <item>
+    <title>{{ it.title | xml_escape }}</title>
+    {%- if it.url != "" and it.url %}
+    <link>{{ it.url | xml_escape }}</link>
+    {%- endif %}
+    <guid isPermaLink="false">{{ site.url }}/#{{ it.id }}</guid>
+    <pubDate>{{ d | date_to_rfc822 }}</pubDate>
+    <category>{{ it.type }}</category>
+    <description>{{ it.venue_or_outlet | xml_escape }}{% if it.abstract != "" and it.abstract %} — {{ it.abstract | xml_escape }}{% endif %}</description>
+  </item>
+  {%- endfor %}
+</channel>
+</rss>

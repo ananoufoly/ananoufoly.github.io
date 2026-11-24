@@ -1,0 +1,12 @@
+---
+layout: default
+nav: media
+title: "In the media"
+description: "Press coverage, interviews and podcasts featuring Foly Ananou."
+---
+{%- assign items = site.data.media | where: "verified", true | sort: "date" | reverse -%}
+    <h1 class="page-title">In the media</h1>
+    {%- if items.size == 0 %}<p class="feed-empty">Nothing here yet.</p>{% endif %}
+    <ul class="pub-list">
+      {%- for it in items %}{% include item.html item=it show_kind=true %}{% endfor %}
+    </ul>

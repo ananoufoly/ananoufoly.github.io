@@ -1,0 +1,3 @@
+# Bookkeeping for the update agent. last_run = date of the last completed weekly scan.
+last_run: "2026-11-24"
+schema_version: 1

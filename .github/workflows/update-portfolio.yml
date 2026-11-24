@@ -1,0 +1,125 @@
+# Keeps ananoufoly.github.io up to date through pull requests the owner approves.
+#
+# - Weekly (Monday 06:00 UTC): scans for new work, checks links, opens ONE PR if anything changed.
+# - Manual: Actions tab -> "Update portfolio" -> Run workflow, optionally pasting a URL or text.
+# - Intake file: commit something into inbox/new_item.md on main and a PR follows.
+#
+# Model: repo variable PORTFOLIO_AGENT_MODEL (default claude-sonnet-5-5; e.g. claude-opus-5-5, claude-haiku-5-5)
+# Pause: Settings -> Secrets and variables -> Actions -> Variables -> PORTFOLIO_AGENT_PAUSED = true
+# Needs: repo secret ANTHROPIC_API_KEY, and Settings -> Actions -> General ->
+#        "Allow GitHub Actions to create and approve pull requests" ticked.
+name: Update portfolio
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      item:
+        description: "One item to add: a URL, a DOI, or a few lines. Leave empty for the full weekly scan."
+        required: false
+        default: ""
+  push:
+    branches: [main]
+    paths: [inbox/new_item.md]
+
+concurrency:
+  group: update-portfolio
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  update:
+    if: vars.PORTFOLIO_AGENT_PAUSED != 'true' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install --quiet pyyaml
+
+      - name: Decide what to do
+        id: mode
+        env:
+          ITEM: ${{ github.event.inputs.item }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          item_file="inbox/.item.txt"
+          if [ -n "$ITEM" ]; then
+            printf '%s\n' "$ITEM" > "$item_file"; mode=intake
+          elif [ "$EVENT" = "push" ]; then
+            # Only act if something was pasted below the template comment.
+            sed '/<!--/,/-->/d' inbox/new_item.md | sed '/^[[:space:]]*$/d' > "$item_file"
+            if [ -s "$item_file" ]; then mode=intake; else mode=skip; fi
+          else
+            mode=weekly
+          fi
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "item_file=$item_file" >> "$GITHUB_OUTPUT"
+          echo "today=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          echo "Mode: $mode"
+
+      - name: Check links
+        if: steps.mode.outputs.mode == 'weekly'
+        id: links
+        run: python3 scripts/check_links.py inbox/.link_report.md | tee -a "$GITHUB_OUTPUT"
+
+      - name: Run the update agent
+        if: steps.mode.outputs.mode != 'skip'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Today is ${{ steps.mode.outputs.today }}.
+            Read .github/agent/${{ steps.mode.outputs.mode }}.md and follow it exactly.
+            ITEM_FILE: ${{ steps.mode.outputs.item_file }}
+            LINK_REPORT: inbox/.link_report.md
+            Do not commit, push, or open a pull request yourself; the workflow does that.
+          claude_args: |
+            --model ${{ vars.PORTFOLIO_AGENT_MODEL || 'claude-sonnet-5-5' }}
+            --max-turns 40
+            --allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash(python3 scripts/validate_data.py),Bash(curl -s *)"
+
+      - name: Validate data files
+        if: steps.mode.outputs.mode != 'skip'
+        run: python3 scripts/validate_data.py
+
+      - name: Decide whether to open a PR
+        if: steps.mode.outputs.mode != 'skip'
+        id: diff
+        env:
+          DEAD: ${{ steps.links.outputs.dead }}
+        run: |
+          changed=$(git status --porcelain -- docs/_data inbox/new_item.md | grep -v 'docs/_data/meta.yml' | wc -l)
+          body=inbox/.pr_body.md
+          [ -f "$body" ] || echo "The agent left no summary; see the diff." > "$body"
+          if [ "$changed" -gt 0 ] || [ "${DEAD:-0}" -gt 0 ]; then open=true; else open=false; fi
+          if head -1 "$body" | grep -q '^NOTHING_NEW' && [ "${DEAD:-0}" -eq 0 ]; then open=false; fi
+          sed -i '1{/^NOTHING_NEW/d}' "$body"
+          mv "$body" "$RUNNER_TEMP/pr_body.md"
+          rm -f inbox/.item.txt inbox/.link_report.md
+          echo "open=$open" >> "$GITHUB_OUTPUT"
+          echo "Files changed: $changed, dead links: ${DEAD:-0}, open PR: $open"
+
+      - name: Open the pull request
+        if: steps.diff.outputs.open == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: portfolio-update/${{ steps.mode.outputs.today }}-${{ github.run_number }}
+          title: "Portfolio update – ${{ steps.mode.outputs.today }}"
+          body-path: ${{ runner.temp }}/pr_body.md
+          commit-message: "Portfolio update – ${{ steps.mode.outputs.today }}"
+          add-paths: |
+            docs/_data/*.yml
+            inbox/new_item.md
+          delete-branch: true

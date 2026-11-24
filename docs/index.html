@@ -1,55 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Foly Ananou — financial economist, writer, and occasional builder of small tools.">
-  <title>Foly Ananou</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+---
+layout: default
+nav: home
+description: Foly Ananou — financial economist, writer, and occasional builder of small tools.
+---
+{%- assign p = site.data.profile -%}
+{%- include all_items.html -%}
+    <h1 class="home-name">{{ p.name }}</h1>
+    <p class="home-identity">{{ p.identity }}</p>
+    <p class="home-bio">{{ p.bio }}</p>
 
-<div class="site-container">
-
-  <nav class="site-nav">
-    <a href="index.html" class="nav-name">Foly Ananou</a>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="research.html">Research</a></li>
-      <li><a href="editos.html">Éditos</a></li>
-      <li><a href="cv.html">CV</a></li>
+    <h2 class="section-heading">Latest</h2>
+    <ul class="pub-list latest-list">
+      {%- for it in all_items limit: 5 %}
+      {% include item.html item=it show_kind=true %}
+      {%- endfor %}
     </ul>
-  </nav>
+    <p class="see-all"><a href="/research.html">All research &rarr;</a> &nbsp; <a href="/editos.html">All éditos &rarr;</a></p>
 
-  <main>
-    <h1 class="home-name">Foly Ananou</h1>
-    <p class="home-identity">PhD Economist</p>
-
-    <p class="home-bio">
-      Foly Ananou is a financial economist — which is a polite way of saying he spends his days
-      asking whether banks and governments can actually pay their bills, and why money behaves the
-      way it does. He works on banking, sovereign risk, and the quiet machinery that keeps financial
-      systems standing (or doesn't). When the data gets interesting he writes about it, in French and
-      English, and he is slowly turning a pile of notes called <em>Dakar days</em> into a book.
-    </p>
-
-    <div class="home-nav-links">
-      <a href="research.html">Research</a>
-      <a href="editos.html">Éditos</a>
-      <a href="cv.html">CV</a>
-    </div>
-
-    <div class="home-contact">
-      <a href="mailto:foly.ananou@etu.unilim.fr">foly.ananou@etu.unilim.fr</a>
-      <a href="https://www.linkedin.com/in/foly-ananou/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://twitter.com/folyananou" target="_blank" rel="noopener">Twitter / X</a>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    Foly Ananou &middot; 2026
-  </footer>
-
-</div>
-</body>
-</html>
+    <section id="about" class="about-block">
+      <h2 class="section-heading">About</h2>
+      <ul class="about-list">
+        {%- for a in p.affiliations %}
+        <li><strong>{{ a.role }}</strong>, {{ a.org }}{% if a.since %} <span class="muted">(since {{ a.since }})</span>{% endif %}</li>
+        {%- endfor %}
+        {%- for e in p.education %}
+        <li><strong>{{ e.degree }}</strong>, {% if e.url %}<a href="{{ e.url }}" target="_blank" rel="noopener">{{ e.org }}</a>{% else %}{{ e.org }}{% endif %} <span class="muted">({{ e.year }})</span></li>
+        {%- endfor %}
+      </ul>
+      <div class="home-contact">
+        <a href="mailto:{{ p.email }}">{{ p.email }}</a>
+        {%- for l in p.links %}
+        <a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.label }}</a>
+        {%- endfor %}
+        {%- if p.cv_pdf != "" and p.cv_pdf %}
+        <a href="{{ p.cv_pdf }}">Download CV (PDF)</a>
+        {%- endif %}
+      </div>
+    </section>

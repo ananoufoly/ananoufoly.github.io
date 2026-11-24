@@ -1,0 +1,16 @@
+{%- assign media_n = site.data.media | where: "verified", true | size -%}
+{%- assign projects_n = site.data.projects | where: "verified", true | size -%}
+<nav class="site-nav">
+  <a href="/" class="nav-name">Foly Ananou</a>
+  <ul class="nav-links">
+    <li><a href="/"{% if page.nav == "home" %} class="active"{% endif %}>Home</a></li>
+    <li><a href="/research.html"{% if page.nav == "research" %} class="active"{% endif %}>Research</a></li>
+    <li><a href="/editos.html"{% if page.nav == "editos" %} class="active"{% endif %}>Éditos</a></li>
+    {%- if media_n > 0 %}
+    <li><a href="/media.html"{% if page.nav == "media" %} class="active"{% endif %}>Media</a></li>
+    {%- endif %}
+    {%- if projects_n > 0 %}
+    <li><a href="/projects.html"{% if page.nav == "projects" %} class="active"{% endif %}>Projects</a></li>
+    {%- endif %}
+  </ul>
+</nav>

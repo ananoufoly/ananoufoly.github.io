@@ -1,0 +1,32 @@
+# Static identity shown on Home ("About" block). Edit by hand; the agent must not change it.
+name: Foly Ananou
+identity: PhD Economist
+bio: >-
+  Foly Ananou is a financial economist — which is a polite way of saying he spends his days
+  asking whether banks and governments can actually pay their bills, and why money behaves the
+  way it does. He works on banking, sovereign risk, and the quiet machinery that keeps financial
+  systems standing (or doesn't). When the data gets interesting he writes about it, in French and
+  English.
+affiliations:
+  - role: Economist
+    org: Société Générale
+    since: "2022"
+  - role: Senior member
+    org: L'Afrique des Idées
+    since: "2012"
+education:
+  - degree: PhD in Economics
+    org: Université de Limoges
+    year: "2021"
+    url: https://theses.fr/2021LIMO0059
+email: ananou.foly@icloud.com
+links:
+  - label: Google Scholar
+    url: https://scholar.google.com/citations?user=ux2mKAYAAAAJ
+  - label: ORCID
+    url: https://orcid.org/0009-0008-7357-0369
+  - label: LinkedIn
+    url: https://www.linkedin.com/in/foly-ananou/
+  - label: Twitter / X
+    url: https://twitter.com/folyananou
+cv_pdf: ""   # e.g. /assets/cv/Foly_Ananou_CV.pdf — leave empty to hide the download link

@@ -1,54 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Research — Foly Ananou">
-  <title>Research — Foly Ananou</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-<div class="site-container">
-
-  <nav class="site-nav">
-    <a href="index.html" class="nav-name">Foly Ananou</a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="research.html" class="active">Research</a></li>
-      <li><a href="editos.html">Éditos</a></li>
-      <li><a href="cv.html">CV</a></li>
-    </ul>
-  </nav>
-
-  <main>
+---
+layout: default
+nav: research
+title: Research
+description: Research — publications and working papers by Foly Ananou.
+---
+{%- assign pubs = site.data.publications | where: "verified", true | sort: "date" | reverse -%}
+{%- assign wps = site.data.working_papers | where: "verified", true | sort: "date" | reverse -%}
+{%- assign wip = site.data.projects | where: "verified", true | where: "status", "in_progress" -%}
+{%- assign everything = pubs | concat: wps | concat: wip -%}
+{%- assign tags = "" | split: "" -%}
+{%- for it in everything %}{% assign tags = tags | concat: it.tags %}{% endfor -%}
+{%- assign tags = tags | uniq | sort_natural -%}
     <h1 class="page-title">Research</h1>
 
-    <!-- ── Publications (fed from the research agenda) ──────────── -->
+    <div class="filters" id="filters" hidden>
+      <div class="filter-row" data-filter="type">
+        <button class="chip is-on" data-value="">All</button>
+        <button class="chip" data-value="article">Articles</button>
+        <button class="chip" data-value="thesis">Thesis</button>
+        <button class="chip" data-value="working_paper">Working papers</button>
+        {%- if wip.size > 0 %}<button class="chip" data-value="in_progress">In progress</button>{% endif %}
+      </div>
+      <div class="filter-row" data-filter="tag">
+        <button class="chip is-on" data-value="">All topics</button>
+        {%- for t in tags %}
+        <button class="chip" data-value="{{ t | downcase }}">{{ t }}</button>
+        {%- endfor %}
+      </div>
+    </div>
+
     <h2 class="section-heading">Publications</h2>
-    <ul class="pub-list" id="pub-list">
-      <li class="feed-loading">Loading…</li>
+    <ul class="pub-list filterable">
+      {%- for it in pubs %}{% include item.html item=it %}{% endfor %}
     </ul>
 
-    <!-- ── Work in progress ────────────────────────────────────── -->
-    <h2 class="section-heading" style="margin-top:48px" data-wip-heading>Work in Progress</h2>
-    <ul class="wip-list" id="wip-list"></ul>
-  </main>
+    {%- if wps.size > 0 %}
+    <h2 class="section-heading" style="margin-top:40px">Working papers</h2>
+    <ul class="pub-list filterable">
+      {%- for it in wps %}{% include item.html item=it %}{% endfor %}
+    </ul>
+    {%- endif %}
 
-  <footer class="site-footer">
-    <a href="index.html">Foly Ananou</a> &middot; 2026
-  </footer>
+    {%- if wip.size > 0 %}
+    <h2 class="section-heading" style="margin-top:40px">Work in progress</h2>
+    <ul class="pub-list filterable">
+      {%- for it in wip %}{% include item.html item=it %}{% endfor %}
+    </ul>
+    {%- endif %}
+    <p class="feed-empty" id="no-match" hidden>Nothing matches these filters.</p>
 
-</div>
-
-<script src="js/feed.js"></script>
 <script>
-  loadFeed()
-    .then((feed) => renderResearch(feed, document.getElementById("pub-list"), document.getElementById("wip-list")))
-    .catch(() => {
-      document.getElementById("pub-list").innerHTML =
-        '<li class="feed-empty">Could not load research data.</li>';
+(function () {
+  var box = document.getElementById("filters");
+  box.hidden = false;
+  var state = { type: "", tag: "" };
+  function apply() {
+    var shown = 0;
+    document.querySelectorAll(".filterable > li").forEach(function (li) {
+      var type = li.getAttribute("data-type");
+      var tags = (li.getAttribute("data-tags") || "").split("|");
+      var okType = !state.type || type === state.type ||
+        (state.type === "in_progress" && li.querySelector(".badge-in_progress"));
+      var okTag = !state.tag || tags.indexOf(state.tag) !== -1;
+      li.hidden = !(okType && okTag);
+      if (!li.hidden) shown++;
     });
+    document.querySelectorAll(".filterable").forEach(function (ul) {
+      var any = Array.prototype.some.call(ul.children, function (li) { return !li.hidden; });
+      ul.hidden = !any;
+      var h = ul.previousElementSibling;
+      if (h && h.classList.contains("section-heading")) h.hidden = !any;
+    });
+    document.getElementById("no-match").hidden = shown > 0;
+  }
+  box.addEventListener("click", function (e) {
+    var b = e.target.closest(".chip");
+    if (!b) return;
+    var row = b.parentElement;
+    row.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("is-on"); });
+    b.classList.add("is-on");
+    state[row.getAttribute("data-filter")] = b.getAttribute("data-value");
+    apply();
+  });
+})();
 </script>
-</body>
-</html>

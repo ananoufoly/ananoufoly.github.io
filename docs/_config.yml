@@ -1,0 +1,12 @@
+# Jekyll config for ananoufoly.github.io (GitHub Pages builds /docs on main).
+# Only files that start with front matter are templated; every other file
+# (the tools under agenda/, planner/, cika-*, luka/, flowra-engine/,
+# predictions/, tracker/) is copied byte-for-byte, as before.
+title: Foly Ananou
+description: Financial economist. Research, éditos, media and tools on banking, sovereign debt and monetary policy in Africa.
+url: https://ananoufoly.github.io
+baseurl: ""
+markdown: kramdown
+exclude:
+  - Gemfile
+  - Gemfile.lock
