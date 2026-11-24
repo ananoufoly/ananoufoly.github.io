@@ -76,3 +76,11 @@ Agence Ecofin, Togolese and Senegalese press, conference programmes.
 `docs/agenda/`, `docs/planner/` (encrypted), `docs/cika-*`, `docs/luka/`,
 `docs/flowra-engine/`, `docs/predictions/`, `docs/tracker/`, `docs/robots.txt`,
 `*.gs`, `encrypt_*.py`. These are separate tools that happen to share the domain.
+
+## Automation
+
+- `.github/workflows/update-portfolio.yml` runs weekly and on demand; it follows
+  `.github/agent/weekly.md` or `.github/agent/intake.md`. The agent edits only `docs/_data/`
+  and writes its PR summary to `inbox/.pr_body.md`; the workflow validates, then opens the PR.
+- `scripts/validate_data.py` must pass before any PR. `scripts/check_links.py` reports dead links.
+- Local intake: `/add-work <file>` (`.claude/commands/add-work.md`).

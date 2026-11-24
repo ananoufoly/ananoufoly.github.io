@@ -37,3 +37,10 @@ planner_apps_script.gs
 # Real transaction data — borrower PII, never publish
 flowra-transactions.json
 docs/**/flowra-transactions.json
+
+# Local-scan report: lists private folder names, never publish
+inbox/local_*
+# Scratch file the update agent writes for the PR body
+inbox/.pr_body.md
+inbox/.item.txt
+inbox/.link_report.md
