@@ -1,0 +1,12 @@
+---
+layout: default
+nav: projects
+title: "Projects &amp; data"
+description: "Data, tools and apps built by Foly Ananou."
+---
+{%- assign items = site.data.projects | where: "verified", true | sort: "date" | reverse -%}
+    <h1 class="page-title">Projects &amp; data</h1>
+    {%- if items.size == 0 %}<p class="feed-empty">Nothing here yet.</p>{% endif %}
+    <ul class="pub-list">
+      {%- for it in items %}{% include item.html item=it show_kind=true %}{% endfor %}
+    </ul>

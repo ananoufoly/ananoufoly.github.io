@@ -1,0 +1,20 @@
+# Working papers, preprints, policy notes. Only verified: true entries are rendered.
+
+- id: ananou2026waemu-transmission
+  title: "Banks and monetary transmission in the WAEMU: Separating the liquidity and rate channels"
+  type: working_paper
+  date: "2026-04"
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: SSRN
+  url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6643579
+  doi: 10.2139/ssrn.6643579
+  pdf: ""
+  abstract: >-
+    This paper analyzes the effect of the monetary policy on banking intermediation in the WAEMU,
+    by augmentation of the standard rate transmission channel with a liquidity channel. We separate
+    them using a panel of seven WAEMU member states over 2000–2020.
+  tags: [WAEMU, monetary policy, banking]
+  status: working_paper
+  source: "Crossref record for DOI 10.2139/ssrn.6643579 (deposited 2026-04-24)"
+  verified: true

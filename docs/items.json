@@ -1,0 +1,9 @@
+---
+layout: null
+---
+{%- include all_items.html -%}
+{
+  "generated": {{ site.time | date: "%Y-%m-%d" | jsonify }},
+  "count": {{ all_items.size }},
+  "items": {{ all_items | jsonify }}
+}

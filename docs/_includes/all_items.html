@@ -1,0 +1,2 @@
+{%- comment -%} Builds `all_items`: every verified entry across all data files, newest first. {%- endcomment -%}
+{%- assign all_items = site.data.publications | concat: site.data.working_papers | concat: site.data.editos | concat: site.data.media | concat: site.data.talks | concat: site.data.projects | where: "verified", true | sort: "date" | reverse -%}

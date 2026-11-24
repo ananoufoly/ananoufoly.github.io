@@ -1,0 +1,49 @@
+# Op-eds, blog posts, think-tank pieces. Only verified: true entries are rendered.
+
+- id: fa-2026-06-senegal-benin
+  title: "Sénégal et Bénin : deux trajectoires, un même traitement"
+  type: oped
+  date: "2026-06-10"
+  language: fr
+  authors: [Foly Ananou, Beringer Gloglo]
+  venue_or_outlet: Financial Afrik
+  url: https://www.financialafrik.com/2026/06/10/senegal-et-benin-deux-trajectoires-un-meme-traitement/
+  doi: ""
+  pdf: ""
+  abstract: ""
+  tags: [WAEMU, sovereign debt, Senegal, Benin]
+  status: published
+  source: "Article page byline 'Par Dr. Ananou Foly, Économiste & Dr. Gloglo Beringer'; datePublished 2026-06-10"
+  verified: true
+
+- id: adi-2026-06-mobile-money
+  title: "Africa's mobile money revolution has outgrown its rules"
+  type: think_tank
+  date: "2026-06-08"
+  language: en
+  authors: [Foly Ananou]
+  venue_or_outlet: L'Afrique des Idées
+  url: https://lafriquedesidees.org/publications/africa-mobile-money-regulation-gaps/
+  doi: ""
+  pdf: ""
+  abstract: ""
+  tags: [mobile money, regulation, financial inclusion]
+  status: published
+  source: "Article page (author name on page); datePublished 2026-06-08"
+  verified: true
+
+- id: fa-2026-04-uemoa-paradoxe
+  title: "UEMOA : Le paradoxe du financement souverain en monnaie locale"
+  type: oped
+  date: "2026-04-28"
+  language: fr
+  authors: [Foly Ananou]
+  venue_or_outlet: Financial Afrik
+  url: https://www.financialafrik.com/2026/04/28/uemoa-le-paradoxe-du-financement-souverain-en-monnaie-locale/
+  doi: ""
+  pdf: ""
+  abstract: ""
+  tags: [WAEMU, sovereign debt]
+  status: published
+  source: "Article page (author name on page); datePublished 2026-04-28"
+  verified: true

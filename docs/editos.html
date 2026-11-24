@@ -1,48 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Éditos — Foly Ananou">
-  <title>Éditos — Foly Ananou</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-<div class="site-container">
-
-  <nav class="site-nav">
-    <a href="index.html" class="nav-name">Foly Ananou</a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="research.html">Research</a></li>
-      <li><a href="editos.html" class="active">Éditos</a></li>
-      <li><a href="cv.html">CV</a></li>
-    </ul>
-  </nav>
-
-  <main>
+---
+layout: default
+nav: editos
+title: Éditos
+description: Éditos — essays and commentary on African economic policy, finance and institutions.
+---
+{%- assign items = site.data.editos | where: "verified", true | sort: "date" | reverse -%}
+{%- assign years = items | group_by_exp: "it", "it.date | slice: 0, 4" -%}
     <h1 class="page-title">Éditos</h1>
     <p class="page-subtitle">Essays and commentary on African economic policy, finance, and institutions.</p>
-    <ul class="edito-list" id="edito-list">
-      <li class="feed-loading">Loading…</li>
+    {%- if items.size == 0 %}<p class="feed-empty">No éditos yet.</p>{% endif %}
+    {%- for y in years %}
+    <h2 class="section-heading year-heading">{{ y.name }}</h2>
+    <ul class="pub-list">
+      {%- for it in y.items %}{% include item.html item=it %}{% endfor %}
     </ul>
-  </main>
-
-  <footer class="site-footer">
-    <a href="index.html">Foly Ananou</a> &middot; 2026
-  </footer>
-
-</div>
-
-<script src="js/feed.js"></script>
-<script>
-  loadFeed()
-    .then((feed) => renderEditos(feed, document.getElementById("edito-list")))
-    .catch(() => {
-      document.getElementById("edito-list").innerHTML =
-        '<li class="feed-empty">Could not load éditos.</li>';
-    });
-</script>
-</body>
-</html>
+    {%- endfor %}
