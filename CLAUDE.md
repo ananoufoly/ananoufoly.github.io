@@ -37,6 +37,7 @@ Pages from **`/docs` on `main`**, built by Jekyll (no theme). Content lives in
 | `media.yml` | press coverage, interviews, quotes, podcasts, TV/radio |
 | `talks.yml` | conferences, seminars, panels |
 | `projects.yml` | data/tools/apps, and approved work in progress |
+| `awards.yml` | prizes, fellowships, scholarships (`type: award`) |
 | `profile.yml` | bio, affiliations, contact (owner-edited only) |
 | `meta.yml` | `last_run` of the update agent |
 
@@ -79,8 +80,8 @@ Agence Ecofin, Togolese and Senegalese press, conference programmes.
 
 ## Automation
 
-- `.github/workflows/update-portfolio.yml` runs weekly and on demand; it follows
-  `.github/agent/weekly.md` or `.github/agent/intake.md`. The agent edits only `docs/_data/`
+- `.github/workflows/update-portfolio.yml` runs quarterly and on demand; it follows
+  `.github/agent/scan.md` or `.github/agent/intake.md`. The agent edits only `docs/_data/`
   and writes its PR summary to `inbox/.pr_body.md`; the workflow validates, then opens the PR.
 - `scripts/validate_data.py` must pass before any PR. `scripts/check_links.py` reports dead links.
 - Local intake: `/add-work <file>` (`.claude/commands/add-work.md`).

@@ -1,8 +1,8 @@
-# Weekly portfolio scan
+# Quarterly portfolio scan
 
 You are updating Foly Ananou's portfolio site. Read `CLAUDE.md` first: its Hard rules
 override anything below. Keep the run lean: no site builds, no rewrites, at most
-8 web searches. You only edit files under `docs/_data/` and write `inbox/.pr_body.md`.
+12 web searches. You only edit files under `docs/_data/` and write `inbox/.pr_body.md`.
 
 ## 1. What is already there
 `docs/_data/meta.yml` holds `last_run`. Collect every `url` and `doi` already present in
@@ -19,7 +19,8 @@ override anything below. Keep the run lean: no site builds, no rewrites, at most
    (only items whose own page names the author "Foly ANANOU").
 5. Jeune Afrique author page: `https://www.jeuneafrique.com/auteurs/f-ananou/` (bylines only; the
    page also lists other people's latest articles).
-6. Web searches, exact name in quotes, recent results: news/interviews/podcasts/conferences in
+6. Web searches, exact name in quotes, results since `last_run`: news/interviews/podcasts/TV (TV5MONDE,
+   France 24, Africa 24, RFI), conferences, awards and prizes, in
    French and English (Financial Afrik, Jeune Afrique, Le Monde Afrique, RFI, Agence Ecofin, Sika
    Finance, Togolese and Senegalese press, SSRN, ResearchGate, conference programmes).
 

@@ -47,6 +47,13 @@ description: Research — publications and working papers by Foly Ananou.
       {%- for it in wip %}{% include item.html item=it %}{% endfor %}
     </ul>
     {%- endif %}
+    {%- assign awards = site.data.awards | where: "verified", true | sort: "date" | reverse -%}
+    {%- if awards.size > 0 %}
+    <h2 class="section-heading" style="margin-top:40px">Awards &amp; honours</h2>
+    <ul class="pub-list awards-list">
+      {%- for it in awards %}{% include item.html item=it %}{% endfor %}
+    </ul>
+    {%- endif %}
     <p class="feed-empty" id="no-match" hidden>Nothing matches these filters.</p>
 
 <script>

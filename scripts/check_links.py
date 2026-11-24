@@ -10,7 +10,7 @@ from pathlib import Path
 import yaml
 
 DATA = Path(__file__).resolve().parent.parent / "docs" / "_data"
-FILES = ["publications", "working_papers", "editos", "media", "talks", "projects"]
+FILES = ["publications", "working_papers", "editos", "media", "talks", "projects", "awards"]
 UA = "Mozilla/5.0 (compatible; portfolio-link-check/1.0; +https://ananoufoly.github.io)"
 BLOCKED = {401, 403, 429, 999}
 

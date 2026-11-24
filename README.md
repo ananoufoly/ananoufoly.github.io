@@ -7,7 +7,7 @@ Rules and the entry schema: [`CLAUDE.md`](CLAUDE.md).
 ## Approving an update
 
 The update agent never publishes anything. It opens a pull request titled
-`Portfolio update – YYYY-MM-DD` listing each new item, its confidence level and the evidence.
+`Portfolio update – YYYY-MM-DD` (quarterly: 1 Jan, 1 Apr, 1 Jul, 1 Oct) listing each new item, its confidence level and the evidence.
 
 1. Open the PR (GitHub app or Pull requests tab) and read the summary.
 2. To drop an item, delete its block in **Files changed → ⋯ → Edit file**, or flip it to

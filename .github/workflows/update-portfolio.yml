@@ -1,6 +1,6 @@
 # Keeps ananoufoly.github.io up to date through pull requests the owner approves.
 #
-# - Weekly (Monday 06:00 UTC): scans for new work, checks links, opens ONE PR if anything changed.
+# - Quarterly (1 Jan, 1 Apr, 1 Jul, 1 Oct, 06:00 UTC): scans for new work, checks links, opens ONE PR if anything changed.
 # - Manual: Actions tab -> "Update portfolio" -> Run workflow, optionally pasting a URL or text.
 # - Intake file: commit something into inbox/new_item.md on main and a PR follows.
 #
@@ -13,11 +13,11 @@ name: Update portfolio
 
 on:
   schedule:
-    - cron: "0 6 * * 1"
+    - cron: "0 6 1 1,4,7,10 *"
   workflow_dispatch:
     inputs:
       item:
-        description: "One item to add: a URL, a DOI, or a few lines. Leave empty for the full weekly scan."
+        description: "One item to add: a URL, a DOI, or a few lines. Leave empty for a full scan."
         required: false
         default: ""
   push:
@@ -63,7 +63,7 @@ jobs:
             sed '/<!--/,/-->/d' inbox/new_item.md | sed '/^[[:space:]]*$/d' > "$item_file"
             if [ -s "$item_file" ]; then mode=intake; else mode=skip; fi
           else
-            mode=weekly
+            mode=scan
           fi
           echo "mode=$mode" >> "$GITHUB_OUTPUT"
           echo "item_file=$item_file" >> "$GITHUB_OUTPUT"
@@ -71,7 +71,7 @@ jobs:
           echo "Mode: $mode"
 
       - name: Check links
-        if: steps.mode.outputs.mode == 'weekly'
+        if: steps.mode.outputs.mode == 'scan'
         id: links
         run: python3 scripts/check_links.py inbox/.link_report.md | tee -a "$GITHUB_OUTPUT"
 

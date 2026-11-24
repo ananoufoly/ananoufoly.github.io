@@ -4,7 +4,7 @@
 {%- assign it = include.item -%}
 {%- assign status_labels = "published:Published|forthcoming:Forthcoming|under_review:Under review|working_paper:Working paper|in_progress:In progress" | split: "|" -%}
 {%- assign status_label = "" -%}
-{%- assign kind_labels = "article:Article|chapter:Book chapter|thesis:Thesis|working_paper:Working paper|policy_note:Policy note|oped:Op-ed|blog:Blog|think_tank:Think tank|interview:Interview|quote:Quoted|podcast:Podcast|tv:TV|radio:Radio|press:Press|talk:Talk|seminar:Seminar|panel:Panel|dataset:Dataset|tool:Tool|app:App|wip:Work in progress" | split: "|" -%}
+{%- assign kind_labels = "article:Article|chapter:Book chapter|thesis:Thesis|working_paper:Working paper|policy_note:Policy note|oped:Op-ed|blog:Blog|think_tank:Think tank|interview:Interview|quote:Quoted|podcast:Podcast|tv:TV|radio:Radio|press:Press|talk:Talk|seminar:Seminar|panel:Panel|dataset:Dataset|tool:Tool|app:App|award:Award|wip:Work in progress" | split: "|" -%}
 {%- assign kind_label = it.type | replace: "_", " " -%}
 {%- for pair in kind_labels -%}{%- assign kv = pair | split: ":" -%}{%- if kv[0] == it.type -%}{%- assign kind_label = kv[1] -%}{%- endif -%}{%- endfor -%}
 {%- for pair in status_labels -%}{%- assign kv = pair | split: ":" -%}{%- if kv[0] == it.status -%}{%- assign status_label = kv[1] -%}{%- endif -%}{%- endfor -%}

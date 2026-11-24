@@ -1,7 +1,8 @@
 ---
 layout: null
 ---
-{%- include all_items.html -%}
+{%- comment -%} Every verified entry, awards included. {%- endcomment -%}
+{%- assign all_items = site.data.publications | concat: site.data.working_papers | concat: site.data.editos | concat: site.data.media | concat: site.data.talks | concat: site.data.projects | concat: site.data.awards | where: "verified", true | sort: "date" | reverse -%}
 {
   "generated": {{ site.time | date: "%Y-%m-%d" | jsonify }},
   "count": {{ all_items.size }},

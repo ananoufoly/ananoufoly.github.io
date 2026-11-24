@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 
 DATA = Path(__file__).resolve().parent.parent / "docs" / "_data"
-LISTS = ["publications", "working_papers", "editos", "media", "talks", "projects"]
+LISTS = ["publications", "working_papers", "editos", "media", "talks", "projects", "awards"]
 FIELDS = ["id", "title", "type", "date", "language", "authors", "venue_or_outlet", "url",
           "doi", "pdf", "abstract", "tags", "status", "source", "verified"]
 STATUS = {"published", "forthcoming", "under_review", "working_paper", "in_progress"}
