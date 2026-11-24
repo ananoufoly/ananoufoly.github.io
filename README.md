@@ -30,6 +30,13 @@ Settings → Secrets and variables → Actions → **Variables** → New variabl
 `PORTFOLIO_AGENT_PAUSED` = `true`. Delete it (or set `false`) to resume. To stop it for good,
 disable the workflow under Actions → *Update portfolio* → ⋯ → *Disable workflow*.
 
+## Changing the agent's model
+
+Settings → Secrets and variables → Actions → **Variables** → `PORTFOLIO_AGENT_MODEL`.
+Default (no variable): `claude-sonnet-5-5`, about $3–5/month. `claude-opus-5-5` is stronger at
+checking identity and namesakes, about $5–10/month. `claude-haiku-5-5` costs well under $1/month
+but is weaker at judging uncertain matches.
+
 ## One-time setup
 
 1. Settings → Secrets and variables → Actions → **New repository secret**

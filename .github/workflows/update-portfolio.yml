@@ -4,6 +4,7 @@
 # - Manual: Actions tab -> "Update portfolio" -> Run workflow, optionally pasting a URL or text.
 # - Intake file: commit something into inbox/new_item.md on main and a PR follows.
 #
+# Model: repo variable PORTFOLIO_AGENT_MODEL (default claude-sonnet-5-5; e.g. claude-opus-5-5, claude-haiku-5-5)
 # Pause: Settings -> Secrets and variables -> Actions -> Variables -> PORTFOLIO_AGENT_PAUSED = true
 # Needs: repo secret ANTHROPIC_API_KEY, and Settings -> Actions -> General ->
 #        "Allow GitHub Actions to create and approve pull requests" ticked.
@@ -85,7 +86,7 @@ jobs:
             LINK_REPORT: inbox/.link_report.md
             Do not commit, push, or open a pull request yourself; the workflow does that.
           claude_args: |
-            --model claude-opus-5-5
+            --model ${{ vars.PORTFOLIO_AGENT_MODEL || 'claude-sonnet-5-5' }}
             --max-turns 40
             --allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash(python3 scripts/validate_data.py),Bash(curl -s *)"
 
