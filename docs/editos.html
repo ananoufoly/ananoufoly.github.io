@@ -4,14 +4,30 @@ nav: editos
 title: Éditos
 description: Éditos — essays and commentary on African economic policy, finance and institutions.
 ---
+{%- comment -%} Newest first. Pieces before 2019 fold under "Earlier", as on the media page. {%- endcomment -%}
 {%- assign items = site.data.editos | where: "verified", true | sort: "date" | reverse -%}
-{%- assign years = items | group_by_exp: "it", "it.date | slice: 0, 4" -%}
+{%- assign recent = items | where_exp: "i", "i.date >= '2019'" -%}
+{%- assign earlier = items | where_exp: "i", "i.date < '2019'" -%}
+{%- if recent.size == 0 -%}{%- assign recent = items -%}{%- assign earlier = "" | split: "" -%}{%- endif -%}
+{%- assign recent_years = recent | group_by_exp: "it", "it.date | slice: 0, 4" -%}
+{%- assign earlier_years = earlier | group_by_exp: "it", "it.date | slice: 0, 4" -%}
     <h1 class="page-title">Éditos</h1>
     <p class="page-subtitle">Essays and commentary on African economic policy, finance, and institutions.</p>
     {%- if items.size == 0 %}<p class="feed-empty">No éditos yet.</p>{% endif %}
-    {%- for y in years %}
+    {%- for y in recent_years %}
     <h2 class="section-heading year-heading">{{ y.name }}</h2>
     <ul class="pub-list">
       {%- for it in y.items %}{% include item.html item=it %}{% endfor %}
     </ul>
     {%- endfor %}
+    {%- if earlier.size > 0 %}
+    <details class="earlier">
+      <summary>Earlier, {{ earlier.last.date | slice: 0, 4 }}–{{ earlier.first.date | slice: 0, 4 }} ({{ earlier.size }})</summary>
+      {%- for y in earlier_years %}
+      <h2 class="section-heading year-heading">{{ y.name }}</h2>
+      <ul class="pub-list">
+        {%- for it in y.items %}{% include item.html item=it %}{% endfor %}
+      </ul>
+      {%- endfor %}
+    </details>
+    {%- endif %}
