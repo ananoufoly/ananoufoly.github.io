@@ -33,7 +33,7 @@ Things I could not verify from a source. Nothing below was changed on the site.
 8. **Sun Shuzhong (Chine Magazine, 1 Oct 2015).** Checked: the page title is "Sun Shuzhong rassure les
    dirigeants africains". Only the URL slug says "pays". Kept as is. It quotes you via Afrique Inside,
    whose original page was not found.
-9. **Direct Infos Gabon (3 Sep 2017)** republished your Jeune Afrique column on the CFA franc. Add it
-   to Media? See `web_candidates.md`.
+9. ~~**Direct Infos Gabon (3 Sep 2017)** republished your Jeune Afrique column on the CFA franc. Add it
+   to Media?~~ Answered 2026-11-25: skip it (republication of a column already listed).
 10. **More TV/radio.** No other TV or radio appearance turned up for 2016–2026. Send links or show
     names for any you remember (TV5MONDE, France 24, Africa 24, RFI…).
