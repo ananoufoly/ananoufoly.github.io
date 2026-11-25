@@ -473,3 +473,22 @@ a:hover { text-decoration: underline; }
 }
 .year-heading { margin-top: 40px; }
 .year-heading:first-of-type { margin-top: 0; }
+
+/* ── Homepage-as-CV, notes, disclaimer ─────────────────────── */
+.pub-note { font-size: 13px; color: #777; margin-top: 3px; }
+.pub-note a { color: #777; text-decoration: underline; }
+.cv-subhead {
+  font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: #888; margin: 22px 0 6px;
+}
+.cv-rows { list-style: none; }
+.cv-rows li { display: flex; justify-content: space-between; gap: 16px; padding: 4px 0; }
+.cv-when { color: #888; white-space: nowrap; font-size: 14px; }
+.cv-languages { margin-bottom: 20px; }
+.earlier { margin-top: 24px; }
+.earlier summary { cursor: pointer; color: #888; font-size: 14px; padding: 6px 0; }
+.earlier summary:hover { color: #1a1a1a; }
+.site-footer .disclaimer { font-size: 11px; line-height: 1.5; color: #999; margin-bottom: 10px; max-width: 640px; }
+@media (max-width: 600px) {
+  .cv-rows li { flex-direction: column; gap: 0; }
+}

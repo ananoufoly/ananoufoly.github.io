@@ -1,39 +1,61 @@
 ---
 layout: default
 nav: home
-description: Foly Ananou — financial economist, writer, and occasional builder of small tools.
+description: Foly Ananou — financial economist. Research, éditos and media on banking, sovereign debt and monetary policy in Africa.
 ---
+{%- comment -%}
+  The homepage is the CV (there is no separate CV page). Content: _data/profile.yml,
+  "Selected" = entries with featured: true, "Latest" = 5 newest verified items not already in Selected.
+{%- endcomment -%}
 {%- assign p = site.data.profile -%}
 {%- include all_items.html -%}
+{%- assign selected = site.data.publications | concat: site.data.working_papers | concat: site.data.awards | where: "verified", true | where: "featured", true | sort: "date" | reverse -%}
     <h1 class="home-name">{{ p.name }}</h1>
     <p class="home-identity">{{ p.identity }}</p>
     <p class="home-bio">{{ p.bio }}</p>
 
-    <h2 class="section-heading">Latest</h2>
-    <ul class="pub-list latest-list">
-      {%- for it in all_items limit: 5 %}
+    {%- if selected.size > 0 %}
+    <h2 class="section-heading">Selected</h2>
+    <ul class="pub-list selected-list">
+      {%- for it in selected %}
       {% include item.html item=it show_kind=true %}
       {%- endfor %}
     </ul>
-    <p class="see-all"><a href="/research.html">All research &rarr;</a> &nbsp; <a href="/editos.html">All éditos &rarr;</a></p>
+    {%- endif %}
+
+    <h2 class="section-heading" style="margin-top:40px">Latest</h2>
+    <ul class="pub-list latest-list">
+      {%- assign latest = all_items | where_exp: "i", "i.featured != true" -%}
+      {%- for it in latest limit: 5 %}
+      {% include item.html item=it show_kind=true %}
+      {%- endfor %}
+    </ul>
+    <p class="see-all"><a href="/research.html">All research &rarr;</a> &nbsp; <a href="/editos.html">All éditos &rarr;</a> &nbsp; <a href="/media.html">All media &rarr;</a></p>
 
     <section id="about" class="about-block">
       <h2 class="section-heading">About</h2>
-      <ul class="about-list">
-        {%- for a in p.affiliations %}
-        <li><strong>{{ a.role }}</strong>, {{ a.org }}{% if a.since %} <span class="muted">(since {{ a.since }})</span>{% endif %}</li>
-        {%- endfor %}
-        {%- for e in p.education %}
-        <li><strong>{{ e.degree }}</strong>, {% if e.url %}<a href="{{ e.url }}" target="_blank" rel="noopener">{{ e.org }}</a>{% else %}{{ e.org }}{% endif %} <span class="muted">({{ e.year }})</span></li>
+
+      <h3 class="cv-subhead">Positions</h3>
+      <ul class="cv-rows">
+        {%- for a in p.positions %}
+        <li><span class="cv-what"><strong>{{ a.role }}</strong>, {{ a.org }}</span><span class="cv-when">{{ a.period }}</span></li>
         {%- endfor %}
       </ul>
+
+      <h3 class="cv-subhead">Education</h3>
+      <ul class="cv-rows">
+        {%- for e in p.education %}
+        <li><span class="cv-what"><strong>{{ e.degree }}</strong>, {% if e.url %}<a href="{{ e.url }}" target="_blank" rel="noopener">{{ e.org }}</a>{% else %}{{ e.org }}{% endif %}</span><span class="cv-when">{{ e.year }}</span></li>
+        {%- endfor %}
+      </ul>
+
+      <h3 class="cv-subhead">Languages</h3>
+      <p class="cv-languages">{{ p.languages }}</p>
+
       <div class="home-contact">
         <a href="mailto:{{ p.email }}">{{ p.email }}</a>
         {%- for l in p.links %}
         <a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.label }}</a>
         {%- endfor %}
-        {%- if p.cv_pdf != "" and p.cv_pdf %}
-        <a href="{{ p.cv_pdf }}">Download CV (PDF)</a>
-        {%- endif %}
       </div>
     </section>

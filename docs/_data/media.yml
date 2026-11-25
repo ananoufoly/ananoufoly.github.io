@@ -1,4 +1,4 @@
-# Press coverage, interviews, quotes, podcasts. Only verified: true entries are rendered.
+# Press coverage, interviews, quotes, podcasts, TV. Only verified: true entries are rendered.
 
 - id: podcast-2025-fdse-episode-4
   title: '#PODCAST - Foly Ananou - Économiste, Société Générale (épisode #4)'
@@ -16,7 +16,7 @@
   source: 'YouTube page: title names ''Foly Ananou - Économiste, Société Générale''; uploadDate 2025-03-10'
   verified: true
 - id: tv5monde-2022-11-meloni-franc-cfa
-  title: 'Accusation de Giorgia Meloni contre la France : le franc CFA à l''origine des migrations ?'
+  title: 'Accusation de Giorgia Meloni contre la France : le franc CFA à l’origine des migrations ?'
   type: tv
   date: '2022-11-23'
   language: fr

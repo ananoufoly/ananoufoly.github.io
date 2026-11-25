@@ -1,53 +1,53 @@
-# Peer-reviewed articles, book chapters, thesis. Schema: see CLAUDE.md at repo root.
-# Only entries with verified: true are rendered.
+# Peer-reviewed articles, book chapters, thesis. Schema: see CLAUDE.md. Only verified: true entries are rendered.
 
 - id: ananou2026jfs
-  title: "Does liquidity regulation reduce bank and systemic risk? Evidence from a quasi-natural experiment"
+  title: Does liquidity regulation reduce bank and systemic risk? Evidence from a quasi-natural experiment
   type: article
-  date: "2026-06"
+  date: 2026-06
   language: en
   authors: [Foly Ananou, Dimitris K. Chronopoulos, Amine Tarazi, John O.S. Wilson]
-  venue_or_outlet: "Journal of Financial Stability, vol. 84, 101550"
+  venue_or_outlet: Journal of Financial Stability, vol. 84, 101550
   url: https://www.sciencedirect.com/science/article/pii/S1572308926000525
   doi: 10.1016/j.jfs.2026.101550
-  pdf: ""
-  abstract: ""
+  pdf: ''
+  abstract: ''
   tags: [banking, liquidity regulation, systemic risk]
   status: published
-  source: "Crossref record for DOI 10.1016/j.jfs.2026.101550"
+  source: 'Crossref record for DOI 10.1016/j.jfs.2026.101550; earlier titles: SSRN 3917632 (2021) and 4825930 (2024),
+    same four authors and Dutch LBR design'
   verified: true
-
-- id: ananou2021jcf
-  title: "Liquidity regulation and bank lending"
-  type: article
-  date: "2021-08"
-  language: en
-  authors: [Foly Ananou, Dimitris K. Chronopoulos, Amine Tarazi, John O.S. Wilson]
-  venue_or_outlet: "Journal of Corporate Finance, vol. 69, 101997"
-  url: https://www.sciencedirect.com/science/article/abs/pii/S0929119921001188
-  doi: 10.1016/j.jcorpfin.2021.101997
-  pdf: ""
-  abstract: ""
-  tags: [banking, liquidity regulation, bank lending]
-  status: published
-  source: "Crossref record for DOI 10.1016/j.jcorpfin.2021.101997"
-  verified: true
-
+  earlier_title: Liquidity Regulation and Bank Risk (SSRN 2021); Bank Liquidity Regulation and Risk (SSRN 2024)
+  featured: true
 - id: ananou2021thesis
-  title: "Essais sur la régulation de la liquidité bancaire : implications pour les prêts et la prise de risque"
+  title: 'Essais sur la régulation de la liquidité bancaire : implications pour les prêts et la prise de risque'
   type: thesis
-  date: "2021"
+  date: '2021-11-30'
   language: fr
   authors: [Foly Sodjine Ananou]
-  venue_or_outlet: "PhD thesis, Université de Limoges"
+  venue_or_outlet: PhD thesis, Université de Limoges
   url: https://theses.fr/2021LIMO0059
   doi: 10.70675/b3ad86c3z1fa5z467dz8b7fzc05c37b319bc
-  pdf: ""
-  abstract: >-
-    L'objectif de cette thèse est d’évaluer l’impact de la mise en place de la réglementation
-    portant sur la liquidité des banques, sur leur contribution à l'économie, et leur comportement
-    de prise de risque.
+  pdf: ''
+  abstract: L'objectif de cette thèse est d’évaluer l’impact de la mise en place de la réglementation portant sur
+    la liquidité des banques, sur leur contribution à l'économie, et leur comportement de prise de risque.
   tags: [banking, liquidity regulation]
   status: published
-  source: "theses.fr/2021LIMO0059 via Crossref DOI 10.70675/b3ad86c3z1fa5z467dz8b7fzc05c37b319bc"
+  source: theses.fr/2021LIMO0059 via Crossref DOI 10.70675/b3ad86c3z1fa5z467dz8b7fzc05c37b319bc; defence date 30/11/2021
+    from theses.fr API
   verified: true
+- id: ananou2021jcf
+  title: Liquidity regulation and bank lending
+  type: article
+  date: 2021-08
+  language: en
+  authors: [Foly Ananou, Dimitris K. Chronopoulos, Amine Tarazi, John O.S. Wilson]
+  venue_or_outlet: Journal of Corporate Finance, vol. 69, 101997
+  url: https://www.sciencedirect.com/science/article/abs/pii/S0929119921001188
+  doi: 10.1016/j.jcorpfin.2021.101997
+  pdf: ''
+  abstract: ''
+  tags: [banking, liquidity regulation, bank lending]
+  status: published
+  source: Crossref record for DOI 10.1016/j.jcorpfin.2021.101997
+  verified: true
+  featured: true

@@ -1,4 +1,6 @@
-# Static identity shown on Home ("About" block). Edit by hand; the agent must not change it.
+# Identity and CV summary shown on Home. There is no separate CV page: the homepage is the CV.
+# Sources: the former docs/cv.html (git history, commit 2603357) and the owner's CVs
+# (curriculum/2512_FA_CVEN.tex, 2512_FA_CVFR.tex). Edit by hand; the update agent never changes this file.
 name: Foly Ananou
 identity: PhD Economist
 bio: >-
@@ -7,18 +9,34 @@ bio: >-
   way it does. He works on banking, sovereign risk, and the quiet machinery that keeps financial
   systems standing (or doesn't). When the data gets interesting he writes about it, in French and
   English.
-affiliations:
+positions:
   - role: Economist
     org: Société Générale
-    since: "2022"
+    period: "2022 – present"
   - role: Senior member
-    org: L'Afrique des Idées
-    since: "2012"
+    org: L'Afrique des Idées (think tank)
+    period: "2012 – present"
+  - role: Research & Teaching Fellow
+    org: Université de Limoges (LAPE)
+    period: "2017 – 2022"
+  - role: Consulting & policy assignments
+    org: West Africa
+    period: "2015 – 2017"
+  - role: Principal Economist
+    org: French Embassy in Senegal
+    period: "2012 – 2016"
 education:
   - degree: PhD in Economics
     org: Université de Limoges
     year: "2021"
     url: https://theses.fr/2021LIMO0059
+  - degree: MPhil in Economics
+    org: Université de Limoges
+    year: "2017"
+  - degree: Ingénieur Statisticien Économiste (MSc Statistics & Economics)
+    org: ENSAE-Sénégal
+    year: "2012"
+languages: "French (native) · English (fluent, C1) · Wolof (basic)"
 email: ananou.foly@icloud.com
 links:
   - label: Google Scholar
@@ -29,4 +47,5 @@ links:
     url: https://www.linkedin.com/in/foly-ananou/
   - label: Twitter / X
     url: https://twitter.com/folyananou
-cv_pdf: ""   # e.g. /assets/cv/Foly_Ananou_CV.pdf — leave empty to hide the download link
+disclaimer_en: The views expressed on this site and in the linked writings are my own and do not necessarily reflect those of my employer.
+disclaimer_fr: Les opinions exprimées sur ce site et dans les textes liés n’engagent que moi et non mon employeur.

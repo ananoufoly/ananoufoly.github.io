@@ -2,11 +2,28 @@
 layout: default
 nav: media
 title: "In the media"
-description: "Press coverage, interviews and podcasts featuring Foly Ananou."
+description: "Press coverage, interviews, TV and podcasts featuring Foly Ananou."
 ---
+{%- comment -%} Newest first. Items before 2016 fold under "Earlier" once newer items exist. {%- endcomment -%}
 {%- assign items = site.data.media | where: "verified", true | sort: "date" | reverse -%}
+{%- assign recent = items | where_exp: "i", "i.date >= '2016'" -%}
+{%- assign earlier = items | where_exp: "i", "i.date < '2016'" -%}
     <h1 class="page-title">In the media</h1>
     {%- if items.size == 0 %}<p class="feed-empty">Nothing here yet.</p>{% endif %}
+    {%- if recent.size > 0 %}
+    <ul class="pub-list">
+      {%- for it in recent %}{% include item.html item=it show_kind=true %}{% endfor %}
+    </ul>
+    {%- if earlier.size > 0 %}
+    <details class="earlier">
+      <summary>Earlier ({{ earlier.size }})</summary>
+      <ul class="pub-list">
+        {%- for it in earlier %}{% include item.html item=it show_kind=true %}{% endfor %}
+      </ul>
+    </details>
+    {%- endif %}
+    {%- else %}
     <ul class="pub-list">
       {%- for it in items %}{% include item.html item=it show_kind=true %}{% endfor %}
     </ul>
+    {%- endif %}
